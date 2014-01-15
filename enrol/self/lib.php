@@ -82,12 +82,11 @@ class enrol_self_plugin extends enrol_plugin {
 
         if (empty($instance->name)) {
             if (!empty($instance->roleid) and $role = $DB->get_record('role', array('id'=>$instance->roleid))) {
-                $role = ' (' . role_get_name($role, context_course::instance($instance->courseid, IGNORE_MISSING)) . ')';
+                $role = role_get_name($role, context_course::instance($instance->courseid, IGNORE_MISSING));
+                return get_string('communityjoinbyyourselfas', 'local_moodleorg', array('rolename' => $role));
             } else {
-                $role = '';
+                return get_string('communityjoinbyyourself', 'local_moodleorg', array('rolename' => $role));
             }
-            $enrol = $this->get_name();
-            return get_string('pluginname', 'enrol_'.$enrol) . $role;
         } else {
             return format_string($instance->name);
         }

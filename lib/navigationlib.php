@@ -1421,9 +1421,9 @@ class global_navigation extends navigation_node {
         }
         $this->rootnodes['site'] = $this->add_course($SITE);
         $this->rootnodes['myprofile'] = $this->add(get_string('profile'), null, self::TYPE_USER, null, 'myprofile');
-        $this->rootnodes['currentcourse'] = $this->add(get_string('currentcourse'), null, self::TYPE_ROOTNODE, null, 'currentcourse');
+        $this->rootnodes['currentcourse'] = $this->add(get_string('communitycurrent', 'local_moodleorg'), null, self::TYPE_ROOTNODE, null, 'currentcourse');
         $this->rootnodes['mycourses'] = $this->add(
-            get_string('mycourses'),
+            get_string('communitiesmy', 'local_moodleorg'),
             new moodle_url('/my/courses.php'),
             self::TYPE_ROOTNODE,
             null,
@@ -1436,7 +1436,7 @@ class global_navigation extends navigation_node {
             $this->rootnodes['mycourses']->mainnavonly = true;
         }
 
-        $this->rootnodes['courses'] = $this->add(get_string('courses'), new moodle_url('/course/index.php'), self::TYPE_ROOTNODE, null, 'courses');
+        $this->rootnodes['courses'] = $this->add(get_string('communities', 'local_moodleorg'), new moodle_url('/course/index.php'), self::TYPE_ROOTNODE, null, 'courses');
         if (!core_course_category::user_top()) {
             $this->rootnodes['courses']->hide();
         }
@@ -2632,7 +2632,7 @@ class global_navigation extends navigation_node {
                 arsort($reports); // User is last, we want to test it first.
 
                 $userscourses = enrol_get_users_courses($user->id, false, '*');
-                $userscoursesnode = $usernode->add(get_string('courses'));
+                $userscoursesnode = $usernode->add(get_string('communities', 'local_moodleorg'));
 
                 $count = 0;
                 foreach ($userscourses as $usercourse) {
@@ -3354,8 +3354,8 @@ class global_navigation_for_ajax extends global_navigation {
 
         $this->rootnodes = array();
         $this->rootnodes['site']    = $this->add_course($SITE);
-        $this->rootnodes['mycourses'] = $this->add(get_string('mycourses'), new moodle_url('/my'), self::TYPE_ROOTNODE, null, 'mycourses');
-        $this->rootnodes['courses'] = $this->add(get_string('courses'), null, self::TYPE_ROOTNODE, null, 'courses');
+        $this->rootnodes['mycourses'] = $this->add(get_string('communitiesmy', 'local_moodleorg'), new moodle_url('/my'), self::TYPE_ROOTNODE, null, 'mycourses');
+        $this->rootnodes['courses'] = $this->add(get_string('communities', 'local_moodleorg'), null, self::TYPE_ROOTNODE, null, 'courses');
         // The courses branch is always displayed, and is always expandable (although may be empty).
         // This mimicks what is done during {@link global_navigation::initialise()}.
         $this->rootnodes['courses']->isexpandable = true;
@@ -4565,7 +4565,7 @@ class settings_navigation extends navigation_node {
 
         // note: do not test if enrolled or viewing here because we need the enrol link in Course administration section
 
-        $coursenode = $this->add(get_string('courseadministration'), null, self::TYPE_COURSE, null, 'courseadmin');
+        $coursenode = $this->add(get_string('communityadministration', 'local_moodleorg'), null, self::TYPE_COURSE, null, 'courseadmin');
         if ($forceopen) {
             $coursenode->force_open();
         }

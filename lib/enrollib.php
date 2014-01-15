@@ -516,7 +516,7 @@ function enrol_add_course_navigation(navigation_node $coursenode, $course) {
                 $plugin = $plugins[$instance->enrol];
                 if ($unenrollink = $plugin->get_unenrolself_link($instance)) {
                     $shortname = format_string($course->shortname, true, array('context' => $coursecontext));
-                    $coursenode->add(get_string('unenrolme', 'core_enrol', $shortname), $unenrollink, navigation_node::TYPE_SETTING, null, 'unenrolself', new pix_icon('i/user', ''));
+                    $coursenode->add(get_string('communityunenrolme', 'local_moodleorg', $shortname), $unenrollink, navigation_node::TYPE_SETTING, null, 'unenrolself', new pix_icon('i/user', ''));
                     $coursenode->get('unenrolself')->set_force_into_more_menu();
                     break;
                     //TODO. deal with multiple unenrol links - not likely case, but still...
@@ -535,7 +535,7 @@ function enrol_add_course_navigation(navigation_node $coursenode, $course) {
                     if ($plugin->show_enrolme_link($instance)) {
                         $url = new moodle_url('/enrol/index.php', array('id'=>$course->id));
                         $shortname = format_string($course->shortname, true, array('context' => $coursecontext));
-                        $coursenode->add(get_string('enrolme', 'core_enrol', $shortname), $url, navigation_node::TYPE_SETTING, null, 'enrolself', new pix_icon('i/user', ''));
+                        $coursenode->add(get_string('communityenrolme', 'local_moodleorg', $shortname), $url, navigation_node::TYPE_SETTING, null, 'enrolself', new pix_icon('i/user', ''));
                         break;
                     }
                 }
