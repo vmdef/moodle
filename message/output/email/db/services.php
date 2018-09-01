@@ -14,16 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
 /**
- * Email processor version information
+ * Message_email external functions and service definitions.
  *
  * @package    message_email
- * @copyright  2008 Luis Rodrigues
+ * @category   webservice
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018051401;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2018050800;        // Requires this Moodle version
-$plugin->component = 'message_email';  // Full name of the plugin (used for diagnostics)
+$functions = array(
+        'message_email_smtp_test' => array(
+                'classname' => 'message_email_external',
+                'methodname' => 'smtp_test',
+                'classpath' => 'message/output/email/externallib.php',
+                'description' => 'Test a SMTP configuration.',
+                'type' => 'read',
+                'loginrequired' => false,
+                'ajax' => true,
+        ),
+);

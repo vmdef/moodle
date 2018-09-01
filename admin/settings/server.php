@@ -232,6 +232,9 @@ $temp->add(new admin_setting_configpasswordunmask('smtppass', new lang_string('s
             new lang_string('configsmtpuser', 'admin'), ''));
 $temp->add(new admin_setting_configtext('smtpmaxbulk', new lang_string('smtpmaxbulk', 'admin'),
            new lang_string('configsmtpmaxbulk', 'admin'), 1, PARAM_INT));
+$temp->add(new admin_setting_configtext_with_button('smtpemailtest', new lang_string('smtpemailtest', 'admin'),
+           new lang_string('configsmtpemailtest', 'admin'), '', PARAM_EMAIL,
+           null, new lang_string('smtpemailtestbutton', 'admin'), 'message_email/smtptest'));
 $temp->add(new admin_setting_heading('noreplydomainheading', new lang_string('noreplydomain', 'admin'),
         new lang_string('noreplydomaindetail', 'admin')));
 $temp->add(new admin_setting_configtext('noreplyaddress', new lang_string('noreplyaddress', 'admin'),

@@ -1,0 +1,61 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template message_email/smtptest_output
+
+    This template render the output of testing several SMTP servers
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * hosts - Array of SMMP connections results.
+      * error - Flag that indicates if the connection failed.
+      * name - SMTP hostname.
+      * errormsg - If the connection fails, debug message about the error.
+
+    Example context (json):
+    {
+        "hosts": [
+            {"error":1,"name":"smtp1.host.com","errormsg":""},
+            {"error":0,"name":"smtp2.host.com","errormsg":""}
+        ]
+    }
+}}
+<div class="message_email_smtptest_output">
+{{#hosts}}
+    <ul>
+        <li>
+            {{#error}}
+                {{# pix }} i/caution, core, Failure {{/ pix }}
+            {{/error}}
+            {{^ error}}
+                {{# pix }} i/checked, core, Success  {{/ pix }}
+            {{/error}}
+            {{#name}}
+                <strong>{{name}}</strong>
+            {{/name}}
+            {{#errormsg}}
+                {{#name}}:{{/name}} {{errormsg}}
+            {{/errormsg}}
+        </li>
+    </ul>
+{{/hosts}}
+</div>

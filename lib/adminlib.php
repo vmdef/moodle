@@ -5051,6 +5051,67 @@ class admin_setting_configtext_with_advanced extends admin_setting_configtext {
     }
 }
 
+/**
+ * Text field with a button, that allow to run a test
+ *
+ * @copyright 2018 Victor Deniz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_setting_configtext_with_button extends admin_setting_configtext {
+    /** @var string value of the button */
+    protected $buttonvalue = null;
+    /** @var string javascript amd module invoked when button is clicked */
+    protected $buttonamd = null;
+    /** @var javascript amd module params */
+    protected $amdparams = [];
+
+
+    /**
+     * Constructor
+     * @param string $name unique ascii name, either 'mysetting' (config), or 'myplugin/mysetting' (config_plugins)
+     * @param string $visiblename localised
+     * @param string $description long localised info
+     * @param array $defaultsetting ('value'=>string, '__construct'=>bool)
+     * @param mixed $paramtype int means PARAM_XXX type, string is a allowed format in regex
+     * @param int $size default field size
+     * @param string $buttonvalue button value
+     * @param string $buttonamd javascript amd module invoked when button is clicked
+     * @param array $amdparams javascript amd module params
+     */
+    public function __construct($name, $visiblename, $description, $defaultsetting, $paramtype=PARAM_RAW, $size=null, $buttonvalue,
+            $buttonamd, $amdparams=[] ) {
+        $this->buttonvalue = $buttonvalue;
+        $this->buttonamd = $buttonamd;
+        $this->amdparams = $amdparams;
+        parent::__construct($name, $visiblename, $description, $defaultsetting, $paramtype, $size);
+    }
+
+    /**
+     * Return an XHTML string for the setting
+     * @param array $data Text input value
+     * @param string $query search query to be highlighted
+     * @return string Returns an XHTML string
+     */
+    public function output_html($data, $query='') {
+        global $OUTPUT, $PAGE;
+
+        $default = $this->get_defaultsetting();
+        $context = (object) [
+            'buttonvalue' => $this->buttonvalue,
+            'size' => $this->size,
+            'id' => $this->get_id(),
+            'name' => $this->get_full_name(),
+            'value' => $data,
+            'forceltr' => $this->get_force_ltr(),
+        ];
+        $element = $OUTPUT->render_from_template('core_admin/setting_configtextbutton', $context);
+
+        $PAGE->requires->js_call_amd($this->buttonamd, 'init', $this->amdparams);
+
+        return format_admin_setting($this, $this->visiblename, $element, $this->description, true, '', $default, $query);
+    }
+}
+
 
 /**
  * Checkbox with an advanced checkbox that controls an additional $name.'_adv' config setting.
