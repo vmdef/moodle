@@ -2565,5 +2565,29 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2018101800.00);
     }
 
+    if ($oldversion < 2018101900.01) {
+        // Define table recent_activities to be created.
+        $table = new xmldb_table('recent_activities');
+        // Adding fields to table recent activities.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        $table->add_field('cmid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'courseid');
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'cmid');
+        $table->add_field('timeaccess', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'moduleid');
+        // Adding keys to table recent_activities.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('userid', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('courseid', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
+        $table->add_key('cmid', XMLDB_KEY_FOREIGN, ['cmid'], 'course_modules', ['id']);
+        // Adding indexes to table recent_activities.
+        $table->add_index('userid-courseid-cmid', XMLDB_INDEX_UNIQUE, ['userid', 'courseid', 'cmid']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        // Conditionally launch create table for recent_activities.
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2018101900.01);
+    }
+
     return true;
 }

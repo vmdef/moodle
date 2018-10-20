@@ -166,6 +166,13 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             'value' => 'privacy:metadata:user_preferences:value'
         ];
 
+        $recentactivities = [
+            'userid' => 'privacy:metadata:userid',
+            'courseid' => 'privacy:metadata:courseid',
+            'cmid' => 'privacy:metadata:cmid',
+            'timeaccess' => 'privacy:metadata:timeaccess'
+        ];
+
         $collection->add_database_table('user', $userfields, 'privacy:metadata:usertablesummary');
         $collection->add_database_table('user_password_history', $passwordhistory, 'privacy:metadata:passwordtablesummary');
         $collection->add_database_table('user_password_resets', $userpasswordresets, 'privacy:metadata:passwordresettablesummary');
@@ -175,6 +182,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         $collection->add_database_table('sessions', $usersessions, 'privacy:metadata:sessiontablesummary');
         $collection->add_database_table('my_pages', $mypages, 'privacy:metadata:my_pages');
         $collection->add_database_table('user_preferences', $userpreferences, 'privacy:metadata:user_preferences');
+        $collection->add_database_table('recent_activities', $recentactivities, 'privacy:metadata:recent_activitiestablesummary');
         $collection->add_subsystem_link('core_files', [], 'privacy:metadata:filelink');
 
         return $collection;
@@ -211,6 +219,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         static::export_course_requests($user->id, $context);
         static::export_user_devices($user->id, $context);
         static::export_user_session_data($user->id, $context);
+        static::export_recentactivities($user->id, $context);
     }
 
     /**
@@ -262,6 +271,8 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         $DB->delete_records('sessions', ['userid' => $userid]);
         // Do I delete user preferences? Seems like the right place to do it.
         $DB->delete_records('user_preferences', ['userid' => $userid]);
+        // Delete recent activities access.
+        $DB->delete_records('recent_activities', ['userid' => $userid]);
 
         // Delete all of the files for this user.
         $fs = get_file_storage();
@@ -514,6 +525,34 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
                 ];
             }, $records);
             writer::with_context($context)->export_data([get_string('privacy:sessionpath', 'user')], $sessiondata);
+        }
+    }
+
+    /**
+     * Export information about the most recently accessed activities.
+     *
+     * @param  int $userid The user ID.
+     * @param  \context $context The user context.
+     */
+    protected static function export_recentactivities(int $userid, \context $context) {
+        global $DB;
+        $sql = "SELECT c.id, c.fullname, ra.timeaccess, m.name, ra.cmid
+                  FROM {recent_activities} ra
+                  JOIN {course} c ON c.id = ra.courseid
+                  JOIN {course_modules} cm on cm.id = ra.cmid
+                  JOIN {modules} m ON m.id = cm.module
+                 WHERE ra.userid = :userid";
+        $params = ['userid' => $userid];
+        $records = $DB->get_records_sql($sql, $params);
+        if (!empty($records)) {
+            $recentactivities = (object) array_map(function($record) use($context) {
+                return [
+                    'course_name' => format_string($record->fullname, true, ['context' => $context]),
+                    'module_name' => format_string($record->name),
+                    'timeaccessactivity' => transform::datetime($record->timeaccess)
+                ];
+            }, $records);
+            writer::with_context($context)->export_data([get_string('privacy:recentactivitiespath', 'user')], $recentactivities);
         }
     }
 }

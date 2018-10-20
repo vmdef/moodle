@@ -72,6 +72,20 @@ $observers = array(
         'eventname'   => '\core\event\course_module_completion_updated',
         'callback'    => 'core_competency\api::observe_course_module_completion_updated',
     ),
+
+    // Recent activities.
+    array(
+        'eventname'   => '\core\event\course_module_viewed',
+        'callback'    => 'core_user\observer::store',
+    ),
+    array(
+        'eventname'   => '\mod_assign\event\submission_status_viewed',
+        'callback'    => 'core_user\observer::store',
+    ),
+    array(
+        'eventname'   => '\core\event\course_module_deleted',
+        'callback'    => 'core_user\observer::remove'
+    ),
 );
 
 // List of all events triggered by Moodle can be found using Events list report.
