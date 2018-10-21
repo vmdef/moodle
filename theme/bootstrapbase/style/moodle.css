@@ -16631,6 +16631,57 @@ body {
     flex-basis: calc(33% - 0.5rem);
   }
 }
+.block_recentactivities *,
+.block_recentactivities *::before,
+.block_recentactivities *::after {
+  box-sizing: border-box;
+}
+.block_recentactivities .empty-placeholder-image-lg {
+  height: 125px;
+}
+.block_recentactivities .activity-card {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: calc(50% - 0.6rem);
+}
+.block_recentactivities .activity-info-container {
+  flex: 1 1 auto;
+  padding: 0.8rem;
+}
+.block_recentactivities .activity-card-title {
+  margin-bottom: 0;
+}
+.block_recentactivities .text-truncate {
+  white-space: unset;
+}
+@media (min-width: 576px) {
+  .block_recentactivities .card-deck {
+    display: flex;
+    flex-flow: row wrap;
+    margin-right: -0.25rem;
+    margin-left: -0.25rem;
+  }
+  .block_recentactivities .activity-card {
+    display: flex;
+    flex-direction: column;
+    margin-right: 0.25rem;
+    margin-left: 0.25rem;
+  }
+  .block_recentactivities .activity-card-footer {
+    padding: .75rem 1.25rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+  }
+}
+@media (min-width: 1200px) {
+  .block_recentactivities .activity-card {
+    flex-basis: calc(33% - 0.5rem);
+  }
+}
 /**
  * Moodle forms HTML isn't changeable via renderers (yet?) so this
  * .less file imports styles from the bootstrap @variables file and

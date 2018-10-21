@@ -424,3 +424,57 @@
         }
     }
 }
+
+.block_recentactivities {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+    .empty-placeholder-image-lg {
+        height: 125px;
+    }
+    .activity-card {
+        .border-radius(@baseBorderRadius);
+        margin-bottom: 0.5rem;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: ~"calc(50% - 0.6rem)";
+    }
+    .activity-info-container {
+        flex: 1 1 auto;
+        padding: 0.8rem;
+    }
+    .activity-card-title {
+        margin-bottom: 0;
+    }
+    .text-truncate {
+        white-space: unset;
+    }
+
+    @media (min-width: 576px) {
+        .card-deck {
+            display: flex;
+            flex-flow: row wrap;
+            margin-right: -.25rem;
+            margin-left: -.25rem;
+        }
+        .activity-card {
+            display: flex;
+            flex-direction: column;
+            margin-right: 0.25rem;
+            margin-left: 0.25rem;
+        }
+        .activity-card-footer {
+            padding: .75rem 1.25rem;
+            background-color: rgba(0, 0, 0, .03);
+            border-top: 1px solid rgba(0, 0, 0, .125);
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .activity-card {
+            flex-basis: ~"calc(33% - 0.5rem)";
+        }
+    }
+}

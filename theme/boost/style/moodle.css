@@ -11141,6 +11141,9 @@ div.editor_atto_toolbar button .icon {
   margin-bottom: 0.5rem;
   flex-basis: 100%; }
 
+.block_myoverview .activity-card-deck {
+  flex-flow: row wrap; }
+
 .block_myoverview .course-info-container {
   padding: 0.8rem; }
 
@@ -11234,6 +11237,52 @@ body.drawer-open-left #region-main.has-blocks .block_myoverview .course-card {
   .block_navigation .block_tree p.hasicon .icon,
   .block_settings .block_tree p.hasicon .icon {
     margin-right: 2px; }
+
+.block_recentactivities .empty-placeholder-image-lg {
+  height: 125px; }
+
+.block_recentactivities .activity-card {
+  margin-bottom: 0.5rem;
+  flex-basis: 100%; }
+
+.block_recentactivities .activity-card-title {
+  margin-bottom: 0; }
+
+.block_recentactivities .activity-info-container {
+  padding: 0.8rem; }
+
+.block_recentactivities a,
+.block_recentactivities a:hover {
+  text-decoration: none; }
+
+#region-main .block_recentactivities .activity-card {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: calc(50% - 0.5rem); }
+
+#region-main .block_recentactivities .activity-card-card {
+  flex-basis: calc(50% - 0.5rem); }
+
+@media (min-width: 768px) {
+  #region-main .block_recentactivities .activity-card {
+    flex-basis: calc(33.33% - 0.5rem); } }
+
+@media (min-width: 992px) {
+  #region-main.has-blocks .block_recentactivities .course-card {
+    flex-basis: calc(33.33% - 0.5rem); } }
+
+body.drawer-open-left #region-main.has-blocks .block_recentactivities .activity-card {
+  flex-basis: calc(50% - 0.5rem); }
+
+@media (min-width: 992px) {
+  body.drawer-open-left #region-main.has-blocks .block_recentactivities .activity-card {
+    flex-basis: calc(33.33% - 0.5rem); } }
+
+#block-region-side-pre .block_recentactivities .activity-card {
+  flex-basis: calc(100% - 0.5rem); }
+
+#block-region-side-pre .block_recentactivities .block-controls + .content {
+  margin-top: 3rem !important; }
 
 .navbar {
   max-height: 50px; }
