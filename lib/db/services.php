@@ -1358,6 +1358,14 @@ $functions = array(
             . 'moodle/site:accessallgroups',
         'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
+    'core_user_get_recent_activities' => array(
+            'classname' => 'core_user_external',
+            'methodname' => 'get_recent_activities',
+            'classpath' => 'user/externallib.php',
+            'description' => 'List of activities a user has accessed most recently.',
+            'type' => 'read',
+            'ajax' => true
+    ),
     'core_user_get_users' => array(
         'classname' => 'core_user_external',
         'methodname' => 'get_users',

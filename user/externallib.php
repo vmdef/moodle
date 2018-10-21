@@ -26,6 +26,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/externallib.php");
+require_once("lib.php");
+
+use core_user\external\user_recent_activity_exporter;
 
 /**
  * User external functions
@@ -1978,5 +1981,87 @@ class core_user_external extends external_api {
                 'warnings' => new external_warnings()
             )
         );
+    }
+
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     * @since Moodle 3.6
+     */
+    public static function get_recent_activities_parameters() {
+        return new external_function_parameters(
+            array(
+                'userid' => new external_value(PARAM_INT, 'id of the user, default to current user'),
+                'limit' => new external_value(PARAM_INT, 'result set limit', VALUE_DEFAULT, 0),
+                'offset' => new external_value(PARAM_INT, 'Result set offset', VALUE_DEFAULT, 0),
+                'sort' => new external_value(PARAM_TEXT, 'Sort string', VALUE_DEFAULT, null),
+                'available' => new external_value(PARAM_BOOL, 'Filter not available activities', VALUE_DEFAULT, false)
+            )
+        );
+    }
+
+    /**
+     * Get last accessed courses adding additional course information like images.
+     *
+     * @param int $userid User id from which the courses will be obtained
+     * @param int $limit Restrict result set to this amount
+     * @param int $offset Skip this number of records from the start of the result set
+     * @param string|null $sort SQL string for sorting
+     * @param bool $available Filter not available activities
+     * @return array List of activities
+     * @throws  invalid_parameter_exception
+     */
+    public static function get_recent_activities(
+            int $userid = null,
+            int $limit = 0,
+            int $offset = 0,
+            string $sort = null,
+            bool $available = false
+    ) {
+        global $USER, $PAGE;
+
+        if (empty($userid)) {
+            $userid = $USER->id;
+        }
+
+        $params = self::validate_parameters(self::get_recent_activities_parameters(),
+            array(
+                'userid' => $userid,
+                'limit' => $limit,
+                'offset' => $offset,
+                'sort' => $sort,
+                'available' => $available
+            )
+        );
+
+        $userid = $params['userid'];
+        $limit = $params['limit'];
+        $offset = $params['offset'];
+        $sort = $params['sort'];
+        $available = $params['available'];
+
+        self::validate_context(context_user::instance($userid));
+
+        $activities = user_get_recent_activities($userid, $limit, $offset, $sort, $available);
+
+        $renderer = $PAGE->get_renderer('core');
+        $recentactivities = array_map(function($activity) use ($renderer) {
+            $context = context_module::instance($activity->cmid);
+            $exporter = new user_recent_activity_exporter($activity, ['context' => $context]);
+            return $exporter->export($renderer);
+        }, $activities);
+
+        return $recentactivities;
+    }
+
+    /**
+     * Returns description of method result value
+     *
+     * @return external_description
+     * @since Moodle 3.6
+     */
+    public static function get_recent_activities_returns() {
+        return new external_multiple_structure(user_recent_activity_exporter::get_read_structure(), 'Activities');
     }
 }

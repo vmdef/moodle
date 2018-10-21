@@ -1344,4 +1344,69 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
         // Try to retrieve other user private files info.
         core_user_external::get_private_files_info($user2->id);
     }
+
+    /**
+     * Test the get_recent_activities function.
+     */
+    public function test_get_recent_activities() {
+        global $USER;
+
+        $this->resetAfterTest();
+        $generator = $this->getDataGenerator();
+
+        // Add courses.
+        $courses = array();
+        for ($i = 1; $i < 4; $i++) {
+            $courses[]  = $generator->create_course();
+        };
+
+        // Add users.
+        $student = $generator->create_user();
+        $teacher = $generator->create_user();
+
+        // Enrol users and add activities to courses.
+        foreach ($courses as $course) {
+            $generator->enrol_user($student->id, $course->id, 'student');
+            $forum[] = $this->getDataGenerator()->create_module('forum', array('course' => $course));
+            $glossary[] = $this->getDataGenerator()->create_module('glossary', array('course' => $course));
+            $chat[] = $this->getDataGenerator()->create_module('chat', array('course' => $course));
+        }
+        $generator->enrol_user($teacher->id, $courses[0]->id, 'teacher');
+
+        $this->setUser($student);
+
+        // No recent activities.
+        $result = core_user_external::get_recent_activities();
+        $this->assertCount(0, $result);
+
+        // Student access all forums.
+        foreach ($forum as $module) {
+            $event = \mod_forum\event\course_module_viewed::create(array('context' => context_module::instance($module->cmid),
+                    'objectid' => $module->id));
+            $event->trigger();
+            $this->waitForSecond();
+        }
+
+        // Test that only access to forums are returned.
+        $result = core_user_external::get_recent_activities();
+        $this->assertCount( count($forum), $result);
+
+        // Student access all assignments.
+        foreach ($chat as $module) {
+            $event = \mod_chat\event\course_module_viewed::create(array('context' => context_module::instance($module->cmid),
+                    'objectid' => $module->id));
+            $event->trigger();
+            $this->waitForSecond();
+        }
+
+        // Test that results are sorted by timeaccess DESC (default).
+        $result = core_user_external::get_recent_activities();
+        $this->assertCount((count($forum) + count($chat)), $result);
+        foreach ($result as $key => $record) {
+            if ($key == 0) {
+                continue;
+            }
+            $this->assertTrue($record->timeaccess < $result[$key - 1]->timeaccess);
+        }
+    }
 }

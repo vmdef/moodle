@@ -1572,3 +1572,79 @@ function core_user_inplace_editable($itemtype, $itemid, $newvalue) {
         return \core_user\output\user_roles_editable::update($itemid, $newvalue);
     }
 }
+
+/**
+ * Returns a list of the most recently courses accessed by a user
+ *
+ * @param int $userid User id from which the courses will be obtained
+ * @param int $limit Restrict result set to this amount
+ * @param int $offset Skip this number of records from the start of the result set
+ * @param string|null $sort SQL string for sorting
+ * @param int available Filter not available activities for the user who calls the function
+ * @return array
+ */
+function user_get_recent_activities(int $userid = null, int $limit = 0, int $offset = 0, string $sort = null,
+        bool $available = false) {
+    global $USER, $DB;
+
+    if (empty($userid)) {
+        $userid = $USER->id;
+    }
+
+    $courses = array();
+    $recentactivities = array();
+
+    // Determine sort sql clause.
+    $sort = trim($sort);
+    if (empty($sort)) {
+        $sort = 'timeaccess DESC';
+    } else {
+        $rawsorts = explode(',', $sort);
+        $sorts = array();
+        foreach ($rawsorts as $rawsort) {
+            $rawsort = trim($rawsort);
+            $sorts[] = trim($rawsort);
+        }
+        $sort = implode(',', $sorts);
+    }
+
+    $paramsql = array('userid' => $userid);
+    $records = $DB->get_records('recent_activities', $paramsql, $sort);
+    $order = 0;
+
+    // Get array of activities by course. Use $order index to keep sql sorted results.
+    foreach ($records as $record) {
+        $courses[$record->courseid][$order++] = $record;
+    }
+
+    // Group by courses to reduce get_fast_modinfo requests.
+    foreach ($courses as $key => $activities) {
+        $modinfo = get_fast_modinfo($key);
+        foreach ($activities as $key => $activity) {
+            $activity->available = $modinfo->cms[$activity->cmid]->uservisible;
+            $activity->modname = $modinfo->cms[$activity->cmid]->modname;
+            $activity->name = $modinfo->cms[$activity->cmid]->name;
+            $activity->coursename = $modinfo->get_course()->fullname;
+            $recentactivities[$key] = $activity;
+        }
+    }
+
+    // Apply filters to determine if the activity is available for the user requesting the data.
+    if ($available) {
+        $recentactivities = array_filter($recentactivities, function ($activity) {
+            return $activity->available;
+        });
+    }
+
+    ksort($recentactivities);
+
+    // Apply limit and offset.
+    if ($offset || $limit) {
+        if (!$limit) {
+            $limit = count($recentactivities);
+        }
+        $recentactivities = array_slice($recentactivities, $offset, $limit);
+    }
+
+    return $recentactivities;
+}
