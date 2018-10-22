@@ -15,25 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class containing data for my overview block.
+ * Class containing data for recentcourses block.
  *
- * @package    block_myoverview
- * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
+ * @package    block_recentcourses
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace block_myoverview\output;
+namespace block_recentcourses\output;
 defined('MOODLE_INTERNAL') || die();
 
 use renderable;
 use renderer_base;
 use templatable;
 
-require_once($CFG->libdir . '/completionlib.php');
-
 /**
- * Class containing data for my overview block.
+ * Class containing data for recentcourses block.
  *
- * @copyright  2018 Bas Brands <bas@moodle.com>
+ * @package    block_recentcourses
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class main implements renderable, templatable {
@@ -41,13 +40,15 @@ class main implements renderable, templatable {
      * Export this data so it can be used as the context for a mustache template.
      *
      * @param \renderer_base $output
-     * @return stdClass
+     * @return stdClass|array
      */
     public function export_for_template(renderer_base $output) {
+        global $USER;
 
-        $nocoursesurl = $output->image_url('courses', 'block_myoverview')->out();
+        $nocoursesurl = $output->image_url('courses', 'block_recentcourses')->out();
 
-        return (object) [
+        return [
+            'userid' => $USER->id,
             'nocoursesimgurl' => $nocoursesurl
         ];
     }

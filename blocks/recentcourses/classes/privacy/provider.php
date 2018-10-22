@@ -15,40 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class containing data for my overview block.
+ * Privacy Subsystem implementation for block_recentcourses.
  *
- * @package    block_myoverview
- * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
+ * @package    block_recentcourses
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace block_myoverview\output;
+
+namespace block_recentcourses\privacy;
+
 defined('MOODLE_INTERNAL') || die();
 
-use renderable;
-use renderer_base;
-use templatable;
-
-require_once($CFG->libdir . '/completionlib.php');
-
 /**
- * Class containing data for my overview block.
+ * Privacy Subsystem for block_recentcourses.
  *
- * @copyright  2018 Bas Brands <bas@moodle.com>
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class main implements renderable, templatable {
+class provider implements \core_privacy\local\metadata\null_provider {
+
     /**
-     * Export this data so it can be used as the context for a mustache template.
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
      *
-     * @param \renderer_base $output
-     * @return stdClass
+     * @return  string
      */
-    public function export_for_template(renderer_base $output) {
-
-        $nocoursesurl = $output->image_url('courses', 'block_myoverview')->out();
-
-        return (object) [
-            'nocoursesimgurl' => $nocoursesurl
-        ];
+    public static function get_reason() : string {
+        return 'privacy:metadata';
     }
 }

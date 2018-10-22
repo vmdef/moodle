@@ -15,40 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class containing data for my overview block.
+ * recentcourses block renderer
  *
- * @package    block_myoverview
- * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
+ * @package    block_recentcourses
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace block_myoverview\output;
-defined('MOODLE_INTERNAL') || die();
+namespace block_recentcourses\output;
+defined('MOODLE_INTERNAL') || die;
 
-use renderable;
-use renderer_base;
-use templatable;
-
-require_once($CFG->libdir . '/completionlib.php');
+use plugin_renderer_base;
 
 /**
- * Class containing data for my overview block.
+ * recentcourses block renderer
  *
- * @copyright  2018 Bas Brands <bas@moodle.com>
+ * @package    block_recentcourses
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class main implements renderable, templatable {
+class renderer extends plugin_renderer_base {
+
     /**
-     * Export this data so it can be used as the context for a mustache template.
+     * Return the main content for the recentcourses block.
      *
-     * @param \renderer_base $output
-     * @return stdClass
+     * @param recentcourses $main The main renderable
+     * @return string HTML string
      */
-    public function export_for_template(renderer_base $output) {
-
-        $nocoursesurl = $output->image_url('courses', 'block_myoverview')->out();
-
-        return (object) [
-            'nocoursesimgurl' => $nocoursesurl
-        ];
+    public function render_recentcourses(recentcourses $main) {
+        return $this->render_from_template('block_recentcourses/main', $main->export_for_template($this));
     }
 }
