@@ -4448,3 +4448,67 @@ function can_download_from_backup_filearea($filearea, \context $context, stdClas
     }
     return $candownload;
 }
+
+/**
+ * Returns a list of the most recently courses accessed by a user
+ *
+ * @param int $userid User id from which the courses will be obtained
+ * @param int $limit Restrict result set to this amount
+ * @param int $offset Skip this number of records from the start of the result set
+ * @param string|null $sort SQL string for sorting
+ * @return array
+ */
+function course_get_recent_courses(
+        int $userid = null,
+        int $limit = 0,
+        int $offset,
+        string $sort = null
+) {
+
+    global $CFG, $USER, $DB;
+
+    if (empty($userid)) {
+        $userid = $USER->id;
+    }
+
+    $basefields = array('id', 'category',
+            'shortname', 'fullname', 'userid', 'timeaccess');
+
+    $sort = trim($sort);
+    if (empty($sort)) {
+        $sort = 'timeaccess DESC';
+    } else {
+        $rawsorts = explode(',', $sort);
+        $sorts = array();
+        foreach ($rawsorts as $rawsort) {
+            $rawsort = trim($rawsort);
+            $sorts[] = trim($rawsort);
+        }
+        $sort = implode(',', $sorts);
+    }
+
+    $orderby = "ORDER BY $sort";
+
+    $coursefields = 'c.' .join(',', $basefields);
+
+    $sql = "SELECT $coursefields
+              FROM {course} c
+              JOIN {user_lastaccess} ul ON ul.courseid = c.id
+             WHERE ul.userid = :userid
+          $orderby";
+    $params = ['userid' => $userid];
+
+    $recentcourses = $DB->get_records_sql($sql, $params, $offset, $limit);
+
+    // Filter courses if last access field is hidden.
+    $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
+
+    if ($userid != $USER->id && isset($hiddenfields['lastaccess'])) {
+        $recentcourses = array_filter($recentcourses, function($course) {
+            $context = context_course::instance($course->id, IGNORE_MISSING);
+            return has_capability('moodle/course:viewhiddenuserfields', $context);
+        });
+    }
+
+    return $recentcourses;
+}

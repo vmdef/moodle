@@ -2675,4 +2675,101 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
         $this->assertEquals($expectedcourses, $actual);
         $this->assertEquals($expectednextoffset, $result['nextoffset']);
     }
+
+    /**
+     * Test the get_recent_courses function.
+     */
+    public function test_get_recent_courses() {
+        global $USER;
+
+        $this->resetAfterTest();
+        $generator = $this->getDataGenerator();
+
+        set_config('hiddenuserfields', 'lastaccess');
+
+        $courses = array();
+        for ($i = 1; $i < 12; $i++) {
+            $courses[]  = $generator->create_course();
+        };
+
+        $student = $generator->create_user();
+        $teacher = $generator->create_user();
+
+        foreach ($courses as $course) {
+            $generator->enrol_user($student->id, $course->id, 'student');
+        }
+
+        $generator->enrol_user($teacher->id, $courses[0]->id, 'teacher');
+
+        $this->setUser($student);
+
+        $result = core_course_external::get_recent_courses(
+                $USER->id
+        );
+
+        // No course accessed.
+        $this->assertCount(0, $result);
+
+        foreach ($courses as $course) {
+            core_course_external::view_course($course->id);
+        }
+
+        // Every course accessed.
+        $result = core_course_external::get_recent_courses(
+                $USER->id
+        );
+        $this->assertCount( 11, $result);
+
+        // Every course accessed, result limited to 10 courses.
+        $result = core_course_external::get_recent_courses(
+                $USER->id, 10
+        );
+        $this->assertCount(10, $result);
+
+        $guestcourse = $generator->create_course(
+                (object)array('shortname' => 'guestcourse',
+                'enrol_guest_status_0' => ENROL_INSTANCE_ENABLED,
+                'enrol_guest_password_0' => ''));
+        core_course_external::view_course($guestcourse->id);
+
+        // Every course accessed, even the not enrolled one.
+        $result = core_course_external::get_recent_courses(
+                $USER->id
+        );
+        $this->assertCount(12, $result);
+
+        // Offset 5, return 7 out of 12.
+        $result = core_course_external::get_recent_courses(
+                $USER->id, 0, 5
+        );
+        $this->assertCount(7, $result);
+
+        // Offset 5 and limit 3, return 3 out of 12.
+        $result = core_course_external::get_recent_courses(
+                $USER->id, 3, 5
+        );
+        $this->assertCount(3, $result);
+
+        // Sorted by course id ASC.
+        $result = core_course_external::get_recent_courses(
+                $USER->id, 0, 0, 'id ASC'
+        );
+        $this->assertEquals($courses[0]->id, array_shift($result)->id);
+
+        // Sorted by course id DESC.
+        $result = core_course_external::get_recent_courses(
+                $USER->id, 0, 0, 'id DESC'
+        );
+        $this->assertEquals($guestcourse->id, array_shift($result)->id);
+
+        // If last access is hidden, only get the courses where has viewhiddenuserfields capability.
+        $this->setUser($teacher);
+
+        // Sorted by course id DESC.
+        $result = core_course_external::get_recent_courses(
+                $student->id
+        );
+        $this->assertCount(1, $result);
+        $this->assertEquals($courses[0]->id, array_shift($result)->id);
+    }
 }
