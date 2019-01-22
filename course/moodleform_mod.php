@@ -409,8 +409,8 @@ abstract class moodleform_mod extends moodleform {
         if ($gradepassvalid && isset($data['gradepass']) && (!empty($data['grade']) || !empty($data['scale']))) {
             $scale = !empty($data['grade']) ? $data['grade'] : $data['scale'];
             if ($scale < 0) {
-                $scalevalues = $DB->get_record('scale', array('id' => -$scale));
-                $grade = count(explode(',', $scalevalues->scale));
+                $scalevalues = new grade_scale(array('id' => -$scale, true));
+                $grade = $scalevalues->get_items();
             } else {
                 $grade = $scale;
             }
