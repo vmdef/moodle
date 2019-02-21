@@ -2495,7 +2495,13 @@ class grade_item extends grade_object {
      */
     public function get_context() {
         if ($this->itemtype == 'mod') {
-            $cm = get_fast_modinfo($this->courseid)->instances[$this->itemmodule][$this->iteminstance];
+            $modinfo = get_fast_modinfo($this->courseid);
+            // Sometimes the course module cache is out of date and needs to be rebuilt (e.g. during import).
+            if (!isset($modinfo->instances[$this->itemmodule][$this->iteminstance])) {
+                rebuild_course_cache($this->courseid, true);
+                $modinfo = get_fast_modinfo($this->courseid);
+            }
+            $cm = $modinfo->instances[$this->itemmodule][$this->iteminstance];
             $context = \context_module::instance($cm->id);
         } else {
             $context = \context_course::instance($this->courseid);
