@@ -2239,9 +2239,12 @@ class grade_category extends grade_object {
      *
      * If no grade_item exists yet, creates one.
      *
+     * @throws moodle_exception If the grade_item category doesn´t exist
      * @return grade_item
      */
     public function get_grade_item() {
+        global $DB;
+
         if (empty($this->id)) {
             debugging("Attempt to obtain a grade_category's associated grade_item without the category's ID being set.");
             return false;
@@ -2258,6 +2261,10 @@ class grade_category extends grade_object {
             // create a new one
             $grade_item = new grade_item($params, false);
             $grade_item->gradetype = GRADE_TYPE_VALUE;
+            // The category could be deleted before reaching this point, so we can't use the cache.
+            if (!$grade_category = $DB->record_exists('grade_categories', array('id' => $this->id))) {
+                print_error('invalidcategory');
+            }
             $grade_item->insert('system');
 
         } else if (count($grade_items) == 1) {
