@@ -2491,7 +2491,7 @@ class grade_item extends grade_object {
     /**
      * Helper function to get the accurate context for this grade column.
      *
-     * @return context
+     * @return null|context
      */
     public function get_context() {
         if ($this->itemtype == 'mod') {
@@ -2501,7 +2501,11 @@ class grade_item extends grade_object {
                 rebuild_course_cache($this->courseid, true);
                 $modinfo = get_fast_modinfo($this->courseid);
             }
-            $cm = $modinfo->instances[$this->itemmodule][$this->iteminstance];
+            try {
+                $cm = $modinfo->instances[$this->itemmodule][$this->iteminstance];
+            } catch (dml_exception $ex) {
+                return null;
+            }
             $context = \context_module::instance($cm->id);
         } else {
             $context = \context_course::instance($this->courseid);
