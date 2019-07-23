@@ -2997,9 +2997,18 @@ abstract class enrol_plugin {
         $a->user     = fullname($user, true);
         $a->timeend  = userdate($ue->timeend, '', $user->timezone);
         $a->enroller = fullname($enroller, has_capability('moodle/site:viewfullnames', $context, $user));
+        if (isset($ue->inactivetime)) {
+            $a->inactivetime = $ue->inactivetime;
+        }
 
         $subject = get_string('expirymessageenrolledsubject', 'enrol_'.$name, $a);
-        $body = get_string('expirymessageenrolledbody', 'enrol_'.$name, $a);
+        if (isset($ue->message)) {
+            $bodystr = $ue->message;
+        } else {
+            $bodystr = 'expirymessageenrolledbody';
+        }
+
+        $body = get_string($bodystr, 'enrol_' . $name, $a);
 
         $message = new \core\message\message();
         $message->courseid          = $ue->courseid;

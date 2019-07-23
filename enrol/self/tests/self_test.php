@@ -63,6 +63,9 @@ class enrol_self_testcase extends advanced_testcase {
 
         $trace = new null_progress_trace();
 
+        $selfplugin->set_config('expirynotifylast', $now - 60*60*24);
+        $selfplugin->set_config('expirynotifyhour', 0);
+
         // Prepare some data.
 
         $studentrole = $DB->get_record('role', array('shortname'=>'student'));
@@ -79,6 +82,8 @@ class enrol_self_testcase extends advanced_testcase {
         $user3 = $this->getDataGenerator()->create_user($record);
         $record['lastaccess'] = $now-10;
         $user4 = $this->getDataGenerator()->create_user($record);
+        $record['lastaccess'] = $now - 11;
+
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
@@ -96,6 +101,8 @@ class enrol_self_testcase extends advanced_testcase {
         unset($id);
 
         $this->assertEquals($studentrole->id, $instance1->roleid);
+        $instance1->expirynotify = 1;
+        $instance1->expirytreshold = 60*60*24*4;
         $instance1->customint2 = 60*60*24*14;
         $DB->update_record('enrol', $instance1);
         $selfplugin->enrol_user($instance1, $user1->id, $studentrole->id);
@@ -130,10 +137,13 @@ class enrol_self_testcase extends advanced_testcase {
         $this->assertEquals(7, $DB->count_records('role_assignments', array('roleid'=>$studentrole->id)));
         $this->assertEquals(2, $DB->count_records('role_assignments', array('roleid'=>$teacherrole->id)));
 
+        $sink = $this->redirectMessages();
         // Execute sync - this is the same thing used from cron.
 
         $selfplugin->sync($trace, $course2->id);
         $this->assertEquals(10, $DB->count_records('user_enrolments'));
+
+        $this->assertEquals(0, $sink->count());
 
         $this->assertTrue($DB->record_exists('user_enrolments', array('enrolid'=>$instance1->id, 'userid'=>$user1->id)));
         $this->assertTrue($DB->record_exists('user_enrolments', array('enrolid'=>$instance1->id, 'userid'=>$user2->id)));
@@ -149,6 +159,17 @@ class enrol_self_testcase extends advanced_testcase {
         $this->assertEquals(6, $DB->count_records('role_assignments'));
         $this->assertEquals(4, $DB->count_records('role_assignments', array('roleid'=>$studentrole->id)));
         $this->assertEquals(2, $DB->count_records('role_assignments', array('roleid'=>$teacherrole->id)));
+
+        // Testing notifications
+        $instance2->customint2 = 60*60*24*7;
+        $instance2->expirynotify = 1;
+        $instance2->expirythreshold = 60*60*24*4;
+        $DB->update_record('enrol', $instance2);
+        $selfplugin->enrol_user($instance2, $user4->id, $studentrole->id);
+        $DB->insert_record('user_lastaccess', array('userid'=>$user4->id, 'courseid'=>$course2->id,
+            'timeaccess'=>$now-60*60*24*4));
+        $selfplugin->sync($trace, $course2->id);
+        $this->assertEquals(1, $sink->count());
     }
 
     public function test_expired() {

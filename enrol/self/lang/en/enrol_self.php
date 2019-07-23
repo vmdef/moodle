@@ -65,6 +65,11 @@ $string['expirymessageenrolledbody'] = 'Dear {$a->user},
 This is a notification that your enrolment in the course \'{$a->course}\' is due to expire on {$a->timeend}.
 
 If you need help, please contact {$a->enroller}.';
+$string['expiryunactivemessageenrolledbody'] = 'Hey {$a->user}, are you still there?
+
+You\'ve not visited the course \'{$a->course}\' in {$a->inactivetime} days, so we\'re going to automatically unenrol you from the course and stop sending you emails.
+
+However, we\'d love to see you again - come and join in!';
 $string['expirynotifyall'] = 'Teacher and enrolled user';
 $string['expirynotifyenroller'] = 'Teacher only';
 $string['groupkey'] = 'Use group enrolment keys';

@@ -415,6 +415,9 @@ class enrol_self_plugin extends enrol_plugin {
     public function sync(progress_trace $trace, $courseid = null) {
         global $DB;
 
+        $users = array();
+        $ueinstances = array();
+
         if (!enrol_is_enabled('self')) {
             $trace->finished();
             return 2;
@@ -426,7 +429,9 @@ class enrol_self_plugin extends enrol_plugin {
 
         $trace->output('Verifying self-enrolments...');
 
-        $params = array('now'=>time(), 'useractive'=>ENROL_USER_ACTIVE, 'courselevel'=>CONTEXT_COURSE);
+        $now = time();
+
+        $params = array('now'=>$now, 'useractive'=>ENROL_USER_ACTIVE, 'courselevel'=>CONTEXT_COURSE);
         $coursesql = "";
         if ($courseid) {
             $coursesql = "AND e.courseid = :courseid";
@@ -437,36 +442,86 @@ class enrol_self_plugin extends enrol_plugin {
         //       and that user accessed course at least once too (=== user_lastaccess record exists).
 
         // First deal with users that did not log in for a really long time - they do not have user_lastaccess records.
-        $sql = "SELECT e.*, ue.userid
+        $sql = "SELECT e.*, ue.userid, u.lastaccess, ue.timeend, ue.id ueid, c.fullname
                   FROM {user_enrolments} ue
                   JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'self' AND e.customint2 > 0)
                   JOIN {user} u ON u.id = ue.userid
-                 WHERE :now - u.lastaccess > e.customint2
+                  JOIN {course} c ON (c.id = e.courseid)
+                 WHERE :now - u.lastaccess > e.customint2 - e.expirythreshold
                        $coursesql";
         $rs = $DB->get_recordset_sql($sql, $params);
         foreach ($rs as $instance) {
             $userid = $instance->userid;
             unset($instance->userid);
-            $this->unenrol_user($instance, $userid);
-            $days = $instance->customint2 / 60*60*24;
-            $trace->output("unenrolling user $userid from course $instance->courseid as they have did not log in for at least $days days", 1);
+            if ($now - $instance->lastaccess >= $instance->customint2) {
+                $this->unenrol_user($instance, $userid);
+                $days = $instance->customint2 / (60 * 60 * 24);
+                $trace->output("unenrolling user $userid from course $instance->courseid as they have did not log in for at least $days days",
+                    1);
+            } elseif ($instance->expirynotify) {
+                if (isset($ueinstances[$instance->ueid])) {
+                    continue;
+                } else {
+                    $ue = new stdClass();
+                    $ue->enrolid = $instance->id;
+                    $ue->courseid = $instance->courseid;
+                    $ue->timeend = $instance->timeend;
+                    $ue->userid = $instance->userid;
+                    $ue->fullname = $instance->fullname;
+                    $ue->message = 'expiryunactivemessageenrolledbody';
+                    $ue->inactivetime = floor(($now - $instance->lastaccess) / DAYSECS);
+                    $ueinstances[$instance->ueid] = 1;
+                }
+                if (isset($users[$instance->userid])) {
+                    $user = $users[$userid];
+                } else {
+                    $user = core_user::get_user($instance->userid);
+                    $users[$ue->userid] = $user;
+                }
+                $this->notify_expiry_enrolled($user, $ue, $trace);
+            }
         }
         $rs->close();
 
         // Now unenrol from course user did not visit for a long time.
-        $sql = "SELECT e.*, ue.userid
+        $sql = "SELECT e.*, ue.userid, ul.timeaccess, ue.timeend, ue.id ueid, c.fullname
                   FROM {user_enrolments} ue
                   JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'self' AND e.customint2 > 0)
                   JOIN {user_lastaccess} ul ON (ul.userid = ue.userid AND ul.courseid = e.courseid)
-                 WHERE :now - ul.timeaccess > e.customint2
+                  JOIN {course} c ON (c.id = e.courseid)
+                 WHERE (:now - ul.timeaccess) > (e.customint2 - e.expirythreshold)
                        $coursesql";
         $rs = $DB->get_recordset_sql($sql, $params);
         foreach ($rs as $instance) {
-            $userid = $instance->userid;
-            unset($instance->userid);
-            $this->unenrol_user($instance, $userid);
-                $days = $instance->customint2 / 60*60*24;
-            $trace->output("unenrolling user $userid from course $instance->courseid as they have did not access course for at least $days days", 1);
+            if ($now - $instance->timeaccess >= $instance->customint2) {
+                $userid = $instance->userid;
+                unset($instance->userid);
+                $this->unenrol_user($instance, $userid);
+                $days = $instance->customint2 / (60 * 60 * 24);
+                $trace->output("unenrolling user $userid from course $instance->courseid as they have did not access course for at least $days days",
+                    1);
+            } elseif ($instance->expirynotify) {
+                if (isset($ueinstances[$instance->ueid])) {
+                    continue;
+                } else {
+                    $ue = new stdClass();
+                    $ue->enrolid = $instance->id;
+                    $ue->courseid = $instance->courseid;
+                    $ue->timeend = $instance->timeend;
+                    $ue->userid = $instance->userid;
+                    $ue->fullname = $instance->fullname;
+                    $ue->message = 'expiryunactivemessageenrolledbody';
+                    $ue->inactivetime = floor(($now - $instance->timeaccess) / DAYSECS);
+                    $ueinstances[$instance->ueid] = 1;
+                }
+                if (isset($users[$instance->userid])) {
+                    $user = $users[$userid];
+                } else {
+                    $user = core_user::get_user($instance->userid);
+                    $users[$ue->userid] = $user;
+                }
+                $this->notify_expiry_enrolled($user, $ue, $trace);
+            }
         }
         $rs->close();
 
@@ -1037,6 +1092,14 @@ class enrol_self_plugin extends enrol_plugin {
         }
 
         return $contact;
+    }
+
+    /**
+     * @param progress_trace $trace (accepts bool for backwards compatibility only)
+     */
+    public function send_expiry_notifications($trace) {
+
+        return parent::send_expiry_notifications($trace); // TODO: Change the autogenerated stub
     }
 }
 
