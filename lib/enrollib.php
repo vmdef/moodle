@@ -2933,15 +2933,25 @@ abstract class enrol_plugin {
 
         $trace->output('Processing '.$name.' enrolment expiration notifications...');
 
-        // Notify users responsible for enrolment once every day.
-        $sql = "SELECT ue.*, e.expirynotify, e.notifyall, e.expirythreshold, e.courseid, c.fullname
+        /*
+         * Notify users responsible for enrolment once every day.
+         * Users may be notified by the expiration time of enrollment or unenrollment due to inactivity. The latter is checked in
+         * the last condition of the where clause:
+         * days of inactivity + number of days in advance to send the notification > days of inactivity allowed before unenrollment
+         */
+        $sql = "SELECT ue.*, e.expirynotify, e.notifyall, e.expirythreshold, e.courseid, c.fullname, e.customint2,
+                       COALESCE(ul.timeaccess, 0) AS timeaccess, ue.timestart
                   FROM {user_enrolments} ue
-                  JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = :name AND e.expirynotify > 0 AND e.status = :enabled)
+                  JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = :name AND e.expirynotify > 0  AND e.status = :enabled)
                   JOIN {course} c ON (c.id = e.courseid)
                   JOIN {user} u ON (u.id = ue.userid AND u.deleted = 0 AND u.suspended = 0)
-                 WHERE ue.status = :active AND ue.timeend > 0 AND ue.timeend > :now1 AND ue.timeend < (e.expirythreshold + :now2)
+                  LEFT JOIN {user_lastaccess} ul ON (ul.userid = u.id AND ul.courseid = c.id)
+                 WHERE ue.status = :active
+                       AND ((ue.timeend > 0 AND ue.timeend > :now1 AND ue.timeend < (e.expirythreshold + :now2))
+                            OR (e.customint2 > 0 AND (:now3 - COALESCE(ul.timeaccess, 0) + e.expirythreshold > e.customint2)))
               ORDER BY ue.enrolid ASC, u.lastname ASC, u.firstname ASC, u.id ASC";
-        $params = array('enabled'=>ENROL_INSTANCE_ENABLED, 'active'=>ENROL_USER_ACTIVE, 'now1'=>$timenow, 'now2'=>$timenow, 'name'=>$name);
+        $params = array('enabled' => ENROL_INSTANCE_ENABLED, 'active' => ENROL_USER_ACTIVE, 'now1' => $timenow, 'now2' => $timenow,
+            'name' => $name, 'now3' => $timenow);
 
         $rs = $DB->get_recordset_sql($sql, $params);
 
@@ -2949,30 +2959,50 @@ abstract class enrol_plugin {
         $users = array();
 
         foreach($rs as $ue) {
-            if ($lastenrollid and $lastenrollid != $ue->enrolid) {
-                $this->notify_expiry_enroller($lastenrollid, $users, $trace);
-                $users = array();
-            }
-            $lastenrollid = $ue->enrolid;
+            $expirycond = ($ue->timeend > 0) && ($ue->timeend > $timenow) && ($ue->timeend < ($ue->expirythreshold + $timenow));
+            $inactivitycond = ($ue->customint2 > 0) && (($timenow - $ue->timeaccess + $ue->expirythreshold) > $ue->customint2);
 
-            $enroller = $this->get_enroller($ue->enrolid);
-            $context = context_course::instance($ue->courseid);
+            $user = $DB->get_record('user', array('id' => $ue->userid));
 
-            $user = $DB->get_record('user', array('id'=>$ue->userid));
+            if ($expirycond) {
+                if ($lastenrollid and $lastenrollid != $ue->enrolid) {
+                    $this->notify_expiry_enroller($lastenrollid, $users, $trace);
+                    $users = array();
+                }
+                $lastenrollid = $ue->enrolid;
 
-            $users[] = array('fullname'=>fullname($user, has_capability('moodle/site:viewfullnames', $context, $enroller)), 'timeend'=>$ue->timeend);
+                $enroller = $this->get_enroller($ue->enrolid);
+                $context = context_course::instance($ue->courseid);
 
-            if (!$ue->notifyall) {
-                continue;
-            }
-
-            if ($ue->timeend - $ue->expirythreshold + 86400 < $timenow) {
-                // Notify enrolled users only once at the start of the threshold.
-                $trace->output("user $ue->userid was already notified that enrolment in course $ue->courseid expires on ".userdate($ue->timeend, '', $CFG->timezone), 1);
-                continue;
+                $users[] = array('fullname' => fullname($user, has_capability('moodle/site:viewfullnames', $context, $enroller)),
+                    'timeend' => $ue->timeend);
             }
 
-            $this->notify_expiry_enrolled($user, $ue, $trace);
+            // Notifications to inactive users only if inactive time limit is set.
+            if ($inactivitycond && $ue->notifyall) {
+                $ue->message = 'expiryunactivemessageenrolledbody';
+                $lastaccess = $ue->timeaccess;
+                if (is_null($lastaccess)) {
+                    $lastaccess = $ue->timestart;
+                }
+                $ue->inactivetime = floor(($timenow - $lastaccess) / DAYSECS);
+                $this->notify_expiry_enrolled($user, $ue, $trace);
+            }
+
+            if ($expirycond) {
+                if (!$ue->notifyall) {
+                    continue;
+                }
+
+                if ($ue->timeend - $ue->expirythreshold + 86400 < $timenow) {
+                    // Notify enrolled users only once at the start of the threshold.
+                    $trace->output("user $ue->userid was already notified that enrolment in course $ue->courseid expires on " .
+                        userdate($ue->timeend, '', $CFG->timezone), 1);
+                    continue;
+                }
+
+                $this->notify_expiry_enrolled($user, $ue, $trace);
+            }
         }
         $rs->close();
 
@@ -3024,9 +3054,17 @@ abstract class enrol_plugin {
         $a->user     = fullname($user, true);
         $a->timeend  = userdate($ue->timeend, '', $user->timezone);
         $a->enroller = fullname($enroller, has_capability('moodle/site:viewfullnames', $context, $user));
+        if (isset($ue->inactivetime)) {
+            $a->inactivetime = $ue->inactivetime;
+        }
 
         $subject = get_string('expirymessageenrolledsubject', 'enrol_'.$name, $a);
-        $body = get_string('expirymessageenrolledbody', 'enrol_'.$name, $a);
+        if (isset($ue->message)) {
+            $bodystr = $ue->message;
+        } else {
+            $bodystr = 'expirymessageenrolledbody';
+        }
+        $body = get_string($bodystr, 'enrol_' . $name, $a);
 
         $message = new \core\message\message();
         $message->courseid          = $ue->courseid;

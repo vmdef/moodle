@@ -151,6 +151,122 @@ class enrol_self_testcase extends advanced_testcase {
         $this->assertEquals(2, $DB->count_records('role_assignments', array('roleid'=>$teacherrole->id)));
     }
 
+    /**
+     * Data provider for longtimenosee notifications tests.
+     *
+     * @return array
+     */
+    public function longtimenosee_notifications_provider() {
+
+        return [
+            'No inactive period' => [
+                'expirynotify' => 1,
+                'notifyall' => 1,
+                'expirythreshold' => DAYSECS * 3,
+                'customint2' => 0,
+                'numnotifications' => 2
+            ],
+            'Notifications disabled' => [
+                'expirynotify' => 0,
+                'notifyall' => 1,
+                'expirythreshold' => DAYSECS * 3,
+                'customint2' => WEEKSECS,
+                'numnotifications' => 0
+            ],
+            'Notifications enabled' => [
+                'expirynotify' => 1,
+                'notifyall' => 1,
+                'expirythreshold' => DAYSECS * 3,
+                'customint2' => WEEKSECS,
+                'numnotifications' => 4
+            ]
+        ];
+    }
+
+    /**
+     * Tests for the inactivity unerol notification.
+     *
+     * Having enrolment duration (timeend) set to 0, the notifications about enrol expiration are not sent
+     *
+     * @dataProvider longtimenosee_notifications_provider
+     * @param   int         $expirynotify       Whether enrolment expiry notification messages are sent
+     * @param   int         $notifyall          Whether teachers and students are notified or only teachers
+     * @param   timestamp   $expirythreshold    How long before expiry are users notified (seconds)
+     * @param   timestamp   $customint2         Time of inactivity before unerolling a user (seconds)
+     * @param   int         $numnotifications   Expected number of notifications sent
+     */
+    public function test_longtimenosee_notifications ($expirynotify, $notifyall, $expirythreshold,
+        $customint2, $numnotifications) {
+        global $DB;
+        $this->resetAfterTest();
+        $this->preventResetByRollback(); // Messaging does not like transactions...
+
+        $selfplugin = enrol_get_plugin('self');
+
+        $now = time();
+        $coursestartdate = $now - WEEKSECS * 4;
+
+        $trace = new null_progress_trace();
+
+        // Note: hopefully nobody executes the unit tests the last second before midnight...
+        $selfplugin->set_config('expirynotifylast', $now - DAYSECS);
+        $selfplugin->set_config('expirynotifyhour', 0);
+
+        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $this->assertNotEmpty($studentrole);
+        $editingteacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
+        $this->assertNotEmpty($editingteacherrole);
+        $managerrole = $DB->get_record('role', array('shortname' => 'manager'));
+        $this->assertNotEmpty($managerrole);
+
+        $user1 = $this->getDataGenerator()->create_user(array('lastname' => 'xuser1'));
+        $user2 = $this->getDataGenerator()->create_user(array('lastname' => 'xuser2'));
+        $user3 = $this->getDataGenerator()->create_user(array('lastname' => 'xuser3'));
+        $user4 = $this->getDataGenerator()->create_user(array('lastname' => 'xuser4'));
+
+        $course1 = $this->getDataGenerator()->create_course(array('fullname' => 'xcourse1', 'startdate' => $coursestartdate));
+
+        $instance1 = $DB->get_record('enrol', array('courseid' => $course1->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance1->expirythreshold = $expirythreshold;
+        $instance1->expirynotify    = $expirynotify;
+        $instance1->notifyall       = $notifyall;
+        $instance1->status          = ENROL_INSTANCE_ENABLED;
+        $instance1->customint2      = $customint2;
+        $DB->update_record('enrol', $instance1);
+
+        // Suspended users are not notified.
+        $selfplugin->enrol_user($instance1, $user1->id, $studentrole->id, $coursestartdate, 0, ENROL_USER_SUSPENDED);
+        // User accessed recently - should not be notified.
+        $selfplugin->enrol_user($instance1, $user2->id, $studentrole->id, $coursestartdate, 0);
+        $DB->insert_record('user_lastaccess', array('userid' => $user2->id, 'courseid' => $course1->id, 'timeaccess' => $now -
+            DAYSECS * 3));
+        // User accessed long time ago - should be notified.
+        $selfplugin->enrol_user($instance1, $user3->id, $studentrole->id, $coursestartdate, $now + DAYSECS * 2 + HOURSECS);
+        $DB->insert_record('user_lastaccess', array('userid' => $user3->id, 'courseid' => $course1->id, 'timeaccess' => $now
+            - DAYSECS * 20));
+        // User has never accessed the course - should be notified.
+        $selfplugin->enrol_user($instance1, $user4->id, $studentrole->id, $coursestartdate, 0);
+
+        $sink = $this->redirectMessages();
+        $selfplugin->send_expiry_notifications($trace);
+        $messages = $sink->get_messages();
+
+        $this->assertCount($numnotifications, $messages);
+        if ($numnotifications && ($customint2 > 0)) {
+            $this->assertEquals($user3->id, $messages[0]->useridto);
+            $this->assertContains('You\'ve not visited', $messages[0]->fullmessagehtml);
+        }
+
+        // Make sure that notifications are not repeated.
+        $sink->clear();
+
+        // Test that no more messages are sent the same day.
+        $selfplugin->send_expiry_notifications($trace);
+        $messages = $sink->get_messages();
+
+        $this->assertCount(0, $messages);
+    }
+
     public function test_expired() {
         global $DB;
         $this->resetAfterTest();

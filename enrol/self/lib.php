@@ -885,7 +885,7 @@ class enrol_self_plugin extends enrol_plugin {
             }
         }
 
-        if ($data['expirynotify'] > 0 and $data['expirythreshold'] < 86400) {
+        if (($data['expirynotify'] > 0 or $data['customint2']) and $data['expirythreshold'] < 86400) {
             $errors['expirythreshold'] = get_string('errorthresholdlow', 'core_enrol');
         }
 
