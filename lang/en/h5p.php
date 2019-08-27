@@ -17,6 +17,8 @@
  * Strings for component 'h5p', language 'en', branch 'master'
  *
  * @package   core_h5p
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright 2019 Amaia Anabitarte <amaia@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+$string['privacy:metadata'] = 'The H5P subsystem does not store any personal data.';
