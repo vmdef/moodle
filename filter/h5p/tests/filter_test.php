@@ -50,6 +50,7 @@ class filter_h5p_testcase extends advanced_testcase {
      * Check that h5p tags with urls from allowed domains are filtered.
      */
     public function test_filter_urls() {
+        global $CFG;
 
         $filterplugin = new filter_h5p(null, array());
 
@@ -61,7 +62,8 @@ class filter_h5p_testcase extends advanced_testcase {
             'https://moodle.h5p.com/content/1290729733828858779/embed',
             '<a href="https://h5p.org/h5p/embed/547225">link</a>',
             'this is a text with an h5p url https://h5p.org/h5p/embed/547225 inside',
-            'https://h5p.org/h5p/embed/547225 another content in the same page https://moodle.h5p.com/content/1290729733828858779/embed'
+            'https://h5p.org/h5p/embed/547225 another content in the same page https://moodle.h5p.com/content/1290729733828858779/embed',
+            $CFG->wwwroot.'/h5p/embed.php?id=12345'
         ];
 
         $filterresult = [
@@ -71,7 +73,8 @@ class filter_h5p_testcase extends advanced_testcase {
             '#<iframe src="https://moodle.h5p.com/content/1290729733828858779/embed"[^>]+?>#',
             '#^((?!iframe).)*$#',
             '#this is a text with an h5p url <iframe src="https://h5p.org/h5p/embed/547225"(.|\n)*> inside#',
-            '#<iframe src="https://h5p.org/h5p/embed/547225"[^>]+?>((?!<iframe).)*<iframe src="https://moodle.h5p.com/content/1290729733828858779/embed"[^>]+?>#'
+            '#<iframe src="https://h5p.org/h5p/embed/547225"[^>]+?>((?!<iframe).)*<iframe src="https://moodle.h5p.com/content/1290729733828858779/embed"[^>]+?>#',
+            '#<iframe src="'.$CFG->wwwroot.'/h5p/embed.php\?id=12345"[^>]+?>#'
         ];
 
         foreach ($h5purls as $key => $text) {

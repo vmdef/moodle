@@ -47,6 +47,7 @@ class filter_h5p extends moodle_text_filter {
      * @return string
      */
     public function filter($text, array $options = array()) {
+        global $CFG;
 
         if (!is_string($text) or empty($text)) {
             // Non string data can not be filtered anyway.
@@ -59,6 +60,9 @@ class filter_h5p extends moodle_text_filter {
 
         $allowedsources = get_config('filter_h5p', 'allowedsources');
         $allowedsources = array_map('trim', explode("\n", $allowedsources));
+        // Allow by default local site H5P content.
+        // TODO Add a setting
+        $allowedsources[] = $CFG->wwwroot.'/h5p/embed.php?id=[id]';
         if (empty($allowedsources)) {
             return $text;
         }
@@ -73,7 +77,8 @@ class filter_h5p extends moodle_text_filter {
             // Convert wildcards.
             $sourceid = str_replace('[id]', '\d+', $source);
             $escapeperiods = str_replace('.', '\.', $sourceid);
-            $replacewildcard = str_replace('*', '.*', $escapeperiods);
+            $escapequestionmark = str_replace('?', '\?', $escapeperiods);
+            $replacewildcard = str_replace('*', '.*', $escapequestionmark);
             $ultimatepattern = '#(' . $replacewildcard . ')#';
 
             $h5pcontenturl = new filterobject($source, null, null, false,
