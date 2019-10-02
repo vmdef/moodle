@@ -26,6 +26,7 @@ require_once(__DIR__ . '/../config.php');
 
 $url = required_param('url', PARAM_LOCALURL);
 $url = urldecode($url);
+$url = str_replace('--__', ' ', $url);
 
 $config = new stdClass();
 $config->frame = optional_param('frame', 0, PARAM_INT);

@@ -60,6 +60,9 @@ class filter_h5p extends moodle_text_filter {
 
         $allowedsources = get_config('filter_h5p', 'allowedsources');
         $allowedsources = array_filter(array_map('trim', explode("\n", $allowedsources)));
+
+        $localsource = $CFG->wwwroot.'/[^<]\.h5p';
+        $allowedsources[] = $localsource;
         if (empty($allowedsources)) {
             return $text;
         }
@@ -73,13 +76,18 @@ class filter_h5p extends moodle_text_filter {
         foreach ($allowedsources as $source) {
             // It is needed to add "/embed" at the end of URLs like https:://*.h5p.com/content/12345 (H5P.com).
             $params['urlmodifier'] = '';
-            if (!(stripos($source, 'embed'))) {
+            if (!(stripos($source, 'embed')))  {
                 $params['urlmodifier'] = '/embed';
             }
 
+            if (($source == $localsource)) {
+                $params['urlmodifier'] = '';
+                $params['tagbegin'] = '<iframe src="'.$CFG->wwwroot.'/h5p/embed.php?url=';
+            }
+
             // Convert special chars.
-            $specialchars = ['*', '?', '&'];
-            $escapedspecialchars = ['[^.]+', '\?', '&amp;'];
+            $specialchars = ['*', '?', '&', '[^<]'];
+            $escapedspecialchars = ['[^.]+', '\?', '&amp;', '[^<]*'];
             $sourceid = str_replace('[id]', '[0-9]+', $source);
             $escapechars = str_replace($specialchars, $escapedspecialchars, $sourceid);
             $ultimatepattern = '#(' . $escapechars . ')#';
@@ -91,20 +99,17 @@ class filter_h5p extends moodle_text_filter {
             $h5pcontents[] = $h5pcontenturl;
         }
 
-        // Check internal .h5p file URLs.
-        $source = $CFG->wwwroot.'/*.h5p';
-        $pattern = '#('.str_replace('.', '\.', $CFG->wwwroot).'/[^ <]*\.h5p)#';
+        $resulttext = filter_phrases($text, $h5pcontents, null, null, false, true);
 
-        $params['urlmodifier'] = '';
-        $params['tagbegin'] = '<iframe src="'.$CFG->wwwroot.'/h5p/embed.php?url=';
+        $text = preg_replace_callback("#embed.php\?url=($CFG->wwwroot/pluginfile\.php[^>]*\.h5p)#",
+            function ($matches) {
+                // Avoid whitespaces in the URL.
+                $urlparam = str_replace(' ', '--__', $matches[1]);
+                $urlparamencoded = rawurlencode($urlparam);
+                return str_replace($matches[1], $urlparamencoded, $matches[0]);
+            }, $resulttext, -1);
 
-        $h5pcontent = new filterobject($source, null, null, false,
-            false, null, [$this, 'filterobject_prepare_replacement_callback'], $params);
-        $h5pcontent->workregexp = $pattern;
-
-        $h5pcontents[] = $h5pcontent;
-
-        return filter_phrases($text, $h5pcontents, null, null, false, true);
+        return $text;
     }
 
     /**

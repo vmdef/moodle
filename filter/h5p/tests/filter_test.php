@@ -84,8 +84,8 @@ class filter_h5p_testcase extends advanced_testcase {
                     "#<iframe src=\"https://generic.wordpress.soton.ac.uk/altc/wp-admin/admin-ajax.php\?action=h5p_embed\&amp\;id=13\"[^>]+?>#"],
             ["https://h5p.org/h5p/embed/547225 another content in the same page https://moodle.h5p.com/content/1290729733828858779/embed",
                     "#<iframe src=\"https://h5p.org/h5p/embed/547225\"[^>]+?>((?!<iframe).)*<iframe src=\"https://moodle.h5p.com/content/1290729733828858779/embed\"[^>]+?>#"],
-            [$CFG->wwwroot."/lib/tests/fixtures/arithmetic-quiz.h5p",
-                    "#<iframe src=\"".$CFG->wwwroot."/h5p/embed.php\?url=".$CFG->wwwroot."/lib/tests/fixtures/arithmetic-quiz.h5p\"[^>]*?></iframe>#"]
+            [$CFG->wwwroot."/pluginfile.php/5/user/private/accordion-6-7138 (1).h5p",
+                    "#<iframe src=\"$CFG->wwwroot/h5p/embed.php\?url=".rawurlencode($CFG->wwwroot)."%2Fpluginfile.php%2F5%2Fuser%2Fprivate%2Faccordion-6-7138--__%281%29.h5p\"[^>]*?></iframe>#"]
         ];
     }
 }
