@@ -28,6 +28,14 @@ $url = required_param('url', PARAM_LOCALURL);
 $url = urldecode($url);
 $url = str_replace('--__', ' ', $url);
 
+// TODO: Remove the clean param (added only for making easy development).
+$clean = optional_param('clean', 0, PARAM_INT);
+if ($clean) {
+    \core_h5p\player::clean_db();
+    die();
+}
+// END.
+
 $config = new stdClass();
 $config->frame = optional_param('frame', 0, PARAM_INT);
 $config->export = optional_param('export', 0, PARAM_INT);
