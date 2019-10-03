@@ -459,11 +459,11 @@ class framework_testcase extends advanced_testcase {
         $interface = framework::instance('interface');
         $interface->saveLibraryDependencies($library->id, $dependencies, 'preloaded');
 
-        $libdependencies = $DB->get_records('h5p_library_dependencies', ['libraryid' => $library->id]);
+        $libdependencies = $DB->get_records('h5p_library_dependencies', ['libraryid' => $library->id], '', 'requiredlibraryid');
 
         $this->assertEquals(2, count($libdependencies));
-        $this->assertEquals($dependency1->id, reset($libdependencies)->requiredlibraryid);
-        $this->assertEquals($dependency2->id, end($libdependencies)->requiredlibraryid);
+        $this->assertArrayHasKey($dependency1->id, $libdependencies);
+        $this->assertArrayHasKey($dependency2->id, $libdependencies);
     }
 
     // Test the behaviour of deleteContentData().
@@ -617,6 +617,10 @@ class framework_testcase extends advanced_testcase {
                 'minorVersion' => $preloadeddependency->minorversion
             );
         }
+        // The arrary is ordered to avoid failures due to the order of the elements.
+        $names = array_column($preloadeddependencies, 'machineName');
+        array_multisort($names, SORT_DESC, $preloadeddependencies);
+
         // Create a dynamic dependency.
         $this->create_library_dependency_record($library1->id, $library5->id, 'dynamic');
 
@@ -628,6 +632,9 @@ class framework_testcase extends advanced_testcase {
 
         $interface = framework::instance('interface');
         $data = $interface->loadLibrary($library1->machinename, $library1->majorversion, $library1->minorversion);
+        // The arrary is ordered to avoid failures due to the order of the elements.
+        $names = array_column($data['preloadedDependencies'], 'machineName');
+        array_multisort($names, SORT_DESC, $data['preloadedDependencies']);
 
         $expected = array(
             'libraryId' => $library1->id,
@@ -752,13 +759,14 @@ class framework_testcase extends advanced_testcase {
                 'itemid' => $library1->id
             )
         );
+        $fs = get_file_storage();
         // The lib1 should have 7 related folders/files in the files table.
         $this->assertCount(7, $libraryfiles);
-        // The path of the created library folder.
-        $libraryfolder = $data->libtemppath . DIRECTORY_SEPARATOR . $library1->machinename . '-' .
-            $library1->majorversion . '.' . $library1->minorversion;
-        // The lib1 folder containing the lib1 files should exist on the filesystem.
-        $this->assertTrue(file_exists($libraryfolder));
+        // Check that files exists in Moodle filesystem.
+        foreach ($libraryfiles as $libraryfile) {
+            $this->assertTrue($fs->file_exists_by_hash($libraryfile->pathnamehash));
+        }
+
         // Delete the library.
         $interface = framework::instance('interface');
         $interface->deleteLibrary($library1);
@@ -771,7 +779,7 @@ class framework_testcase extends advanced_testcase {
         // The lib1 should have 0 dependencies.
         $this->assertCount(0, $dependencies);
 
-        $libraryfiles = $DB->get_records('files',
+        $libraryfilesdeleted = $DB->get_records('files',
             array(
                 'component' => \core_h5p\file_storage::COMPONENT,
                 'filearea' => \core_h5p\file_storage::LIBRARY_FILEAREA,
@@ -779,9 +787,11 @@ class framework_testcase extends advanced_testcase {
             )
         );
         // The lib1 should have 0 related folders/files in the files table.
-        $this->assertCount(0, $libraryfiles);
-        // The lib1 folder containing the lib1 files should not exist on the filesystem.
-        $this->assertFalse(file_exists($libraryfolder));
+        $this->assertCount(0, $libraryfilesdeleted);
+        // Check that files don't exist in Moodle filesystem.
+        foreach ($libraryfiles as $libraryfile) {
+            $this->assertFalse($fs->file_exists_by_hash($libraryfile->pathnamehash));
+        }
     }
 
     // Test the behaviour of loadContent().
