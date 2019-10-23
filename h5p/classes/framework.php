@@ -363,14 +363,6 @@ class framework implements \H5PFrameworkInterface {
     public function getLibraryFileUrl($libraryfoldername, $filename) {
         global $DB;
 
-<<<<<<< HEAD
-        $context = \context_system::instance();
-        $itemid = $DB->get_field('files', 'itemid', ['component' => 'core_h5p', 'filearea' => 'libraries',
-            'filepath' => $libraryfoldername, 'filename' => $filename]);
-
-        return \moodle_url::make_pluginfile_url($context->id, 'core_h5p', 'libraries', $itemid,
-            $libraryfoldername . '/', $filename)->out();
-=======
         // Remove unnecessary slashes (first and last, if present) from the path to the folder
         // of the library file.
         $libraryfilepath = trim($libraryfoldername, '/');
@@ -412,7 +404,6 @@ class framework implements \H5PFrameworkInterface {
 
         return \moodle_url::make_pluginfile_url($context->id, 'core_h5p', 'libraries',
             $library->id, '/' . $libraryfilepath . '/', $filename)->out();
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
     }
 
     /**
@@ -1580,11 +1571,7 @@ class framework implements \H5PFrameworkInterface {
      * @param string $searchparam The library parameter (Default: 'path')
      * @return string Library parameter values separated by ', '
      */
-<<<<<<< HEAD
-    private function library_parameter_values_to_csv(array $librarydata, string $key, string $searchparam = 'path') : string {
-=======
     private function library_parameter_values_to_csv(array $librarydata, string $key, string $searchparam = 'path'): string {
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
         if (isset($librarydata[$key])) {
             $parametervalues = array();
             foreach ($librarydata[$key] as $file) {

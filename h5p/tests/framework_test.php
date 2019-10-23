@@ -23,11 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-<<<<<<< HEAD
-namespace core_h5p\local\tests;
-=======
 namespace core_h5p;
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -286,8 +282,6 @@ class framework_testcase extends \advanced_testcase {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Test the behaviour of getLibraryFileUrl() when requesting a file URL from an existing library and
      * the folder name is parsable.
      **/

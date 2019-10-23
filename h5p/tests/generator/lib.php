@@ -147,11 +147,7 @@ class core_h5p_generator extends \component_generator_base {
      * @param bool $createlibraryfiles Whether to create and store library files on the filesystem
      * @return stdClass An object representing the added H5P records
      */
-<<<<<<< HEAD
-    public function generate_h5p_data(bool $createlibraryfiles = false) : stdClass {
-=======
     public function generate_h5p_data(bool $createlibraryfiles = false): stdClass {
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
         // Create libraries.
         $mainlib = $libraries[] = $this->create_library_record('MainLibrary', 'Main Lib', 1, 0);
         $lib1 = $libraries[] = $this->create_library_record('Library1', 'Lib1', 2, 0);
@@ -231,11 +227,7 @@ class core_h5p_generator extends \component_generator_base {
      * @return stdClass An object representing the added library record
      */
     public function create_library_record(string $machinename, string $title, int $majorversion = 1,
-<<<<<<< HEAD
-            int $minorversion = 0, int $patchversion = 1, string $semantics = '', string $addto = null) : stdClass {
-=======
             int $minorversion = 0, int $patchversion = 1, string $semantics = '', string $addto = null): stdClass {
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
         global $DB;
 
         $content = array(
@@ -266,11 +258,7 @@ class core_h5p_generator extends \component_generator_base {
      * @param string $filtered The filtered content parameters
      * @return int The ID of the added record
      */
-<<<<<<< HEAD
-    public function create_h5p_record(int $mainlibid, string $jsoncontent = null, string $filtered = null) : int {
-=======
     public function create_h5p_record(int $mainlibid, string $jsoncontent = null, string $filtered = null): int {
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
         global $DB;
 
         if (!$jsoncontent) {
@@ -315,11 +303,7 @@ class core_h5p_generator extends \component_generator_base {
      * @return int The ID of the added record
      */
     public function create_contents_libraries_record(string $h5pid, int $libid,
-<<<<<<< HEAD
-            string $dependencytype = 'preloaded') : int {
-=======
             string $dependencytype = 'preloaded'): int {
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
         global $DB;
 
         return $DB->insert_record(
@@ -343,11 +327,7 @@ class core_h5p_generator extends \component_generator_base {
      * @return int The ID of the added record
      */
     public function create_library_dependency_record(int $libid, int $requiredlibid,
-<<<<<<< HEAD
-            string $dependencytype = 'preloaded') : int {
-=======
             string $dependencytype = 'preloaded'): int {
->>>>>>> 04c3553a52a04bedf75203f5404e7625ea8e2cb6
         global $DB;
 
         return $DB->insert_record(
