@@ -26,7 +26,9 @@ require_once(__DIR__ . '/../config.php');
 
 // The login check is done inside the player when getting the file from the url param.
 
-$url = required_param('url', PARAM_LOCALURL);
+$path = required_param('url', PARAM_PATH);
+//$url = required_param('url', PARAM_LOCALURL);
+$url = $CFG->wwwroot.$path;
 
 $config = new stdClass();
 $config->frame = optional_param('frame', 0, PARAM_INT);

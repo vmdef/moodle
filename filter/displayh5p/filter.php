@@ -109,14 +109,15 @@ class filter_displayh5p extends moodle_text_filter {
         $localsource = '#\?url=([^" <]*[\/]+[^" <]*\.h5p)([?][^"]*)?#';
         $result = preg_replace_callback($localsource,
             function ($matches) {
-                $baseurl = rawurlencode($matches[1]);
+                //$baseurl = rawurlencode($matches[1]);
+                $baseurl = preg_replace("#http://mdk.test/moodles/h5pfilter/moodle#", '', $matches[1]);
                 // Deal with possible parameters in the url link.
-                if (!empty($matches[2])) {
+/*                if (!empty($matches[2])) {
                     $match = explode('?', $matches[2]);
                     if (!empty($match[1])) {
                         $baseurl = $baseurl."&".$match[1];
                     }
-                }
+                }*/
                 return "?url=".$baseurl;
             }, $result);
 
