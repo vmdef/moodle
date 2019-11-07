@@ -148,6 +148,7 @@ $string['showmore'] = 'Show more';
 $string['size'] = 'Size';
 $string['source'] = 'Source';
 $string['startingover'] = 'You\'ll be starting over.';
+$string['sitecouldnotberegistered'] = 'Site could not be registered with the hub. Please contact your site administrator.';
 $string['sublevel'] = 'Sublevel';
 $string['thumbnail'] = 'Thumbnail';
 $string['title'] = 'Title';

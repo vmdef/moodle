@@ -149,4 +149,31 @@ class h5p_core_testcase extends \advanced_testcase {
         $this->assertEquals($numcontenttypes, count($contentfiles));
         $this->assertCount(0, $result->typesinstalled);
     }
+
+    /**
+     * Test that if site_uuid is not set, the site is registered and site_uuid is set.
+     *
+     * This test require access to an external URL (H5P libraries repository), so can take long time to execute.
+     * PHPUNIT_LONGTEST constant should be set in phpunit.xml or directly in config.php.
+     * define('PHPUNIT_LONGTEST', true);
+     *
+     * return void
+     */
+    public function test_register_site(): void {
+        $this->resetAfterTest(true);
+
+        if (!defined('PHPUNIT_LONGTEST')) {
+            $this->markTestSkipped('PHPUNIT_LONGTEST is not defined');
+        }
+
+        // Check that after first request, site_uuid is set.
+        $this->assertFalse(get_config('core_h5p', 'site_uuid'));
+        $result = $this->core->register_site();
+        $uuid = $result->data;
+        $this->assertEquals($uuid, get_config('core_h5p', 'site_uuid'));
+
+        // Check that after a new request the site_uuid remains the same.
+        $result = $this->core->register_site();
+        $this->assertEquals( get_config('core_h5p', 'site_uuid'), $result->data);
+    }
 }

@@ -226,7 +226,7 @@ class core extends \H5PCore {
         $tempfile = "{$temppath}/" . $library['machineName'] . ".h5p";
 
         // Download the latest content type from the H5P official repository.
-        $endpoint = $this->get_api_endpoint($library['machineName']);
+        $endpoint = $this->get_api_endpoint(false, $library['machineName']);
         $result = download_file_content(
             $endpoint,
             null,
@@ -264,11 +264,20 @@ class core extends \H5PCore {
      * If $library is null, moodle_url is the endpoint of the latest version of the H5P content types. If library is the
      * machine name of a content type, moodle_url is the endpoint to download the content type.
      *
+     * @param bool $site If true, the sites endpoint is requested.
      * @param string|null $library The machineName of the library whose endpoint is requested.
      * @return moodle_url The endpoint moodle_url object.
      */
-    public function get_api_endpoint(?string $library): moodle_url {
-        $h5purl = \H5PHubEndpoints::createURL(\H5PHubEndpoints::CONTENT_TYPES ) . $library;
+    public function get_api_endpoint(bool $site = false, ?string $library = null): moodle_url {
+        if ($site) {
+            $endpoint = \H5PHubEndpoints::SITES;
+        } else {
+            $endpoint = \H5PHubEndpoints::CONTENT_TYPES;
+        }
+        $h5purl = \H5PHubEndpoints::createURL($endpoint);
+        if (!$site) {
+            $h5purl = \H5PHubEndpoints::createURL($endpoint) . $library;
+        }
         return new moodle_url($h5purl);
     }
 
@@ -280,9 +289,17 @@ class core extends \H5PCore {
      *     - array contentTypes: an object for each H5P content type with its information
      */
     public function get_latest_content_types(): \stdClass {
-        // Get the latest content-types json.
-        $postdata = ['uuid' => 'foo'];
-        $endpoint = $this->get_api_endpoint(null);
+        // Get the uuid if the site is already registered or register the site if it is not.
+        $uuid = $this->register_site();
+
+        // If there's not valid uuid, we use a dummy value (H5P allows that).
+        if ($uuid->data) {
+            $postdata = ['uuid' => $uuid->data];
+        } else {
+            $postdata = ['uuid' => 'moodle'];
+        }
+
+        $endpoint = $this->get_api_endpoint(false, null);
         $request = download_file_content($endpoint, null, $postdata, true);
 
         if (!empty($request->error) || $request->status != '200' || empty($request->results)) {
@@ -301,7 +318,7 @@ class core extends \H5PCore {
     /**
      * Checks if a supported version of the H5P core API is installed.
      *
-     * @param $coreapi Object with properties major and minor for the core API version values.
+     * @param string $coreapi Object with properties major and minor for the core API version values.
      * @return bool True is there is there is a supported H5P core API version installed. False otherwise.
      */
     public function is_valid_core_api($coreapi): bool {
@@ -312,5 +329,55 @@ class core extends \H5PCore {
             }
         }
         return true;
+    }
+
+    /**
+     * Register the site if it is not yet register in H5P.
+     *
+     * @return stdClass It has two properties:
+     *     - string error, empty is there is no error; otherwise, the error message.
+     *     - string uuid, this sites uuid or empty if it can't be registered.
+     */
+    public function register_site(): \stdClass {
+        global $CFG;
+
+        // Check if the sites is already registered.
+        $uuid = get_config('core_h5p', 'site_uuid');
+
+        $result = new stdClass();
+        if (empty($uuid)) {
+
+            $registrationdata = array(
+                    'uuid' => $uuid,
+                    'platform_name' => 'Moodle',
+                    'platform_version' => $CFG->version,
+                    'h5p_version' => '',
+                    'disabled' => 0,
+                    'local_id' => hash('crc32', $this->fullPluginPath),
+                    'type' => 'local',
+                    'core_api_version' => H5PCore::$coreApi['majorVersion'] . '.' .
+                            H5PCore::$coreApi['minorVersion']
+            );
+
+            $endpoint = $this->get_api_endpoint(true);
+            $registration = download_file_content($endpoint, null, $registrationdata);
+
+            // Failed retrieving uuid.
+            if (!$registration) {
+                $result->error = get_string('sitecouldnotberegistered', 'core_h5p');
+                $result->data = '';
+            } else {
+                // Successfully retrieved new uuid.
+                $json = json_decode($registration);
+                set_config('site_uuid', $json->uuid, 'core_h5p');
+                $result->data = $json->uuid;
+                $result->error = '';
+            }
+        } else {
+            $result->data = $uuid;
+            $result->error = '';
+        }
+
+        return $result;
     }
 }
