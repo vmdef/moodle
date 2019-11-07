@@ -3763,5 +3763,20 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2019103000.13);
     }
 
+    if ($oldversion < 2019110500.4) {
+
+        // Define field coreapi to be added to h5p_libraries.
+        $table = new xmldb_table('h5p_libraries');
+        $field = new xmldb_field('coreapi', XMLDB_TYPE_CHAR, '8', null, null, null, null, 'addto');
+
+        // Conditionally launch add field coreapi.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2019110500.4);
+    }
+
     return true;
 }

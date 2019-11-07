@@ -696,6 +696,7 @@ class framework implements \H5PFrameworkInterface {
             'droplibrarycss' => $droplibrarycss,
             'semantics' => $librarydata['semantics'],
             'addto' => isset($librarydata['addTo']) ? json_encode($librarydata['addTo']) : null,
+            'coreapi' => isset($librarydata['coreApi']) ? "{$librarydata['coreApi']['majorVersion']}.{$librarydata['coreApi']['minorVersion']}" : null
         );
 
         if ($new) {
