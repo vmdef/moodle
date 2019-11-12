@@ -12,6 +12,7 @@ services:
 variables:
   MYSQL_DATABASE: "moodle"
   MYSQL_ROOT_PASSWORD: ""
+  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 
 test:
   # Execute this only on the final -test branch, not on all individual features branches.
