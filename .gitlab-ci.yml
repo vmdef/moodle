@@ -28,4 +28,5 @@ test:
   - php admin/tool/phpunit/cli/init.php
   - php admin/tool/phpunit/cli/util.php --buildcomponentconfigs
   # Run unit tests for the custom plugins on the site.
+  - vendor/bin/phpunit -c blocks/partners/
   - vendor/bin/phpunit -c blocks/spam_deletion/
