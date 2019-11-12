@@ -20,7 +20,7 @@ test:
 
   script:
   # Create the main config.php file.
-  - php admin/cli/install.php --non-interactive --wwwroot=http://localhost --fullname=test --shortname=test --adminpass=test --agree-license --dataroot=/var/www/moodledata --dbtype=mysqli --dbhost=mysql --dbuser=root --dbpass= --dbname=moodle --skip-database
+  - php admin/cli/install.php --non-interactive --wwwroot=http://localhost --fullname=test --shortname=test --adminpass=test --agree-license --dataroot=/var/www/moodledata --dbtype=mysqli --dbhost=mysql --dbuser=root --dbpass= --dbname=moodle --skip-database --allow-unstable
   # Inject the PHPUnit settings into the config.php file.
   - sed -i '25i$CFG->phpunit_prefix = "phpu_"; $CFG->phpunit_dataroot = "/var/www/phpunitdata";' config.php
   # Initialize PHPunit.
