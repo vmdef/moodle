@@ -30,5 +30,6 @@ test:
   # Run unit tests for the custom plugins on the site.
   - vendor/bin/phpunit -c blocks/partners/
   - vendor/bin/phpunit -c blocks/spam_deletion/
+  - vendor/bin/phpunit -c filter/moodledocs/
   - vendor/bin/phpunit -c filter/moodlelinks/
   - vendor/bin/phpunit -c lib/editor/marklar/
