@@ -34,3 +34,4 @@ test:
   - vendor/bin/phpunit -c filter/moodledocs/
   - vendor/bin/phpunit -c filter/moodlelinks/
   - vendor/bin/phpunit -c lib/editor/marklar/
+  - vendor/bin/phpunit -c local/chatlogs/
