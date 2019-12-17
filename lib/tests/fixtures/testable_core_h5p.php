@@ -86,9 +86,9 @@ class h5p_test_core extends core {
         $testcase = new h5p_testcase();
 
         if ($library) {
-            $h5purl = $testcase->getExternalTestFileUrl('/'.$library.'.h5p');
+            $h5purl = $testcase->getExternalTestFileUrl('/'.$library.'.h5p', false);
         } else {
-            $h5purl = $testcase->getExternalTestFileUrl('/h5pcontenttypes.json');
+            $h5purl = $testcase->getExternalTestFileUrl('/h5pcontenttypes.json', false);
         }
 
         return new moodle_url($h5purl);

@@ -278,6 +278,7 @@ class core extends \H5PCore {
         // Get the latest content-types json.
         $postdata = ['uuid' => 'foo'];
         $endpoint = $this->get_api_endpoint(null);
+        var_dump($endpoint);
         $request = download_file_content($endpoint, null, $postdata, true);
 
         if (!empty($request->error) || $request->status != '200' || empty($request->results)) {
