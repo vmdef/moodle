@@ -81,8 +81,9 @@ class framework_testcase extends \advanced_testcase {
 
         $this->resetAfterTest();
 
+        $library = 'H5P.Accordion';
         // Provide a valid URL to an external H5P content.
-        $url = "https://h5p.org/sites/default/files/h5p/exports/arithmetic-quiz-22-57860.h5p";
+        $url = $this->getExternalTestFileUrl('/'.$library.'.h5p');
 
         // Test fetching an external H5P content without defining a path to where the file should be stored.
         $data = $this->framework->fetchExternalData($url, null, true);
@@ -112,8 +113,9 @@ class framework_testcase extends \advanced_testcase {
 
         $this->resetAfterTest();
 
+        $library = 'H5P.Accordion';
         // Provide a valid URL to an external H5P content.
-        $url = "https://h5p.org/sites/default/files/h5p/exports/arithmetic-quiz-22-57860.h5p";
+        $url = $this->getExternalTestFileUrl('/'.$library.'.h5p');
 
         $h5pfolderpath = $CFG->tempdir . uniqid('/h5p-');
 

@@ -25,9 +25,9 @@
 
 namespace core_h5p\local\tests;
 
-use core_h5p\factory;
-
 defined('MOODLE_INTERNAL') || die();
+
+use core_h5p\autoloader;
 
 /**
  * Test class covering the H5PFileStorage interface implementation.
@@ -36,14 +36,18 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2019 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @runTestsInSeparateProcesses
  */
 class h5p_core_test extends \advanced_testcase {
 
     protected function setup() {
+        global $CFG;
         parent::setUp();
 
-        $factory = new factory();
+        autoloader::register();
+
+        require_once($CFG->libdir . '/tests/fixtures/testable_core_h5p.php');
+
+        $factory = new \h5p_test_factory();
         $this->core = $factory->get_core();
     }
 
@@ -54,14 +58,21 @@ class h5p_core_test extends \advanced_testcase {
     public function test_fetch_content_type(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
-
         if (!PHPUNIT_LONGTEST) {
             $this->markTestSkipped('PHPUNIT_LONGTEST is not defined');
         }
 
+        $this->resetAfterTest(true);
+
         // Get info of latest content types versions.
-        $contenttypes = $this->core->get_latest_content_types()->contentTypes;
+        $contenttypes = $this->core->get_latest_content_types();
+
+        if ($contenttypes->error != "") {
+            throw new \invalid_response_exception($contenttypes->error);
+        } else {
+            $contenttypes = $contenttypes->contentTypes;
+        }
+
         // We are installing the first content type.
         $librarydata = $contenttypes[0];
 
@@ -95,27 +106,27 @@ class h5p_core_test extends \advanced_testcase {
     public function test_fetch_latest_content_types(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
-
         if (!PHPUNIT_LONGTEST) {
             $this->markTestSkipped('PHPUNIT_LONGTEST is not defined');
         }
+
+        $this->resetAfterTest(true);
 
         $contentfiles = $DB->count_records('h5p_libraries');
 
         // Initially there are no h5p records in database.
         $this->assertEquals(0, $contentfiles);
 
+        $contenttypespending = ['H5P.Accordion'];
+
         // Fetch generator.
         $generator = \testing_util::get_data_generator();
         $h5pgenerator = $generator->get_plugin_generator('core_h5p');
 
         // Get info of latest content types versions.
-        [$contenttypes, $contenttoinstall] = $h5pgenerator->create_content_types(1);
+        [$installedtypes, $typesnotinstalled] = $h5pgenerator->create_content_types($contenttypespending, $this);
         // Number of H5P content types.
-        $numcontenttypes = count($contenttypes) + count($contenttoinstall);
-
-        $contenttoinstall = $contenttoinstall[0];
+        $numcontenttypes = $installedtypes + $typesnotinstalled;
 
         // Content type libraries has runnable set to 1.
         $conditions = ['runnable' => 1];
@@ -123,7 +134,7 @@ class h5p_core_test extends \advanced_testcase {
 
         // There is a record for each installed content type, except the one that was hold for later.
         $this->assertEquals($numcontenttypes - 1, count($contentfiles));
-        $this->assertArrayNotHasKey($contenttoinstall->id, $contentfiles);
+        $this->assertArrayNotHasKey($contenttypespending[0], $contentfiles);
 
         $result = $this->core->fetch_latest_content_types();
 
@@ -131,9 +142,9 @@ class h5p_core_test extends \advanced_testcase {
 
         // There is a new record for the new installed content type.
         $this->assertCount($numcontenttypes, $contentfiles);
-        $this->assertArrayHasKey($contenttoinstall->id, $contentfiles);
+        $this->assertArrayHasKey($contenttypespending[0], $contentfiles);
         $this->assertCount(1, $result->typesinstalled);
-        $this->assertStringStartsWith($contenttoinstall->id, $result->typesinstalled[0]['name']);
+        $this->assertStringStartsWith($contenttypespending[0], $result->typesinstalled[0]['name']);
 
         // New execution doesn't install any content type.
         $result = $this->core->fetch_latest_content_types();
