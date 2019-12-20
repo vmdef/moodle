@@ -116,7 +116,7 @@
     <location>amd/src/tether.js</location>
     <name>tether</name>
     <license>(MIT)</license>
-    <version>1.3.3</version>
+    <version>1.4.7</version>
     <licenseversion></licenseversion>
   </library>
   <library>
