@@ -23,10 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      2.9
  */
-define(['jquery', './tether', 'core/event', 'core/custom_interaction_events'], function(jQuery, Tether, Event, customEvents) {
+define(['jquery', 'core/event', 'core/custom_interaction_events'], function(jQuery, Event, customEvents) {
 
     window.jQuery = jQuery;
-    window.Tether = Tether;
     M.util.js_pending('theme_boost/loader:children');
 
     require(['theme_boost/aria',
