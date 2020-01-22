@@ -22,6 +22,7 @@
  */
 namespace core_h5p\form;
 
+use core_h5p\factory;
 use tool_dataprivacy\context_instance;
 
 defined('MOODLE_INTERNAL') || die();
@@ -45,22 +46,22 @@ class editor_form extends \moodleform {
 
         // Action.
         $h5paction = array();
-        $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'hvp'), 'upload');
-        $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('create', 'hvp'), 'create');
-        $mform->addGroup($h5paction, 'h5pactiongroup', get_string('action', 'hvp'), array('<br/>'), false);
+        $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'core_h5p'), 'upload');
+        $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('create', 'core_h5p'), 'create');
+        $mform->addGroup($h5paction, 'h5pactiongroup', get_string('action', 'core_h5p'), array('<br/>'), false);
         $mform->setDefault('h5paction', 'create');
         // Upload.
-        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null,
+        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'core_h5p'), null,
             array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
         // Editor placeholder.
         if ($CFG->theme == 'boost' || in_array('boost', $PAGE->theme->parents)) {
             $h5peditor   = [];
             $h5peditor[] = $mform->createElement('html',
-                '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
-            $mform->addGroup($h5peditor, 'h5peditor', get_string('editor', 'hvp'));
+                '<div class="h5p-editor">' . get_string('javascriptloading', 'core_h5p') . '</div>');
+            $mform->addGroup($h5peditor, 'h5peditor', get_string('editor', 'core_h5p'));
         } else {
-            $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'),
-                '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
+            $mform->addElement('static', 'h5peditor', get_string('editor', 'core_h5p'),
+                '<div class="h5p-editor">' . get_string('javascriptloading', 'core_h5p') . '</div>');
         }
         // Hidden fields.
         $mform->addElement('hidden', 'h5plibrary', '');
@@ -69,28 +70,31 @@ class editor_form extends \moodleform {
         $mform->setType('h5pparams', PARAM_RAW);
         $mform->addElement('hidden', 'h5pmaxscore', '');
         $mform->setType('h5pmaxscore', PARAM_INT);
-        $core = \mod_hvp\framework::instance();
+        //$core = \mod_hvp\framework::instance();
+        $factory = new factory();
+        $core = $factory->get_core();
+
         $displayoptions = $core->getDisplayOptionsForEdit();
         if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_FRAME])) {
             // Display options group.
-            $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
-            $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_FRAME, get_string('enableframe', 'hvp'));
+            $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'core_h5p'));
+            $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_FRAME, get_string('enableframe', 'core_h5p'));
             $mform->setType(\H5PCore::DISPLAY_OPTION_FRAME, PARAM_BOOL);
             $mform->setDefault(\H5PCore::DISPLAY_OPTION_FRAME, true);
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
-                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_DOWNLOAD, get_string('enabledownload', 'hvp'));
+                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_DOWNLOAD, get_string('enabledownload', 'core_h5p'));
                 $mform->setType(\H5PCore::DISPLAY_OPTION_DOWNLOAD, PARAM_BOOL);
                 $mform->setDefault(\H5PCore::DISPLAY_OPTION_DOWNLOAD, $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD]);
                 $mform->disabledIf(\H5PCore::DISPLAY_OPTION_DOWNLOAD, 'frame');
             }
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED])) {
-                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_EMBED, get_string('enableembed', 'hvp'));
+                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_EMBED, get_string('enableembed', 'core_h5p'));
                 $mform->setType(\H5PCore::DISPLAY_OPTION_EMBED, PARAM_BOOL);
                 $mform->setDefault(\H5PCore::DISPLAY_OPTION_EMBED, $displayoptions[\H5PCore::DISPLAY_OPTION_EMBED]);
                 $mform->disabledIf(\H5PCore::DISPLAY_OPTION_EMBED, 'frame');
             }
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
-                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_COPYRIGHT, get_string('enablecopyright', 'hvp'));
+                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_COPYRIGHT, get_string('enablecopyright', 'core_h5p'));
                 $mform->setType(\H5PCore::DISPLAY_OPTION_COPYRIGHT, PARAM_BOOL);
                 $mform->setDefault(\H5PCore::DISPLAY_OPTION_COPYRIGHT, $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT]);
                 $mform->disabledIf(\H5PCore::DISPLAY_OPTION_COPYRIGHT, 'frame');
@@ -106,7 +110,9 @@ class editor_form extends \moodleform {
     private function set_display_options(&$defaultvalues) {
         // Individual display options are not stored, must be extracted from disable.
         if (isset($defaultvalues['disable'])) {
-            $h5pcore = \mod_hvp\framework::instance('core');
+            //$h5pcore = \mod_hvp\framework::instance('core');
+            $factory = new factory();
+            $h5pcore = $factory->get_core();
             $displayoptions = $h5pcore->getDisplayOptionsForEdit($defaultvalues['disable']);
             if (isset ($displayoptions[\H5PCore::DISPLAY_OPTION_FRAME])) {
                 $defaultvalues[\H5PCore::DISPLAY_OPTION_FRAME] = $displayoptions[\H5PCore::DISPLAY_OPTION_FRAME];
@@ -146,7 +152,10 @@ class editor_form extends \moodleform {
     }
     public function data_preprocessing(&$defaultvalues) {
         global $DB, $PAGE;
-        $core = \mod_hvp\framework::instance();
+        //$core = \mod_hvp\framework::instance();
+        $factory = new factory();
+        $core = $factory->get_core();
+
         $content = null;
         if (!empty($defaultvalues['id'])) {
             // Load Content.
@@ -163,7 +172,7 @@ class editor_form extends \moodleform {
         $this->set_display_options($defaultvalues);
         // Determine default action.
         if (!get_config('mod_hvp', 'hub_is_enabled') && $content === null &&
-            $DB->get_field_sql("SELECT id FROM {hvp_libraries} WHERE runnable = 1", null, IGNORE_MULTIPLE) === false) {
+            $DB->get_field_sql("SELECT id FROM {h5p_libraries} WHERE runnable = 1", null, IGNORE_MULTIPLE) === false) {
             $defaultvalues['h5paction'] = 'upload';
         }
         // Set editor defaults.
@@ -218,7 +227,7 @@ class editor_form extends \moodleform {
                         if ($dep['machineName'] === $h5pvalidator->h5pC->mainJsonData['mainLibrary']) {
                             if ($h5pvalidator->h5pF->libraryHasUpgrade($dep)) {
                                 // We do not allow storing old content due to security concerns.
-                                $errors['h5pfile'] = get_string('olduploadoldcontent', 'hvp');
+                                $errors['h5pfile'] = get_string('olduploadoldcontent', 'core_h5p');
                             }
                         }
                     }
@@ -237,27 +246,27 @@ class editor_form extends \moodleform {
         // Get library array from string.
         $library = H5PCore::libraryFromString($data['h5plibrary']);
         if (!$library) {
-            $errors['h5peditor'] = get_string('librarynotselected', 'hvp');
+            $errors['h5peditor'] = get_string('librarynotselected', 'core_h5p');
         } else {
             // Check that library exists.
             $library['libraryId'] = $core->h5pF->getLibraryId($library['machineName'],
                 $library['majorVersion'],
                 $library['minorVersion']);
             if (!$library['libraryId']) {
-                $errors['h5peditor'] = get_string('nosuchlibrary', 'hvp');
+                $errors['h5peditor'] = get_string('nosuchlibrary', 'core_h5p');
             } else {
                 $data['h5plibrary'] = $library;
                 if ($core->h5pF->libraryHasUpgrade($library)) {
                     // We do not allow storing old content due to security concerns.
-                    $errors['h5peditor'] = get_string('anunexpectedsave', 'hvp');
+                    $errors['h5peditor'] = get_string('anunexpectedsave', 'core_h5p');
                 } else {
                     // Verify that parameters are valid.
                     if (empty($data['h5pparams'])) {
-                        $errors['h5peditor'] = get_string('noparameters', 'hvp');
+                        $errors['h5peditor'] = get_string('noparameters', 'core_h5p');
                     } else {
                         $params = json_decode($data['h5pparams']);
                         if ($params === null) {
-                            $errors['h5peditor'] = get_string('invalidparameters', 'hvp');
+                            $errors['h5peditor'] = get_string('invalidparameters', 'core_h5p');
                         } else {
                             $data['h5pparams'] = $params;
                         }
@@ -278,7 +287,7 @@ class editor_form extends \moodleform {
         $errors = parent::validation($data, $files);
         // Validate max grade as a non-negative numeric value.
         if (!is_numeric($data['maximumgrade']) || $data['maximumgrade'] < 0) {
-            $errors['maximumgrade'] = get_string('maximumgradeerror', 'hvp');
+            $errors['maximumgrade'] = get_string('maximumgradeerror', 'core_h5p');
         }
         if ($data['h5paction'] === 'upload') {
             // Validate uploaded H5P file.
