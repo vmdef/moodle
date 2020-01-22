@@ -51,6 +51,7 @@ class autoloader {
             'H5PDevelopment' => '/lib/h5p/h5p-development.class.php',
             'H5PFileStorage' => '/lib/h5p/h5p-file-storage.interface.php',
             'H5PMetadata' => '/lib/h5p/h5p-metadata.class.php',
+            'H5peditor' => '/lib/h5p/editor/h5peditor.class.php',
         ];
 
         if (isset($classes[$classname])) {
