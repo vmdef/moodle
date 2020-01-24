@@ -27,11 +27,14 @@ namespace core_h5p;
 
 defined('MOODLE_INTERNAL') || die();
 
+use \core_h5p\editor_framework;
+use \core_h5p\editor_ajax;
 use \core_h5p\framework as framework;
 use \core_h5p\core as core;
 use \H5PStorage as storage;
 use \H5PValidator as validator;
 use \H5PContentValidator as content_validator;
+use \H5peditor as editor;
 
 /**
  * H5P factory class.
@@ -57,6 +60,16 @@ class factory {
 
     /** @var content_validator The Moodle H5PContentValidator implementation */
     protected $content_validator;
+
+    /** @var editor */
+    protected $editor;
+
+    // TODO this perhaps could be part of the get_editor method
+    /** @var editorinterface */
+    protected $editorinterface;
+
+    /** @var editorajaxinterface */
+    protected $editorajaxinterface;
 
     /**
      * factory constructor.
@@ -136,5 +149,28 @@ class factory {
         }
 
         return $this->content_validator;
+    }
+
+    /**
+     * Returns an instance of
+     *
+     * @return \H5peditor
+     */
+    public function get_editor(): editor {
+        if (null === $this->editor) {
+            if (empty($this->editorinterface)) {
+                $this->editorinterface = new editor_framework();
+            }
+
+            if (empty($this->editorajaxinterface)) {
+                $this->editorajaxinterface = new editor_ajax();
+            }
+
+            if (empty($this->editor)) {
+                $this->editor = new \H5peditor($this->get_core(), $this->editorinterface, $this->editorajaxinterface);
+            }
+        }
+
+        return $this->editor;
     }
 }

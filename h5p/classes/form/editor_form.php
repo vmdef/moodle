@@ -171,7 +171,7 @@ class editor_form extends \moodleform {
         $defaultvalues['h5pfile'] = $draftitemid;
         $this->set_display_options($defaultvalues);
         // Determine default action.
-        if (!get_config('mod_hvp', 'hub_is_enabled') && $content === null &&
+        if (!get_config('core_h5p', 'hub_is_enabled') && $content === null &&
             $DB->get_field_sql("SELECT id FROM {h5p_libraries} WHERE runnable = 1", null, IGNORE_MULTIPLE) === false) {
             $defaultvalues['h5paction'] = 'upload';
         }

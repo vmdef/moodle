@@ -36,6 +36,7 @@ $url = new \moodle_url('/h5p/editor.php');
 $PAGE->set_context($context);
 $PAGE->set_url($url);
 
+// TODO temporal assignment
 $data = [];
 
 $mform = new editor_form();
