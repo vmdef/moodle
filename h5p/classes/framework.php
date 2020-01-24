@@ -1641,4 +1641,27 @@ class framework implements \H5PFrameworkInterface {
 
         return null;
     }
+
+    /**
+     * TODO refactor. Don't use static methods. Verify capabilities used.
+     * Check if the current user has editor access, if not then return the
+     * given error message.
+     *
+     * @param string $error
+     * @return boolean
+     */
+    public static function has_editor_access($error) {
+        $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        $cap = ($context->contextlevel === CONTEXT_COURSE ? 'addinstance' : 'manage');
+
+//        if (!has_capability("mod/hvp:$cap", $context)) {
+        // TODO capability temporal while development
+        if (!has_capability('moodle/h5p:updatelibraries', $context)) {
+            \H5PCore::ajaxError(get_string($error, 'hvp'));
+            http_response_code(403);
+            return false;
+        }
+
+        return true;
+    }
 }
