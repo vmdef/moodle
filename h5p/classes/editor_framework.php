@@ -116,7 +116,7 @@ class editor_framework implements \H5peditorStorage {
             $librarieswithdetails = array();
             foreach ($libraries as $library) {
                 // Look for library.
-                $details = $DB->get_record_sql(
+                /*$details = $DB->get_record_sql(
                         "SELECT title,
                                 runnable,
                                 restricted,
@@ -132,6 +132,21 @@ class editor_framework implements \H5peditorStorage {
                             $library->majorVersion,
                             $library->minorVersion
                         )
+                );*/
+                // TODO Add field to table: restricted, tutorial_url, metadata_settings
+                $details = $DB->get_record_sql(
+                    "SELECT title,
+                                runnable
+                           FROM {h5p_libraries}
+                          WHERE machinename = ?
+                            AND majorversion = ?
+                            AND minorversion = ?
+                            AND semantics IS NOT NULL
+                        ", array(
+                        $library->name,
+                        $library->majorVersion,
+                        $library->minorVersion
+                    )
                 );
                 if ($details) {
                     // Library found, add details to list.
