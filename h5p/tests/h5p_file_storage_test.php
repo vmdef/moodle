@@ -28,6 +28,7 @@ namespace core_h5p\local\tests;
 use core_h5p\file_storage;
 use core_h5p\autoloader;
 use file_archive;
+use ReflectionMethod;
 use zip_archive;
 
 defined('MOODLE_INTERNAL') || die();
@@ -42,7 +43,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class h5p_file_storage_testcase extends \advanced_testcase {
 
-    /** @var \core_h5p\file_storage H5P file storage instance */
+    /** @var file_storage H5P file storage instance */
     protected $h5p_file_storage;
     /** @var \file_storage Core Moodle file_storage associated to the H5P file_storage */
     protected $h5p_fs_fs;
@@ -552,5 +553,20 @@ class h5p_file_storage_testcase extends \advanced_testcase {
         $files =  $this->h5p_fs_fs->get_area_files($this->h5p_fs_context->id, file_storage::COMPONENT,
                 file_storage::LIBRARY_FILEAREA);
         $this->assertCount(7, $files);
+    }
+
+    /**
+     * Test that the file path is returned, without the file name.
+     */
+    public function test_get_file() {
+
+        $file = '/fake/path/file.ext';
+
+        $method = new ReflectionMethod(file_storage::class, 'get_filepath');
+        $method->setAccessible(true);
+
+        $filepath = $method->invoke(new file_storage(), $file);
+
+        $this->assertEquals('/fake/path/', $filepath);
     }
 }

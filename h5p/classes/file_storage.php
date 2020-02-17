@@ -24,6 +24,9 @@
 
 namespace core_h5p;
 
+use stored_file;
+require_once($CFG->dirroot. '/lib/h5p/h5p-file-storage.interface.php');
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -45,6 +48,8 @@ class file_storage implements \H5PFileStorage {
     public const CACHED_ASSETS_FILEAREA = 'cachedassets';
     /** The export file area */
     public const EXPORT_FILEAREA = 'export';
+    /** The editor file area */
+    public const EDITOR_FILEAREA = 'editor';
 
     /**
      * @var \context $context Currently we use the system context everywhere.
@@ -328,10 +333,51 @@ class file_storage implements \H5PFileStorage {
      *
      * @param string $file path + name
      * @param string|int $fromid Content ID or 'editor' string
-     * @param int $toid Target Content ID
+     * @param stdClass $tocontent Target Content
      */
-    public function cloneContentFile($file, $fromid, $toid) {
-        // This is to be implemented when the h5p editor is introduced / created.
+    public function cloneContentFile($file, $fromid, $tocontent) {
+        // TODO What is it $tocontent?.
+        // Determine source filearea and itemid.
+        if ($fromid === self::EDITOR_FILEAREA) {
+            $sourcefilearea = self::EDITOR_FILEAREA;
+            if (empty($tocontent->instance)) {
+                // TODO core_h5p doesn't use course context. Does itemid has value?
+                $sourceitemid = \context_course::instance($tocontent->course);
+            } else {
+                // TODO core_h5p doesn't use module context. Does itemid has value?
+                $sourceitemid = \context_module::instance($tocontent->coursemodule);
+            }
+        } else {
+            $sourcefilearea = self::CONTENT_FILEAREA;
+            $sourceitemid = $fromid;
+        }
+
+        // Check to see if source exists.
+        $sourcefile = $this->get_file($sourcefilearea, $sourceitemid, $file);
+        if ($sourcefile === false) {
+            return; // Nothing to copy from.
+        }
+
+        // Check to make sure that file doesn't exist already in target.
+        if ($this->get_file(self::CONTENT_FILEAREA, $tocontent, $file) !== false) {
+            return; // File exists, no need to copy.
+        }
+
+        // Grab context for CM.
+        // TODO core_h5p doesn't use module context.
+        $context = \context_module::instance($tocontent->coursemodule);
+
+        // Create new file record.
+        $record = [
+            'contextid' => $context->id,
+            'component' => self::COMPONENT,
+            'filearea' => self::CONTENT_FILEAREA,
+            'itemid' => $tocontent->id,
+            'filepath' => '/'.dirname($file).'/',
+            'filename' => basename($file),
+        ];
+        $fs = get_file_storage();
+        $fs->create_file_from_storedfile($record, $sourcefile);
     }
 
     /**
@@ -578,7 +624,7 @@ class file_storage implements \H5PFileStorage {
      * Get files ready for export.
      *
      * @param  string $filename File name to retrieve.
-     * @return bool|\stored_file Stored file instance if exists, false if not
+     * @return bool|stored_file Stored file instance if exists, false if not
      */
     private function get_export_file(string $filename) {
         return $this->fs->get_file($this->context->id, self::COMPONENT, self::EXPORT_FILEAREA, 0, '/', $filename);
@@ -620,5 +666,26 @@ class file_storage implements \H5PFileStorage {
         global $DB;
         return $DB->get_field('files', 'itemid', ['component' => self::COMPONENT, 'filearea' => $filearea, 'filepath' => $filepath,
                 'filename' => $filename]);
+    }
+
+    /**
+     * Help make it easy to load content files.
+     *
+     * @param string $filearea File area
+     * @param int|object $itemid
+     * @param string $file path + name
+     *
+     * @return stored_file|bool stored_file instance if exists, false otherwise
+     */
+    private function get_file(string $filearea, $itemid, string $file) {
+        if ($filearea === self::EDITOR_FILEAREA) {
+            $itemid = 0;
+        } else if (is_object($itemid)) {
+            $itemid = $itemid->id;
+        }
+
+        // Load file.
+        return $this->fs->get_file($this->context->id, self::COMPONENT, $filearea, $itemid, '/'.dirname($file).'/',
+            basename($file));
     }
 }
