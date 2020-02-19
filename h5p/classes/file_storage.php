@@ -24,6 +24,8 @@
 
 namespace core_h5p;
 
+use stored_file;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -45,6 +47,8 @@ class file_storage implements \H5PFileStorage {
     public const CACHED_ASSETS_FILEAREA = 'cachedassets';
     /** The export file area */
     public const EXPORT_FILEAREA = 'export';
+    /** The editor file area */
+    public const EDITOR_FILEAREA = 'editor';
 
     /**
      * @var \context $context Currently we use the system context everywhere.
@@ -328,10 +332,50 @@ class file_storage implements \H5PFileStorage {
      *
      * @param string $file path + name
      * @param string|int $fromid Content ID or 'editor' string
-     * @param int $toid Target Content ID
+     * @param \stdClass $tocontent Target Content
      */
-    public function cloneContentFile($file, $fromid, $toid) {
-        // This is to be implemented when the h5p editor is introduced / created.
+    public function cloneContentFile($file, $fromid, $tocontent) {
+        // TODO What is it $tocontent? Could be the H5P content id (h5p table id)?
+        // TODO Instead of using a literal, $fromid could be 0 for the editor
+        // Determine source filearea and itemid.
+        if ($fromid === self::EDITOR_FILEAREA) {
+            $sourcefilearea = self::EDITOR_FILEAREA;
+            $sourceitemid = 0;
+        } else {
+            $sourcefilearea = self::CONTENT_FILEAREA;
+            $sourceitemid = $fromid;
+        }
+
+        $filepath = '/'.dirname($file).'/';
+        $filename = basename($file);
+
+        // Check to see if source exists.
+        //$sourcefile = $this->get_file($sourcefilearea, $sourceitemid, $file);
+        $sourcefile = $this->fs->get_file($this->context->id, self::COMPONENT, $sourcefilearea, $sourceitemid, $filepath,
+            $filename);
+        if ($sourcefile === false) {
+            return; // Nothing to copy from.
+        }
+
+        // Check to make sure that file doesn't exist already in target.
+        //if ($this->get_file(self::CONTENT_FILEAREA, $tocontent, $file) !== false) {
+        $targetfile = $this->fs->get_file($this->context->id,self::CONTENT_FILEAREA, $sourcefilearea, $tocontent->id, $filepath,
+            $filename);
+        if ( $targetfile !== false) {
+            return; // File exists, no need to copy.
+        }
+
+        // Create new file record.
+        $record = [
+            'contextid' => $this->context->id,
+            'component' => self::COMPONENT,
+            'filearea' => self::CONTENT_FILEAREA,
+            'itemid' => $tocontent->id,
+            'filepath' => $filepath,
+            'filename' => $filename,
+        ];
+        $fs = get_file_storage();
+        $fs->create_file_from_storedfile($record, $sourcefile);
     }
 
     /**
@@ -348,15 +392,15 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
-     * Checks to see if content has the given file.
-     * Used when saving content.
+     * Checks to see if an H5P content has the given file.
      *
      * @param string $file path + name
-     * @param int $contentid
-     * @return string|int File ID or NULL if not found
+     * @param int $content
+     * @return int|null File ID or NULL if not found
      */
-    public function getContentFile($file, $contentid) {
-        // This is to be implemented when the h5p editor is introduced / created.
+    public function getContentFile($file, $content): ?int {
+        $file = $this->getFile('content', $content, $file);
+        return ($file === false ? null : $file->get_id());
     }
 
     /**
@@ -578,7 +622,7 @@ class file_storage implements \H5PFileStorage {
      * Get files ready for export.
      *
      * @param  string $filename File name to retrieve.
-     * @return bool|\stored_file Stored file instance if exists, false if not
+     * @return bool|stored_file Stored file instance if exists, false if not
      */
     private function get_export_file(string $filename) {
         return $this->fs->get_file($this->context->id, self::COMPONENT, self::EXPORT_FILEAREA, 0, '/', $filename);
@@ -620,5 +664,30 @@ class file_storage implements \H5PFileStorage {
         global $DB;
         return $DB->get_field('files', 'itemid', ['component' => self::COMPONENT, 'filearea' => $filearea, 'filepath' => $filepath,
                 'filename' => $filename]);
+    }
+
+    /**
+     * Helper to make it easy to load content files.
+     *
+     * @param string $filearea
+     * @param int|object $item
+     * @param string $file path + name
+     *
+     * @return stored_file|bool
+     */
+    private function getFile($filearea, $item, $file) {
+        if ($filearea === 'editor') {
+            $itemid = 0;
+        } else if (is_object($item)) {
+            $itemid = $item->id;
+        } else {
+            $itemid = $item;
+        }
+
+        $filepath = '/'. dirname($file). '/';
+        $filename = basename($file);
+
+        // Load file.
+        return $this->fs->get_file($this->context->id, self::COMPONENT, $filearea, $itemid, $filepath, $filename);
     }
 }

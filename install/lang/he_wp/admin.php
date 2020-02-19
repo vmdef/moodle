@@ -30,5 +30,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['parentlanguage'] = 'hi';
-$string['thislanguage'] = 'वर्कप्लेस  के लिए  हिंदी';
+$string['clianswerno'] = 'ל';
+$string['cliansweryes'] = 'כ';
+$string['cliincorrectvalueretry'] = 'ערך לא תקין, נסו שוב בבקשה';

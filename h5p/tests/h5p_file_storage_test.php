@@ -28,6 +28,7 @@ namespace core_h5p\local\tests;
 use core_h5p\file_storage;
 use core_h5p\autoloader;
 use file_archive;
+use ReflectionMethod;
 use zip_archive;
 
 defined('MOODLE_INTERNAL') || die();
@@ -38,11 +39,11 @@ defined('MOODLE_INTERNAL') || die();
  * @package    core_h5p
  * @copyright  2019 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @runTestsInSeparateProcesses
+
  */
 class h5p_file_storage_testcase extends \advanced_testcase {
 
-    /** @var \core_h5p\file_storage H5P file storage instance */
+    /** @var file_storage H5P file storage instance */
     protected $h5p_file_storage;
     /** @var \file_storage Core Moodle file_storage associated to the H5P file_storage */
     protected $h5p_fs_fs;
@@ -552,5 +553,71 @@ class h5p_file_storage_testcase extends \advanced_testcase {
         $files =  $this->h5p_fs_fs->get_area_files($this->h5p_fs_context->id, file_storage::COMPONENT,
                 file_storage::LIBRARY_FILEAREA);
         $this->assertCount(7, $files);
+    }
+
+    /**
+     * Test that a file is copied from another H5P content or the H5P editor.
+     */
+    public function test_cloneContentFile() {
+        $file = 'images/fake.jpg';
+        $filepath = '/'.dirname($file).'/';
+        $filename = basename($file);
+
+        $content = 'abcd';
+
+        $filerecord = array(
+            'contextid' => $this->h5p_fs_context->id,
+            'component' => file_storage::COMPONENT,
+            'filearea'  => file_storage::EDITOR_FILEAREA,
+            'itemid'    => 0,
+            'filepath'  => $filepath,
+            'filename'  => $filename,
+        );
+
+        $this->h5p_fs_fs->create_file_from_string($filerecord, $content);
+
+        $targetcontent = new \stdClass();
+        $targetcontent->id = 999;
+
+        // Check the file doesn't exists before cloning.
+        $this->assertFalse($this->h5p_fs_fs->get_file($this->h5p_fs_context->id, file_storage::COMPONENT,
+            file_storage::CONTENT_FILEAREA, $targetcontent->id, $filepath, $filename));
+
+        // Copy file from the editor.
+        $this->h5p_file_storage->cloneContentFile($file, 'editor', $targetcontent);
+
+        // Check the file exists after cloning.
+        $this->assertInstanceOf(\stored_file::class, $this->h5p_fs_fs->get_file($this->h5p_fs_context->id, file_storage::COMPONENT,
+            file_storage::CONTENT_FILEAREA, $targetcontent->id, $filepath, $filename));
+
+        $file = 'images/fake2.jpg';
+        $filepath = '/'.dirname($file).'/';
+        $filename = basename($file);
+
+        $sourcecontentid = 111;
+        $filerecord['filearea'] = 'content';
+        $filerecord['itemid'] = $sourcecontentid;
+        $filerecord['filepath'] = $filepath;
+        $filerecord['filename'] = $filename;
+
+        $this->h5p_fs_fs->create_file_from_string($filerecord, $content);
+
+        // Check the file doesn't exists before cloning.
+        $this->assertFalse($this->h5p_fs_fs->get_file($this->h5p_fs_context->id, file_storage::COMPONENT,
+            file_storage::CONTENT_FILEAREA, $targetcontent->id, $filepath, $filename));
+
+        // Copy file from another H5P content.
+        $this->h5p_file_storage->cloneContentFile($file, $sourcecontentid, $targetcontent);
+
+        // Check the file exists after cloning.
+        $this->assertInstanceOf(\stored_file::class, $this->h5p_fs_fs->get_file($this->h5p_fs_context->id, file_storage::COMPONENT,
+            file_storage::CONTENT_FILEAREA, $targetcontent->id, $filepath, $filename));
+    }
+
+    /**
+     * Test that a file is copied from another H5P content or the H5P editor.
+     */
+    public function test_cloneContentFile() {
+
     }
 }
