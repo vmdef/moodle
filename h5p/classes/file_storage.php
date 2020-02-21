@@ -24,6 +24,7 @@
 
 namespace core_h5p;
 
+use H5peditorFile;
 use stored_file;
 
 defined('MOODLE_INTERNAL') || die();
@@ -321,8 +322,10 @@ class file_storage implements \H5PFileStorage {
      * Save files uploaded through the editor.
      * The files must be marked as temporary until the content form is saved.
      *
-     * @param \H5peditorFile $file
+     * @param H5peditorFile $file
      * @param int $contentid
+     *
+     * @return int The id of the saved file.
      */
     public function saveFile($file, $contentid) {
         $record = array(

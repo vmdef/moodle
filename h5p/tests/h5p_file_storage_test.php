@@ -856,4 +856,9 @@ class h5p_file_storage_testcase extends \advanced_testcase {
         $this->assertFalse($this->h5p_fs_fs->file_exists($this->h5p_fs_context->id, file_storage::COMPONENT,
             file_storage::CONTENT_FILEAREA, $h5pcontentid, $filepath, $filename));
     }
+
+    public function test_saveFile(): void {
+        // TODO implement this test
+        $this->markTestIncomplete();
+    }
 }
