@@ -624,6 +624,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * Test the private method get_file, a wrapper for getting an H5P content file.
      */
     public function test_get_file(): void {
+        // TODO remove, it's in the setup
         $this->resetAfterTest();
 
         $file = 'img/fake.png';
@@ -654,6 +655,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * Test that a single file is added to Moodle files.
      */
     public function test_move_file(): void {
+        // TODO remove, it's in the setup
         $this->resetAfterTest();
 
         // Create temp folder.
@@ -693,6 +695,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * @return void
      */
     public function test_cloneContentFile(): void {
+        // TODO remove, it's in the setup
         $this->resetAfterTest();
 
         // Upload a file to the editor.
@@ -760,6 +763,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * @return void
      */
     public function test_getContentFile(): void {
+        // TODO remove, it's in the setup
         $this->resetAfterTest();
 
         $file = 'img/fake.png';
@@ -782,6 +786,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      */
     public function test_moveContentDiretory(): void {
         global $DB;
+        // TODO remove, it's in the setup
         $this->resetAfterTest();
 
         // Create temp folder.
@@ -837,6 +842,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * Test that an H5P content file is removed.
      */
     public function test_removeContentFile(): void {
+        // TODO remove, it's in the setup
         $this->resetAfterTest();
 
         $file = 'img/fake.png';
