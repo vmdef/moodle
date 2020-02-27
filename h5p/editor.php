@@ -46,7 +46,6 @@ if ($mform->is_cancelled()) {
     redirect($returnurl);
 
 } else if ($data = $mform->get_data()) {
-
 }
 
 echo $OUTPUT->header();

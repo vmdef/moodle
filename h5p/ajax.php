@@ -262,7 +262,7 @@ switch($action) {
         }
 
         //$editor = framework::instance('editor');
-        // TODO move factory before the switch
+        // TODO move factory above the switch
         $factory = new core_h5p\factory();
         $editor = $factory->get_editor();
         $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);

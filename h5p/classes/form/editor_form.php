@@ -23,6 +23,7 @@
 namespace core_h5p\form;
 
 use core_h5p\factory;
+use H5PCore;
 use tool_dataprivacy\context_instance;
 
 defined('MOODLE_INTERNAL') || die();
@@ -75,31 +76,33 @@ class editor_form extends \moodleform {
         $core = $factory->get_core();
 
         $displayoptions = $core->getDisplayOptionsForEdit();
-        if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_FRAME])) {
+        if (isset($displayoptions[H5PCore::DISPLAY_OPTION_FRAME])) {
             // Display options group.
             $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'core_h5p'));
-            $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_FRAME, get_string('enableframe', 'core_h5p'));
-            $mform->setType(\H5PCore::DISPLAY_OPTION_FRAME, PARAM_BOOL);
-            $mform->setDefault(\H5PCore::DISPLAY_OPTION_FRAME, true);
-            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
-                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_DOWNLOAD, get_string('enabledownload', 'core_h5p'));
-                $mform->setType(\H5PCore::DISPLAY_OPTION_DOWNLOAD, PARAM_BOOL);
-                $mform->setDefault(\H5PCore::DISPLAY_OPTION_DOWNLOAD, $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD]);
-                $mform->disabledIf(\H5PCore::DISPLAY_OPTION_DOWNLOAD, 'frame');
+            $mform->addElement('checkbox', H5PCore::DISPLAY_OPTION_FRAME, get_string('enableframe', 'core_h5p'));
+            $mform->setType(H5PCore::DISPLAY_OPTION_FRAME, PARAM_BOOL);
+            $mform->setDefault(H5PCore::DISPLAY_OPTION_FRAME, true);
+            if (isset($displayoptions[H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
+                $mform->addElement('checkbox', H5PCore::DISPLAY_OPTION_DOWNLOAD, get_string('enabledownload', 'core_h5p'));
+                $mform->setType(H5PCore::DISPLAY_OPTION_DOWNLOAD, PARAM_BOOL);
+                $mform->setDefault(H5PCore::DISPLAY_OPTION_DOWNLOAD, $displayoptions[H5PCore::DISPLAY_OPTION_DOWNLOAD]);
+                $mform->disabledIf(H5PCore::DISPLAY_OPTION_DOWNLOAD, 'frame');
             }
-            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED])) {
-                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_EMBED, get_string('enableembed', 'core_h5p'));
-                $mform->setType(\H5PCore::DISPLAY_OPTION_EMBED, PARAM_BOOL);
-                $mform->setDefault(\H5PCore::DISPLAY_OPTION_EMBED, $displayoptions[\H5PCore::DISPLAY_OPTION_EMBED]);
-                $mform->disabledIf(\H5PCore::DISPLAY_OPTION_EMBED, 'frame');
+            if (isset($displayoptions[H5PCore::DISPLAY_OPTION_EMBED])) {
+                $mform->addElement('checkbox', H5PCore::DISPLAY_OPTION_EMBED, get_string('enableembed', 'core_h5p'));
+                $mform->setType(H5PCore::DISPLAY_OPTION_EMBED, PARAM_BOOL);
+                $mform->setDefault(H5PCore::DISPLAY_OPTION_EMBED, $displayoptions[H5PCore::DISPLAY_OPTION_EMBED]);
+                $mform->disabledIf(H5PCore::DISPLAY_OPTION_EMBED, 'frame');
             }
-            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
-                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_COPYRIGHT, get_string('enablecopyright', 'core_h5p'));
-                $mform->setType(\H5PCore::DISPLAY_OPTION_COPYRIGHT, PARAM_BOOL);
-                $mform->setDefault(\H5PCore::DISPLAY_OPTION_COPYRIGHT, $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT]);
-                $mform->disabledIf(\H5PCore::DISPLAY_OPTION_COPYRIGHT, 'frame');
+            if (isset($displayoptions[H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
+                $mform->addElement('checkbox', H5PCore::DISPLAY_OPTION_COPYRIGHT, get_string('enablecopyright', 'core_h5p'));
+                $mform->setType(H5PCore::DISPLAY_OPTION_COPYRIGHT, PARAM_BOOL);
+                $mform->setDefault(H5PCore::DISPLAY_OPTION_COPYRIGHT, $displayoptions[H5PCore::DISPLAY_OPTION_COPYRIGHT]);
+                $mform->disabledIf(H5PCore::DISPLAY_OPTION_COPYRIGHT, 'frame');
             }
         }
+
+        $this->add_action_buttons();
 
     }
     /**
@@ -114,17 +117,17 @@ class editor_form extends \moodleform {
             $factory = new factory();
             $h5pcore = $factory->get_core();
             $displayoptions = $h5pcore->getDisplayOptionsForEdit($defaultvalues['disable']);
-            if (isset ($displayoptions[\H5PCore::DISPLAY_OPTION_FRAME])) {
-                $defaultvalues[\H5PCore::DISPLAY_OPTION_FRAME] = $displayoptions[\H5PCore::DISPLAY_OPTION_FRAME];
+            if (isset ($displayoptions[H5PCore::DISPLAY_OPTION_FRAME])) {
+                $defaultvalues[H5PCore::DISPLAY_OPTION_FRAME] = $displayoptions[H5PCore::DISPLAY_OPTION_FRAME];
             }
-            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
-                $defaultvalues[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD];
+            if (isset($displayoptions[H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
+                $defaultvalues[H5PCore::DISPLAY_OPTION_DOWNLOAD] = $displayoptions[H5PCore::DISPLAY_OPTION_DOWNLOAD];
             }
-            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED])) {
-                $defaultvalues[\H5PCore::DISPLAY_OPTION_EMBED] = $displayoptions[\H5PCore::DISPLAY_OPTION_EMBED];
+            if (isset($displayoptions[H5PCore::DISPLAY_OPTION_EMBED])) {
+                $defaultvalues[H5PCore::DISPLAY_OPTION_EMBED] = $displayoptions[H5PCore::DISPLAY_OPTION_EMBED];
             }
-            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
-                $defaultvalues[\H5PCore::DISPLAY_OPTION_COPYRIGHT] = $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT];
+            if (isset($displayoptions[H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
+                $defaultvalues[H5PCore::DISPLAY_OPTION_COPYRIGHT] = $displayoptions[H5PCore::DISPLAY_OPTION_COPYRIGHT];
             }
         }
     }
@@ -242,7 +245,9 @@ class editor_form extends \moodleform {
      */
     private function validate_created(&$data, &$errors) {
         // Validate library and params used in editor.
-        $core = \mod_hvp\framework::instance();
+        //$core = \mod_hvp\framework::instance();
+        $factory = new factory();
+        $core = $factory->get_core();
         // Get library array from string.
         $library = H5PCore::libraryFromString($data['h5plibrary']);
         if (!$library) {
@@ -286,9 +291,9 @@ class editor_form extends \moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         // Validate max grade as a non-negative numeric value.
-        if (!is_numeric($data['maximumgrade']) || $data['maximumgrade'] < 0) {
+/*        if (!is_numeric($data['maximumgrade']) || $data['maximumgrade'] < 0) {
             $errors['maximumgrade'] = get_string('maximumgradeerror', 'core_h5p');
-        }
+        }*/
         if ($data['h5paction'] === 'upload') {
             // Validate uploaded H5P file.
             unset($errors['name']); // Will be set in data_postprocessing().
@@ -309,12 +314,15 @@ class editor_form extends \moodleform {
     public function data_postprocessing($data) {
         // Determine disabled content features.
         $options = array(
-            \H5PCore::DISPLAY_OPTION_FRAME     => isset($data->frame) ? $data->frame : 0,
-            \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($data->export) ? $data->export : 0,
-            \H5PCore::DISPLAY_OPTION_EMBED     => isset($data->embed) ? $data->embed : 0,
-            \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($data->copyright) ? $data->copyright : 0,
+            H5PCore::DISPLAY_OPTION_FRAME     => isset($data->frame) ? $data->frame : 0,
+            H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($data->export) ? $data->export : 0,
+            H5PCore::DISPLAY_OPTION_EMBED     => isset($data->embed) ? $data->embed : 0,
+            H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($data->copyright) ? $data->copyright : 0,
         );
-        $core = \mod_hvp\framework::instance();
+        //$core = \mod_hvp\framework::instance();
+        $factory = new factory();
+        $core = $factory->get_core();
+
         $data->disable = $core->getStorableDisplayOptions($options, 0);
         // Remove metadata wrapper from form data.
         $params = json_decode($data->h5pparams);
@@ -333,7 +341,9 @@ class editor_form extends \moodleform {
             if (empty($data->metadata->title)) {
                 // Fix for legacy content upload to work.
                 // Fetch title from h5p.json or use a default string if not available.
-                $h5pvalidator = \mod_hvp\framework::instance('validator');
+                //$h5pvalidator = \mod_hvp\framework::instance('validator');
+                $factory = new factory();
+                $h5pvalidator = $factory->get_validator();
                 $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title']) ? 'Uploaded Content' : $h5pvalidator->h5pC->mainJsonData['title'];
             }
             $data->name = $data->metadata->title; // Sort of a hack,
@@ -351,8 +361,9 @@ class editor_form extends \moodleform {
      */
     public function get_data() {
         $data = parent::get_data();
+        // TODO: according to method documentation, it is not necessary
         if ($data) {
-            // Check if moodleform_mod class has already taken care of the data for us.
+/*            // Check if moodleform_mod class has already taken care of the data for us.
             // If not this is an older Moodle or Totara site that we need to treat differently.
             $class = new ReflectionClass('moodleform_mod');
             $method = $class->getMethod('get_data');
@@ -363,9 +374,10 @@ class editor_form extends \moodleform {
                 // they can be added to the DB.
                 if (isset($data->gradepass)) {
                     $data->gradepass = unformat_float($data->gradepass);
-                }
+                }*/
+// TODO: data_postprocessing is not invoked in moodleform
                 $this->data_postprocessing($data);
-            }
+/*            }*/
         }
         return $data;
     }
