@@ -25,7 +25,10 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-//require_once('autoloader.php');
+use core_h5p\autoloader;
+use core_h5p\factory;
+use core_h5p\framework;
+use core_h5p\view_assets;
 
 /**
  * Get array with settings for hvp core
@@ -37,12 +40,13 @@ function hvp_get_core_settings($context) {
     global $USER, $CFG;
 
     $systemcontext = \context_system::instance();
-    $basepath = \mod_hvp\view_assets::getsiteroot() . '/';
+    $basepath = view_assets::getsiteroot() . '/';
 
     // Check permissions and generate ajax paths.
     $ajaxpaths = array();
     $savefreq = false;
-    $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$context->instanceid}&token=";
+    // TODO change ajax.php path
+    $ajaxpath = "{$basepath}h5p/ajax.php?contextId={$context->instanceid}&token=";
     if ($context->contextlevel == CONTEXT_MODULE && has_capability('mod/hvp:saveresults', $context)) {
         $ajaxpaths['setFinished'] = $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished';
         $ajaxpaths['xAPIResult'] = $ajaxpath . \H5PCore::createToken('xapiresult') . '&action=xapiresult';
@@ -56,7 +60,10 @@ function hvp_get_core_settings($context) {
         }
     }
 
-    $core = \mod_hvp\framework::instance('core');
+    //$core = \mod_hvp\framework::instance('core');
+    $factory = new factory();
+    $core = $factory->get_core();
+
 
     $settings = array(
         'baseUrl' => $basepath,
@@ -78,7 +85,7 @@ function hvp_get_core_settings($context) {
         'crossoriginCacheBuster' => isset($CFG->mod_hvp_crossoriginCacheBuster) ? $CFG->mod_hvp_crossoriginCacheBuster : null,
         'libraryConfig' => $core->h5pF->getLibraryConfig(),
         'pluginCacheBuster' => hvp_get_cache_buster(),
-        'libraryUrl' => $basepath . 'mod/hvp/library/js'
+        'libraryUrl' => $basepath . 'lib/h5p/js'
     );
 
     return $settings;
@@ -106,7 +113,7 @@ function hvp_get_core_assets($context) {
     $cachebuster = \hvp_get_cache_buster();
 
     // Use relative URL to support both http and https.
-    $liburl = \mod_hvp\view_assets::getsiteroot() . '/mod/hvp/library/';
+    $liburl = view_assets::getsiteroot() . '/lib/h5p/';
     $relpath = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $liburl);
 
     // Add core stylesheets.
@@ -135,6 +142,9 @@ function hvp_get_core_assets($context) {
 function hvp_add_editor_assets($id = null, $mformid = null) {
     global $PAGE, $CFG, $COURSE;
 
+    // Require classes from H5P third party library
+    autoloader::register();
+
     // First we need to determine the context for permission handling.
     if ($id) {
         // Use cm context when editing existing content.
@@ -154,7 +164,7 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     );
 
     // Use relative URL to support both http and https.
-    $url = \mod_hvp\view_assets::getsiteroot() . '/mod/hvp/';
+    $url = view_assets::getsiteroot() . '/lib/h5p/';
     $url = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $url);
 
     // Make sure files are reloaded for each plugin update.
@@ -174,22 +184,25 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     }
 
     // Add JavaScript with library framework integration (editor part).
-    $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-editor.js' . $cachebuster), true);
-    $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-init.js' . $cachebuster), true);
-    $PAGE->requires->js(new moodle_url('/mod/hvp/editor.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/lib/h5p/editor/scripts/h5peditor-editor.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/lib/h5p/editor/scripts/h5peditor-init.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/h5p/editor.js' . $cachebuster), true);
 
     // Add translations.
-    $language = \mod_hvp\framework::get_language();
+    $language = framework::get_language();
     $languagescript = "editor/language/{$language}.js";
-    if (!file_exists("{$CFG->dirroot}/mod/hvp/{$languagescript}")) {
+    //TODO don't use harcoded paths
+    if (!file_exists("{$CFG->dirroot}/lib/h5p/{$languagescript}")) {
         $languagescript = 'editor/language/en.js';
     }
-    $PAGE->requires->js(new moodle_url('/mod/hvp/' . $languagescript . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/lib/h5p/' . $languagescript . $cachebuster), true);
 
     // Add JavaScript settings.
-    $root = \mod_hvp\view_assets::getsiteroot();
+    $root = view_assets::getsiteroot();
     $filespathbase = "{$root}/pluginfile.php/{$context->id}/mod_hvp/";
-    $contentvalidator = \mod_hvp\framework::instance('contentvalidator');
+    //$contentvalidator = \mod_hvp\framework::instance('contentvalidator');
+    $factory = new factory();
+    $contentvalidator = $factory->get_content_validator();
     $editorajaxtoken = \H5PCore::createToken('editorajax');
     $settings['editor'] = array(
       'filesPath' => $filespathbase . 'editor',
