@@ -174,3 +174,17 @@ $string['year'] = 'Year';
 $string['years'] = 'Year(s)';
 $string['yearsfrom'] = 'Years (from)';
 $string['yearsto'] = 'Years (to)';
+
+// TODO Check this strings
+
+$string['displayoptions'] = 'displayoptions';
+$string['javascriptloading'] = 'javascriptloading';
+$string['h5pfile'] = 'h5pfile';
+$string['upload'] = 'upload';
+$string['create'] = 'create';
+$string['action'] = 'action';
+$string['enableframe'] = 'enableframe';
+$string['enabledownload'] = 'enabledownload';
+$string['enableembed'] = 'enableembed';
+$string['enablecopyright'] = 'enablecopyright';
+

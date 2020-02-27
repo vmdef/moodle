@@ -278,11 +278,13 @@ switch($action) {
     case 'files':
         $token = required_param('token', PARAM_RAW);
         $contentid = required_param('contentId', PARAM_INT);
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadfiles')) {
+        if (!framework::has_editor_access('nopermissiontouploadfiles')) {
             break;
         }
 
-        $editor = \mod_hvp\framework::instance('editor');
+        //$editor = \mod_hvp\framework::instance('editor');
+        $factory = new core_h5p\factory();
+        $editor = $factory->get_editor();
         $editor->ajax->action(H5PEditorEndpoints::FILES, $token, $contentid);
         break;
 

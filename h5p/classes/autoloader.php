@@ -56,6 +56,7 @@ class autoloader {
             'H5PEditorAjaxInterface' => '/lib/h5peditor/h5peditor-ajax.interface.php',
             'H5PEditorAjax' => '/lib/h5peditor/h5peditor-ajax.class.php',
             'H5PEventBase' => '/lib/h5p/h5p-event-base.class.php',
+            'H5peditorFile' => '/lib/h5peditor/h5peditor-file.class.php',
         ];
 
         if (isset($classes[$classname])) {

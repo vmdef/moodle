@@ -24,6 +24,7 @@ namespace core_h5p\form;
 
 use core_h5p\factory;
 use H5PCore;
+use core_h5p\framework;
 use tool_dataprivacy\context_instance;
 
 defined('MOODLE_INTERNAL') || die();
@@ -211,19 +212,23 @@ class editor_form extends \moodleform {
             } else {
                 // Prepare to validate package.
                 $file = reset($files);
-                $interface = \mod_hvp\framework::instance('interface');
+                //$interface = \mod_hvp\framework::instance('interface');
+                $factory = new factory();
+                $interface = $factory->get_framework();
                 $path = $CFG->tempdir . uniqid('/hvp-');
                 $interface->getUploadedH5pFolderPath($path);
                 $path .= '.h5p';
                 $interface->getUploadedH5pPath($path);
                 $file->copy_content_to($path);
-                $h5pvalidator = \mod_hvp\framework::instance('validator');
+
+                //$h5pvalidator = \mod_hvp\framework::instance('validator');
+                $h5pvalidator = $factory->get_validator();
                 if (! $h5pvalidator->isValidPackage()) {
                     // Errors while validating the package.
                     $errors = array_map(function ($message) {
                         return $message->message;
-                    }, \mod_hvp\framework::messages('error'));
-                    $messages = array_merge(\mod_hvp\framework::messages('info'), $errors);
+                    }, $interface->getMessages('error'));
+                    $messages = array_merge($interface->getMessages('info'), $errors);
                     $errors['h5pfile'] = implode('<br/>', $messages);
                 } else {
                     foreach ($h5pvalidator->h5pC->mainJsonData['preloadedDependencies'] as $dep) {

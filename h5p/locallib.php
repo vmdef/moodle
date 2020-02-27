@@ -52,7 +52,9 @@ function hvp_get_core_settings($context) {
         $ajaxpaths['setFinished'] = $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished';
         $ajaxpaths['xAPIResult'] = $ajaxpath . \H5PCore::createToken('xapiresult') . '&action=xapiresult';
     }
-    if (has_capability('mod/hvp:savecontentuserdata', $context)) {
+    // TODO capability savecontentuserdata required?
+    // if (has_capability('mod/hvp:savecontentuserdata', $context)) {
+    if (has_capability('moodle/h5p:updatelibraries', $context)) {
         $ajaxpaths['contentUserData'] = $ajaxpath . \H5PCore::createToken('contentuserdata') .
             '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId';
 
@@ -98,7 +100,7 @@ function hvp_get_core_settings($context) {
 /**
  * Get assets (scripts and styles) for hvp core.
  *
- * @param \context_course|\context_module $context
+ * @param \context_course|\context_module|\context_system $context
  * @return array
  */
 function hvp_get_core_assets($context) {
@@ -152,15 +154,17 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     // Require classes from H5P third party library
     autoloader::register();
 
+
     // First we need to determine the context for permission handling.
-    if ($id) {
+/*    if ($id) {
         // Use cm context when editing existing content.
         $cm = get_coursemodule_from_instance('hvp', $id);
         $context = \context_module::instance($cm->id);
     } else {
         // Use course context when there's no content, i.e. adding new content.
         $context = \context_course::instance($COURSE->id);
-    }
+    }*/
+    $context = \context_system::instance();
 
     $settings = \hvp_get_core_assets($context);
 
@@ -171,7 +175,7 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     );
 
     // Use relative URL to support both http and https.
-    $url = view_assets::getsiteroot() . '/lib/h5p/';
+    $url = view_assets::getsiteroot() . '/lib/h5peditor/';
     $url = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $url);
 
     // Make sure files are reloaded for each plugin update.
@@ -179,30 +183,30 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
 
     // Add editor styles.
     foreach (H5peditor::$styles as $style) {
-        $assets['css'][] = $url . 'editor/' . $style . $cachebuster;
+        $assets['css'][] = $url . $style . $cachebuster;
     }
 
     // Add editor JavaScript.
     foreach (H5peditor::$scripts as $script) {
         // We do not want the creator of the iframe inside the iframe.
         if ($script !== 'scripts/h5peditor-editor.js') {
-            $assets['js'][] = $url . 'editor/' . $script . $cachebuster;
+            $assets['js'][] = $url . $script . $cachebuster;
         }
     }
 
     // Add JavaScript with library framework integration (editor part).
-    $PAGE->requires->js(new moodle_url('/lib/h5p/editor/scripts/h5peditor-editor.js' . $cachebuster), true);
-    $PAGE->requires->js(new moodle_url('/lib/h5p/editor/scripts/h5peditor-init.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/lib/h5peditor/scripts/h5peditor-editor.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/lib/h5peditor/scripts/h5peditor-init.js' . $cachebuster), true);
     $PAGE->requires->js(new moodle_url('/h5p/editor.js' . $cachebuster), true);
 
     // Add translations.
     $language = framework::get_language();
-    $languagescript = "editor/language/{$language}.js";
+    $languagescript = "language/{$language}.js";
     //TODO don't use harcoded paths
-    if (!file_exists("{$CFG->dirroot}/lib/h5p/{$languagescript}")) {
-        $languagescript = 'editor/language/en.js';
+    if (!file_exists("{$CFG->dirroot}/lib/h5peditor/{$languagescript}")) {
+        $languagescript = 'language/en.js';
     }
-    $PAGE->requires->js(new moodle_url('/lib/h5p/' . $languagescript . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/lib/h5peditor/' . $languagescript . $cachebuster), true);
 
     // Add JavaScript settings.
     $root = view_assets::getsiteroot();
@@ -214,14 +218,14 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     $settings['editor'] = array(
       'filesPath' => $filespathbase . 'editor',
       'fileIcon' => array(
-        'path' => $url . 'editor/images/binary-file.png',
+        'path' => $url . 'images/binary-file.png',
         'width' => 50,
         'height' => 50,
       ),
       //'ajaxPath' => "{$url}ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
         // editor library and ajax.php file are in different folders
       'ajaxPath' => $CFG->wwwroot . '/h5p/' . "ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
-      'libraryUrl' => $url . 'editor/',
+      'libraryUrl' => $url,
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
       'metadataSemantics' => $contentvalidator->getMetadataSemantics(),
       'assets' => $assets,
@@ -236,8 +240,10 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
 
         // TODO set right context
         // Find cm context.
-        $cm      = \get_coursemodule_from_instance('hvp', $id);
-        $context = \context_module::instance($cm->id);
+        //$cm      = \get_coursemodule_from_instance('hvp', $id);
+        //$context = \context_module::instance($cm->id);
+        $context = \context_system::instance();
+
 
         // Override content URL.
         $contenturl = "{$root}/pluginfile.php/{$context->id}/core_h5p/content/{$id}";
