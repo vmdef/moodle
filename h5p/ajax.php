@@ -22,11 +22,18 @@
  */
 
 define('AJAX_SCRIPT', true);
-require(__DIR__ . '/../../config.php');
+
+use core_h5p\event;
+use core_h5p\framework;
+use core_h5p\autoloader;
+//require(__DIR__ . '/../../config.php');
+require(__DIR__ . '/../config.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once("locallib.php");
 
 require_login();
+
+autoloader::register();
 
 $action = required_param('action', PARAM_ALPHA);
 switch($action) {
@@ -217,26 +224,29 @@ switch($action) {
      *  int minorVersion
      */
     case 'libraries':
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+        if (!framework::has_editor_access('nopermissiontoviewcontenttypes')) {
             break;
         }
 
+        // TODO Moodle don't use camel
         // Get parameters.
         $name = optional_param('machineName', '', PARAM_TEXT);
         $major = optional_param('majorVersion', 0, PARAM_INT);
         $minor = optional_param('minorVersion', 0, PARAM_INT);
-        $editor = \mod_hvp\framework::instance('editor');
+
+        $factory = new core_h5p\factory();
+        $editor = $factory->get_editor();
         $language = optional_param('default-language', null, PARAM_RAW);
 
         if (!empty($name)) {
             $editor->ajax->action(H5PEditorEndpoints::SINGLE_LIBRARY, $name,
-                $major, $minor, \mod_hvp\framework::get_language(), '', '', $language);
-
-            new \mod_hvp\event(
+                $major, $minor, framework::get_language(), '', '', $language);
+// TODO temporarily ignore events. this ones
+/*            new event(
                     'library', null,
                     null, null,
                     $name, $major . '.' . $minor
-            );
+            );*/
         } else {
             $editor->ajax->action(H5PEditorEndpoints::LIBRARIES);
         }
@@ -247,11 +257,14 @@ switch($action) {
      * Load content type cache list to display available libraries in hub
      */
     case 'contenttypecache':
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+        if (!framework::has_editor_access('nopermissiontoviewcontenttypes')) {
             break;
         }
 
-        $editor = \mod_hvp\framework::instance('editor');
+        //$editor = framework::instance('editor');
+        // TODO move factory before the switch
+        $factory = new core_h5p\factory();
+        $editor = $factory->get_editor();
         $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);
         break;
 

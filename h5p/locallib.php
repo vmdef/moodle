@@ -31,6 +31,7 @@ use core_h5p\framework;
 use core_h5p\view_assets;
 
 /**
+ * TODO use player.php get_core_settings
  * Get array with settings for hvp core
  *
  * @param \context_course|\context_module [$context]
@@ -67,8 +68,11 @@ function hvp_get_core_settings($context) {
 
     $settings = array(
         'baseUrl' => $basepath,
-        'url' => "{$basepath}pluginfile.php/{$context->instanceid}/mod_hvp",
-        'urlLibraries' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries", // NOTE: Separate context from content URL !
+        //'url' => "{$basepath}pluginfile.php/{$context->instanceid}/mod_hvp",
+        'url' => "{$basepath}pluginfile.php/{$systemcontext->instanceid}/core_h5p",
+        //'urlLibraries' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries", // NOTE: Separate context from
+    // content URL !
+        'urlLibraries' => "{$basepath}pluginfile.php/{$systemcontext->id}/core_h5p/libraries",
         'postUserStatistics' => true,
         'ajax' => $ajaxpaths,
         'saveFreq' => $savefreq,
@@ -109,9 +113,12 @@ function hvp_get_core_assets($context) {
     $settings['loadedJs'] = array();
     $settings['loadedCss'] = array();
 
+    // TODO use similar method in player class
     // Make sure files are reloaded for each plugin update.
     $cachebuster = \hvp_get_cache_buster();
 
+    // TODO Don't use getsiteroot
+    // TODO relpath is right?
     // Use relative URL to support both http and https.
     $liburl = view_assets::getsiteroot() . '/lib/h5p/';
     $relpath = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $liburl);
@@ -199,7 +206,7 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
 
     // Add JavaScript settings.
     $root = view_assets::getsiteroot();
-    $filespathbase = "{$root}/pluginfile.php/{$context->id}/mod_hvp/";
+    $filespathbase = "{$root}/pluginfile.php/{$context->id}/core_h5p/";
     //$contentvalidator = \mod_hvp\framework::instance('contentvalidator');
     $factory = new factory();
     $contentvalidator = $factory->get_content_validator();
@@ -211,7 +218,9 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
         'width' => 50,
         'height' => 50,
       ),
-      'ajaxPath' => "{$url}ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
+      //'ajaxPath' => "{$url}ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
+        // editor library and ajax.php file are in different folders
+      'ajaxPath' => $CFG->wwwroot . '/h5p/' . "ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
       'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
       'metadataSemantics' => $contentvalidator->getMetadataSemantics(),
@@ -225,15 +234,18 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     if ($id !== null) {
         $settings['editor']['nodeVersionId'] = $id;
 
+        // TODO set right context
         // Find cm context.
         $cm      = \get_coursemodule_from_instance('hvp', $id);
         $context = \context_module::instance($cm->id);
 
         // Override content URL.
-        $contenturl = "{$root}/pluginfile.php/{$context->id}/mod_hvp/content/{$id}";
+        $contenturl = "{$root}/pluginfile.php/{$context->id}/core_h5p/content/{$id}";
         $settings['contents']['cid-' . $id]['contentUrl'] = $contenturl;
     }
 
+    // TODO toggle HUB use
+    $settings['hubIsEnabled'] = false;
     $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 }
 
