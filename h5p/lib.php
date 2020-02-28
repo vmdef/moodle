@@ -21,6 +21,9 @@
  * @copyright  2019 Bas Brands <bas@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use core_h5p\factory;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -113,4 +116,79 @@ function core_h5p_pluginfile($course, $cm, $context, string $filearea, array $ar
     send_stored_file($file, null, 0, $forcedownload, $options);
 
     return true;
+}
+
+/**
+ * Saves a new instance of the hvp into the database
+ *
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod_form.php) this function
+ * will create a new instance and return the id number
+ * of the new instance.
+ *
+ * @param stdClass $hvp Submitted data from the form in mod_form.php
+ * @return int The id of the newly inserted newmodule record
+ */
+function add_instance($hvp) {
+    // Save content.
+    $hvp->id = save_content($hvp);
+
+    // Set and create grade item.
+    //hvp_grade_item_update($hvp);
+
+    return $hvp->id;
+}
+
+/**
+ * Does the actual process of saving the H5P content that's submitted through
+ * the activity form
+ *
+ * @param stdClass $hvp
+ * @return int Content ID
+ */
+function save_content($hvp) {
+    $factory = new factory();
+    // Determine if we're uploading or creating.
+    if ($hvp->h5paction === 'upload') {
+        // Save uploaded package.
+        $hvp->uploaded = true;
+        //$h5pstorage = \mod_hvp\framework::instance('storage');
+        $h5pstorage = $factory->get_storage();
+        $h5pstorage->savePackage((array)$hvp);
+        $hvp->id = $h5pstorage->contentId;
+    } else {
+        // Save newly created or edited content.
+        //$core = \mod_hvp\framework::instance();
+        //$editor = \mod_hvp\framework::instance('editor');
+        $core = $factory->get_core();
+        $editor = $factory->get_editor();
+
+
+        if (!empty($hvp->id)) {
+            // Load existing content to get old parameters for comparison.
+            $content = $core->loadContent($hvp->id);
+            $oldlib = $content['library'];
+            $oldparams = json_decode($content['params']);
+        }
+
+        // Make params and library available for core to save.
+        $hvp->library = H5PCore::libraryFromString($hvp->h5plibrary);
+        $hvp->library['libraryId'] = $core->h5pF->getLibraryId($hvp->library['machineName'],
+            $hvp->library['majorVersion'],
+            $hvp->library['minorVersion']);
+
+        $hvp->id = $core->saveContent((array)$hvp);
+        // We need to process the parameters to move any images or files and
+        // to determine which dependencies the content has.
+
+        // Prepare current parameters.
+        $params = json_decode($hvp->params);
+
+        // Move any uploaded images or files. Determine content dependencies.
+        $editor->processParameters($hvp, $hvp->library, $params,
+            isset($oldlib) ? $oldlib : null,
+            isset($oldparams) ? $oldparams : null);
+    }
+
+    return $hvp->id;
 }

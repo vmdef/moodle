@@ -220,6 +220,8 @@ class editor_form extends \moodleform {
                 $path .= '.h5p';
                 $interface->getUploadedH5pPath($path);
                 $file->copy_content_to($path);
+                $interface->set_file($file);
+
 
                 //$h5pvalidator = \mod_hvp\framework::instance('validator');
                 $h5pvalidator = $factory->get_validator();
@@ -341,7 +343,7 @@ class editor_form extends \moodleform {
         unset($data->h5pparams);
         if ($data->h5paction === 'upload') {
             if (empty($data->metadata)) {
-                $data->metadata = new stdClass();
+                $data->metadata = new \stdClass();
             }
             if (empty($data->metadata->title)) {
                 // Fix for legacy content upload to work.

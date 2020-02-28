@@ -25,6 +25,7 @@
 use core_h5p\form\editor_form;
 
 require_once(__DIR__ . '/../config.php');
+require_once('lib.php');
 
 require_login();
 
@@ -37,7 +38,7 @@ $PAGE->set_context($context);
 $PAGE->set_url($url);
 
 // TODO temporal assignment
-$data = [];
+$data = $data ?? [];
 
 $mform = new editor_form();
 $mform->set_data($data);
@@ -46,7 +47,8 @@ if ($mform->is_cancelled()) {
     redirect($returnurl);
 
 } else if ($data = $mform->get_data()) {
-    print_object($data);exit;
+    $h5pid = add_instance($data);
+    var_dump($data);exit;
 }
 
 echo $OUTPUT->header();
