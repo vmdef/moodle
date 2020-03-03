@@ -1648,4 +1648,23 @@ class framework implements \H5PFrameworkInterface {
 
         return null;
     }
+
+    /**
+     * Check if the current user has editor access, if not then return the
+     * given error message.
+     *
+     * @param string $error
+     * @return boolean
+     */
+    public static function has_editor_access($error) {
+        $context = \context_system::instance();
+
+        if (!has_capability('moodle/h5p:updatelibraries', $context)) {
+            \H5PCore::ajaxError(get_string($error, 'core_h5p'));
+            http_response_code(403);
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -315,7 +315,7 @@ class helper {
             'siteUrl' => $CFG->wwwroot,
             'l10n' => array('H5P' => $core->getLocalization()),
             'user' => [],
-            'hubIsEnabled' => false,
+            'hubIsEnabled' => true,
             'reportingIsEnabled' => false,
             'crossorigin' => null,
             'libraryConfig' => $core->h5pF->getLibraryConfig(),
@@ -457,7 +457,7 @@ class helper {
             $settings['contents']['cid-' . $id]['contentUrl'] = $contenturl;
         }
 
-        $settings['hubIsEnabled'] = false;
+        //$settings['hubIsEnabled'] = false;
         $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
     }
 }
