@@ -624,7 +624,6 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * Test the private method get_file, a wrapper for getting an H5P content file.
      */
     public function test_get_file(): void {
-        $this->resetAfterTest();
 
         $file = 'img/fake.png';
         $h5pcontentid = 3;
@@ -654,7 +653,6 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * Test that a single file is added to Moodle files.
      */
     public function test_move_file(): void {
-        $this->resetAfterTest();
 
         // Create temp folder.
         $tempfolder = make_request_directory(false);
@@ -693,7 +691,6 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * @return void
      */
     public function test_cloneContentFile(): void {
-        $this->resetAfterTest();
 
         // Upload a file to the editor.
         $file = 'images/fake.jpg';
@@ -759,7 +756,6 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * @return void
      */
     public function test_getContentFile(): void {
-        $this->resetAfterTest();
 
         $file = 'img/fake.png';
         $contentid = 3;
@@ -781,7 +777,6 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      */
     public function test_moveContentDiretory(): void {
         global $DB;
-        $this->resetAfterTest();
 
         // Create temp folder.
         $tempfolder = make_request_directory(false);
@@ -836,7 +831,6 @@ class h5p_file_storage_testcase extends \advanced_testcase {
      * Test that an H5P content file is removed.
      */
     public function test_removeContentFile(): void {
-        $this->resetAfterTest();
 
         $file = 'img/fake.png';
         $filepath = '/' . dirname($file) . '/';
