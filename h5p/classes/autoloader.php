@@ -51,6 +51,11 @@ class autoloader {
             'H5PDevelopment' => '/lib/h5p/h5p-development.class.php',
             'H5PFileStorage' => '/lib/h5p/h5p-file-storage.interface.php',
             'H5PMetadata' => '/lib/h5p/h5p-metadata.class.php',
+            'H5peditor' => '/lib/h5peditor/h5peditor.class.php',
+            'H5peditorStorage' => '/lib/h5peditor/h5peditor-storage.interface.php',
+            'H5PEditorAjaxInterface' => '/lib/h5peditor/h5peditor-ajax.interface.php',
+            'H5PEditorAjax' => '/lib/h5peditor/h5peditor-ajax.class.php',
+            'H5peditorFile' => 'lib/h5peditor/h5peditor-file.class.php'
         ];
 
         if (isset($classes[$classname])) {

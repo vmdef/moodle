@@ -65,6 +65,7 @@ lib/babel-polyfill/
 lib/mdn-polyfills/
 lib/emoji-data/
 lib/h5p/
+lib/h5peditor/
 media/player/videojs/amd/src/video-lazy.js
 media/player/videojs/amd/src/Youtube-lazy.js
 media/player/videojs/videojs/
