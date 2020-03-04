@@ -557,18 +557,6 @@ class player {
     }
 
     /**
-     * Get a query string with the theme revision number to include at the end
-     * of URLs. This is used to force the browser to reload the asset when the
-     * theme caches are cleared.
-     *
-     * @return string
-     */
-    private function get_cache_buster(): string {
-        global $CFG;
-        return '?ver=' . $CFG->themerev;
-    }
-
-    /**
      * Get the identifier for the H5P content, to be used in the arrays as index.
      *
      * @return string The identifier.
@@ -583,34 +571,10 @@ class player {
      * @return Array core H5P assets.
      */
     private function get_assets(): array {
-        global $CFG;
-
-        // Get core settings.
-        $settings = $this->get_core_settings();
-        $settings['core'] = [
-          'styles' => [],
-          'scripts' => []
-        ];
-        $settings['loadedJs'] = [];
-        $settings['loadedCss'] = [];
-
-        // Make sure files are reloaded for each plugin update.
-        $cachebuster = $this->get_cache_buster();
-
-        // Use relative URL to support both http and https.
-        $liburl = $CFG->wwwroot . '/lib/h5p/';
-        $relpath = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $liburl);
-
-        // Add core stylesheets.
-        foreach (core::$styles as $style) {
-            $settings['core']['styles'][] = $relpath . $style . $cachebuster;
-            $this->cssrequires[] = new \moodle_url($liburl . $style . $cachebuster);
-        }
-        // Add core JavaScript.
-        foreach (core::get_scripts() as $script) {
-            $settings['core']['scripts'][] = $script->out(false);
-            $this->jsrequires[] = $script;
-        }
+        // Get core assets.
+        $settings = helper::get_core_assets();
+        // Added here because in the helper we don't have the h5p content id.
+        $settings['moodleLibraryPaths'] = $this->core->get_dependency_roots($this->h5pid);
 
         $cid = $this->get_cid();
         // The filterParameters function should be called before getting the dependencyfiles because it rebuild content
@@ -653,44 +617,6 @@ class player {
             $settings['contents'][$cid]['scripts'] = $this->core->getAssetsUrls($files['scripts']);
             $settings['contents'][$cid]['styles']  = $this->core->getAssetsUrls($files['styles']);
         }
-        return $settings;
-    }
-
-    /**
-     * Get the settings needed by the H5P library.
-     *
-     * @return array The settings.
-     */
-    private function get_core_settings(): array {
-        global $CFG;
-
-        $basepath = $CFG->wwwroot . '/';
-        $systemcontext = \context_system::instance();
-
-        // Generate AJAX paths.
-        $ajaxpaths = [];
-        $ajaxpaths['xAPIResult'] = '';
-        $ajaxpaths['contentUserData'] = '';
-
-        $settings = array(
-            'baseUrl' => $basepath,
-            'url' => "{$basepath}pluginfile.php/{$systemcontext->instanceid}/core_h5p",
-            'urlLibraries' => "{$basepath}pluginfile.php/{$systemcontext->id}/core_h5p/libraries",
-            'postUserStatistics' => false,
-            'ajax' => $ajaxpaths,
-            'saveFreq' => false,
-            'siteUrl' => $CFG->wwwroot,
-            'l10n' => array('H5P' => $this->core->getLocalization()),
-            'user' => [],
-            'hubIsEnabled' => false,
-            'reportingIsEnabled' => false,
-            'crossorigin' => null,
-            'libraryConfig' => $this->core->h5pF->getLibraryConfig(),
-            'pluginCacheBuster' => $this->get_cache_buster(),
-            'libraryUrl' => $basepath . 'lib/h5p/js',
-            'moodleLibraryPaths' => $this->core->get_dependency_roots($this->h5pid),
-        );
-
         return $settings;
     }
 
