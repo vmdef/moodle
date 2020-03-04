@@ -2212,5 +2212,32 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2020013000.01);
     }
 
+    if ($oldversion < 2020022800.03) {
+
+        // Define field id to be added to h5p_libraries_languages.
+        $table = new xmldb_table('h5p_libraries_languages');
+
+        // Adding fields to table h5p_libraries_languages.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('libraryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        $table->add_field('languagecode', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'libraryid');
+        $table->add_field('languagejson', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'languagecode');
+
+        // Adding primary key to table h5p_libraries_languages.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        // Adding unique key to table h5p_libraries_languages.
+        $table->add_key('library-language', XMLDB_KEY_UNIQUE, ['libraryid', 'languagecode']);
+        // Adding foreign key to the table h5p_libraries.
+        $table->add_key('fk_libraryid', XMLDB_KEY_FOREIGN, ['libraryid'], 'h5p_libraries', ['id']);
+
+        // Conditionally launch create table for h5p_libraries_languages.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2020022800.03);
+    }
+
     return true;
 }

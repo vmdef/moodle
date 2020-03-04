@@ -32,6 +32,7 @@ use \core_h5p\core as core;
 use \H5PStorage as storage;
 use \H5PValidator as validator;
 use \H5PContentValidator as content_validator;
+use \H5peditor;
 
 /**
  * H5P factory class.
@@ -57,6 +58,17 @@ class factory {
 
     /** @var content_validator The Moodle H5PContentValidator implementation */
     protected $content_validator;
+
+    /** @var editor_framework The Moodle H5peditorStorage implementation */
+    protected $editorframework;
+
+    /** @var H5peditor */
+    protected $editor;
+
+    /** @var editor_ajax */
+    protected $editorajaxinterface;
+
+
 
     /**
      * factory constructor.
@@ -136,5 +148,28 @@ class factory {
         }
 
         return $this->content_validator;
+    }
+
+    /*
+     * Returns an instance of H5Peditor class.
+     *
+     * @return H5peditor
+     */
+    public function get_editor(): H5peditor {
+        if (null === $this->editor) {
+            if (empty($this->editorframework)) {
+                $this->editorframework = new editor_framework();
+            }
+
+            if (empty($this->editorajaxinterface)) {
+                $this->editorajaxinterface = new editor_ajax();
+            }
+
+            if (empty($this->editor)) {
+                $this->editor = new \H5peditor($this->get_core(), $this->editorframework, $this->editorajaxinterface);
+            }
+        }
+
+        return $this->editor;
     }
 }
