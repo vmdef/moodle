@@ -72,6 +72,14 @@ switch($action) {
 
         break;
 
+    //Load content type cache list to display available libraries in hub.
+    case 'contenttypecache':
+        if (!framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+            break;
+        }
+
+        $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);
+        break;
 
     /*
      * Handle file upload through the editor.
