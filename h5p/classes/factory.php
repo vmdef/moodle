@@ -65,9 +65,6 @@ class factory {
     /** @var H5peditor */
     protected $editor;
 
-    /** @var editor_ajax */
-    protected $editorajaxinterface;
-
 
 
     /**
