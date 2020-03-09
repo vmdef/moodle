@@ -123,8 +123,6 @@ switch($action) {
             break;
         }
 
-        $factory = new core_h5p\factory();
-        $editor = $factory->get_editor();
         $uploadpath = $_FILES['h5p']['tmp_name'];
         $contentid = optional_param('contentId', 0, PARAM_INT);
         $editor->ajax->action(H5PEditorEndpoints::LIBRARY_UPLOAD, $token, $uploadpath, $contentid);
