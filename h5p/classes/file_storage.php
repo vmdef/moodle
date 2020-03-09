@@ -169,6 +169,9 @@ class file_storage implements \H5PFileStorage {
      * @param string $filename Name of export file.
      */
     public function saveExport($source, $filename) {
+        // Remove old export.
+        $this->deleteExport($filename);
+
         $filerecord = [
             'contextid' => $this->context->id,
             'component' => self::COMPONENT,
@@ -365,7 +368,7 @@ class file_storage implements \H5PFileStorage {
 
         // Check to see if source exists.
         $sourcefile = $this->get_file($sourcefilearea, $sourceitemid, $file);
-        if ($sourcefile === false) {
+        if ($sourcefile === null) {
             return; // Nothing to copy from.
         }
 
@@ -697,7 +700,7 @@ class file_storage implements \H5PFileStorage {
      * @param  string $filename File name to retrieve.
      * @return bool|\stored_file Stored file instance if exists, false if not
      */
-    private function get_export_file(string $filename) {
+    public function get_export_file(string $filename) {
         return $this->fs->get_file($this->context->id, self::COMPONENT, self::EXPORT_FILEAREA, 0, '/', $filename);
     }
 
@@ -785,7 +788,7 @@ class file_storage implements \H5PFileStorage {
         $record = array(
             'contextid' => $this->context->id,
             'component' => self::COMPONENT,
-            'filearea' => $contentid > 0 ? 'content' : 'editor',
+            'filearea' => $contentid > 0 ? self::CONTENT_FILEAREA : self::EDITOR_FILEAREA,
             'itemid' => $contentid > 0 ? $contentid : 0,
             'filepath' => '/' . $foldername . '/',
             'filename' => $filename

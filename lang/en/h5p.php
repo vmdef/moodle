@@ -120,6 +120,7 @@ $string['invalidselectoption'] = 'Invalid selected option in select.';
 $string['invalidsemanticsjson'] = 'Invalid semantics.json file has been included in the library {$a->%name}';
 $string['invalidsemanticstype'] = 'H5P internal error: unknown content type "{$a->@type}" in semantics. Removing content!';
 $string['invalidstring'] = 'Provided string is not valid according to regexp in semantics. (value: "{$a->%value}", regexp: "{$a->%regexp}")';
+$string['javascriptloading'] = 'Javascript loading';
 $string['librarydirectoryerror'] = 'Library directory name must match machineName or machineName-majorVersion.minorVersion (from library.json). (Directory: {$a->%directoryName} , machineName: {$a->%machineName}, majorVersion: {$a->%majorVersion}, minorVersion: {$a->%minorVersion})';
 $string['librariesmanagerdescription'] = '<p>H5P enables users to create interactive content by providing a range of content types.</p><p>To ensure that only trusted H5P content types are used on your site, you need to <i>either</i></p><ul><li>Upload H5P content types from h5p.org <i>or</i></li><li>Enable the scheduled task \'Download available H5P content types from h5p.org\'</li></ul><p>Note that users will only be able to use the H5P content types which are installed on your site.</p>';
 $string['license'] = 'License';
