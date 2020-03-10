@@ -24,9 +24,7 @@
 
 namespace core_h5p\output;
 
-use core_h5p\factory;
 use core_h5p\editor;
-use H5PCore;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -49,7 +47,8 @@ class h5peditor implements \renderable, \templatable {
         $this->context['h5plibrary'] = $library;
         $this->context['actionurl'] = new \moodle_url('/h5p/editor.php');
 
-        $this->data_preprocessing($this->context);
+        $editor = new editor();
+        $editor->data_preprocessing($this->context);
     }
 
     /**
@@ -61,50 +60,5 @@ class h5peditor implements \renderable, \templatable {
     public function export_for_template(\renderer_base $output) {
 
         return $this->context;
-    }
-
-    /**
-     * Preprocess the data sent through the form to the H5P JS Editor Library.
-     *
-     * @param $defaultvalues array Default values for the editor
-     *
-     * @return void
-     */
-    protected function data_preprocessing(&$defaultvalues): void {
-
-        $factory = new factory();
-        $core = $factory->get_core();
-        $editor = new editor();
-
-        // If there is a content id, it's an update: load the content data.
-        $content = null;
-        if (!empty($defaultvalues['id'])) {
-            // Load content.
-            $content = $core->loadContent($defaultvalues['id']);
-            if ($content === null) {
-                print_error('invalidcontentid');
-            }
-        }
-
-        // In case both contentid and library have values, content(edition) takes precedence over library(creation).
-        if ($content) {
-            $defaultvalues['h5plibrary'] = H5PCore::libraryToString($content['library']);
-        }
-
-        // Combine params and metadata in one JSON object.
-        // H5P JS Editor library expects a JSON object with the parameters and the metadata.
-        $params = ($content === null ? '{}' : $core->filterParameters($content));
-
-        $maincontentdata = array('params' => json_decode($params));
-        if (isset($content['metadata'])) {
-            $maincontentdata['metadata'] = $content['metadata'];
-        }
-
-        $defaultvalues['h5pparams'] = json_encode($maincontentdata, true);
-
-        // Add to page required editor assets.
-        $mformid = "h5peditor-form";
-        $contentid = ($content === null) ? null : $defaultvalues['id'];
-        $editor->add_editor_assets_to_page($contentid, $mformid);
     }
 }
