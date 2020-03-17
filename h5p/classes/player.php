@@ -211,14 +211,6 @@ class player {
         $settings = $this->get_assets();
         $settings['contents'][$cid] = array_merge($settings['contents'][$cid], $contentsettings);
 
-        foreach ($this->jsrequires as $script) {
-            $PAGE->requires->js($script, true);
-        }
-
-        foreach ($this->cssrequires as $css) {
-            $PAGE->requires->css($css);
-        }
-
         // Print JavaScript settings to page.
         $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
     }

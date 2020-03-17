@@ -25,9 +25,7 @@
 namespace core_h5p;
 
 use context_system;
-use H5PCore;
-use H5peditor;
-use moodle_url;
+use core_h5p\local\library\autoloader;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -329,7 +327,7 @@ class helper {
             'crossorigin' => null,
             'libraryConfig' => $core->h5pF->getLibraryConfig(),
             'pluginCacheBuster' => self::get_cache_buster(),
-            'libraryUrl' => $basepath . 'lib/h5p/js'
+            'libraryUrl' => autoloader::get_h5p_core_library_url('core/js')
         );
 
         return $settings;
@@ -356,7 +354,7 @@ class helper {
         $cachebuster = self::get_cache_buster();
 
         // Use relative URL to support both http and https.
-        $liburl = $CFG->wwwroot . '/lib/h5p/';
+        $liburl = autoloader::get_h5p_core_library_url()->out();
         $relpath = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $liburl);
 
         // Add core stylesheets.
