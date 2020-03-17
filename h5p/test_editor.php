@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core_h5p\autoloader;
+use core_h5p\local\library\autoloader;
 use core_h5p\editor_ajax;
 
 require_once(__DIR__ . '/../config.php');
@@ -77,7 +77,7 @@ if ($contentid === null && empty($library)) {
     }
 
     echo html_writer::label('Select a content to edit', 'contentid');
-    echo html_writer::select($options, 'contentid',);
+    echo html_writer::select($options, 'contentid');
 
     // Button to submit form.
     echo html_writer::start_div('', array('style' => 'margin-top: 20px'));
@@ -95,7 +95,7 @@ if ($contentid === null && empty($library)) {
     }
 
     echo html_writer::label('Select a content to create', 'library');
-    echo html_writer::select($options2, 'library',);
+    echo html_writer::select($options2, 'library');
 
     // Button to submit form.
     echo html_writer::start_div('', array('style' => 'margin-top: 20px'));
