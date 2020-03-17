@@ -169,6 +169,8 @@ class file_storage implements \H5PFileStorage {
      * @param string $filename Name of export file.
      */
     public function saveExport($source, $filename) {
+        global $USER;
+
         // Remove old export.
         $this->deleteExport($filename);
 
@@ -178,7 +180,8 @@ class file_storage implements \H5PFileStorage {
             'filearea' => self::EXPORT_FILEAREA,
             'itemid' => 0,
             'filepath' => '/',
-            'filename' => $filename
+            'filename' => $filename,
+            'userid' => $USER->id
         ];
         $this->fs->create_file_from_pathname($filerecord, $source);
     }

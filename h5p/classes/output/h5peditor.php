@@ -45,7 +45,7 @@ class h5peditor implements \renderable, \templatable {
     public function __construct(int $contentid = null, string $library = null) {
         $this->context['id'] = $contentid;
         $this->context['h5plibrary'] = $library;
-        $this->context['actionurl'] = new \moodle_url('/h5p/editor.php');
+        $this->context['actionurl'] = new \moodle_url('/h5p/editorform_handler.php');
 
         $editor = new editor();
         $editor->data_preprocessing($this->context);

@@ -25,6 +25,7 @@
 namespace core_h5p;
 
 use coding_exception;
+use core_h5p\local\library\autoloader;
 use H5PEditorEndpoints;
 
 define('AJAX_SCRIPT', true);

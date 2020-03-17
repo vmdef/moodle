@@ -24,6 +24,7 @@
 
 namespace core_h5p;
 
+use core_h5p\local\library\autoloader;
 use H5PCore;
 use H5peditor;
 use stdClass;
@@ -69,10 +70,9 @@ class editor {
      *
      * @param stdClass $content Object containing all the necessary data.
      *
-     * @return bool Success/Fail
+     * @return int Content id
      */
-    public function save_content(stdClass $content): bool {
-        global $USER;
+    public function save_content(stdClass $content): int {
 
         if (!empty($content->id)) {
             // Load existing content to get old parameters for comparison.
@@ -82,6 +82,8 @@ class editor {
             // Keep the existing display options.
             $content->disable = $oldcontent['disable'];
         }
+
+        $pathnamehash = $oldcontent['pathnamehash'] ?? null;
 
         // Make params and library available for core to save.
         $content->library = H5PCore::libraryFromString($content->h5plibrary);
@@ -95,21 +97,42 @@ class editor {
         $params = json_decode($content->params);
 
         // Move any uploaded images or files. Determine content dependencies.
-        $this->h5peditor->processParameters($content, $content->library, $params->params,
-            isset($oldlib) ? $oldlib : null,
-            isset($oldparams) ? $oldparams : null);
+        $this->h5peditor->processParameters($content, $content->library, $params->params, $oldlib ?? null, $oldparams ?? null);
 
-        $content = $this->core->loadContent($content->id);
-        $this->core->filterParameters($content);
+        $this->update_h5p_file($content, $pathnamehash);
 
-        // Update hash fields in the h5p table.
-        $file = $this->core->fs->get_export_file((isset($content['slug']) ? $content['slug'] . '-' : '') . $content['id'] . '.h5p');
-        $fs = new \file_storage();
+        return $content->id;
+    }
+
+    /**
+     * Creates or updates the H5P file and the related database data.
+     *
+     * @param stdClass $content
+     * @param string|null $pathnamehash
+     *
+     * @return void
+     */
+    private function update_h5p_file(stdClass $content, ?string $pathnamehash = null): void {
+        global $USER;
+
+        // Keep title before filtering params.
+        $title = $content->title;
+        $contentarray = $this->core->loadContent($content->id);
+        $contentarray['title'] = $title;
+
+        // Generates filtered params and export file.
+        $this->core->filterParameters($contentarray);
+
+
+        $file = $this->core->fs->get_export_file((isset($contentarray['slug']) ? $contentarray['slug'] . '-' : '') . $contentarray['id'] . '.h5p');
+        $fs = get_file_storage();
+
         if ($file) {
             $fields['contenthash'] = $file->get_contenthash();
-            // Rewrite the old H5P file.
-            if (isset($oldcontent)) {
-                $oldfile = $fs->get_file_by_hash($oldcontent['pathnamehash']);
+
+            // Updating content. Rewrite the old H5P file.
+            if ($pathnamehash !== null) {
+                $oldfile = $fs->get_file_by_hash($pathnamehash);
                 if ($oldfile) {
                     $record = [
                         'contextid' => $oldfile->get_contextid(),
@@ -118,30 +141,29 @@ class editor {
                         'itemid' => $oldfile->get_itemid(),
                         'filepath' => $oldfile->get_filepath(),
                         'filename' => $oldfile->get_filename(),
+                        'userid' => $USER->id
                     ];
                     $oldfile->delete();
                     $fs->create_file_from_storedfile($record, $file);
                 }
-                // Keep the pathname when updating an existing H5P content.
-                $pathnamehash = $oldcontent['pathnamehash'];
-            } else {
+            } else { // New content.
                 $record = [
                     'contextid' => \context_user::instance($USER->id)->id,
                     'component' => 'user',
                     'filearea' => 'private',
                     'itemid' => 0,
                     'filepath' => '/',
-                    'filename' => $content['slug'] . '.h5p',
+                    'filename' => $contentarray['slug'] . '.h5p',
+                    'userid' => $USER->id,
                 ];
                 $newfile = $fs->create_file_from_storedfile($record, $file);
                 $pathnamehash =  $newfile->get_pathnamehash();
             }
+
+            // Update hash fields in the h5p table.
             $fields['pathnamehash'] = $pathnamehash;
-
-            $this->core->h5pF->updateContentFields($content['id'], $fields);
+            $this->core->h5pF->updateContentFields($contentarray['id'], $fields);
         }
-
-        return $content['id'];
     }
 
     /**
@@ -155,8 +177,6 @@ class editor {
     private function add_editor_assets_to_page(?int $id = null, string $mformid = null): void {
         global $PAGE, $CFG;
 
-        $libeditorpath = 'lib/h5peditor';
-
         $context = \context_system::instance();
 
         $settings = helper::get_core_assets();
@@ -168,7 +188,7 @@ class editor {
         );
 
         // Use relative URL to support both http and https.
-        $url = $CFG->wwwroot . '/'. $libeditorpath . '/';
+        $url = autoloader::get_h5p_editor_library_url()->out();
         $url = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $url);
 
         // Make sure files are reloaded for each plugin update.
@@ -188,17 +208,18 @@ class editor {
         }
 
         // Add JavaScript with library framework integration (editor part).
-        $PAGE->requires->js(new \moodle_url('/'. $libeditorpath .'/scripts/h5peditor-editor.js' . $cachebuster), true);
-        $PAGE->requires->js(new \moodle_url('/'. $libeditorpath .'/scripts/h5peditor-init.js' . $cachebuster), true);
+        $PAGE->requires->js(autoloader::get_h5p_editor_library_url('scripts/h5peditor-editor.js' . $cachebuster), true);
+        $PAGE->requires->js(autoloader::get_h5p_editor_library_url('scripts/h5peditor-init.js' . $cachebuster), true);
 
         // Add translations.
         $language = framework::get_language();
         $languagescript = "language/{$language}.js";
 
-        if (!file_exists("{$CFG->dirroot}/" . $libeditorpath . "/{$languagescript}")) {
+        if (!file_exists("{$CFG->dirroot}" . autoloader::get_h5p_editor_library_base($languagescript))) {
             $languagescript = 'language/en.js';
         }
-        $PAGE->requires->js(new \moodle_url('/' . $libeditorpath .'/' . $languagescript . $cachebuster), true);
+        $PAGE->requires->js(autoloader::get_h5p_editor_library_url($languagescript . $cachebuster),
+            true);
 
         // Add JavaScript settings.
         $root = $CFG->wwwroot;
