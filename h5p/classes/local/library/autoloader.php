@@ -116,6 +116,27 @@ class autoloader {
     }
 
     /**
+     * Get a URL for the current H5P Editor Library.
+     *
+     * @param string $filepath The path within the h5p root
+     * @param array $params these params override current params or add new
+     * @return null|string
+     */
+    public static function get_h5p_editor_library_url(?string $filepath = null, ?array $params = null): ?\moodle_url {
+        return component_class_callback(self::get_handler_classname(), 'get_h5p_editor_library_url', [$filepath, $params]);
+    }
+
+    /**
+     * Get the base path for the current H5P Editor Library.
+     *
+     * @param string $filepath The path within the h5p root
+     * @return null|moodle_url
+     */
+    public static function get_h5p_editor_library_base(?string $filepath = null): ?string {
+        return component_class_callback(self::get_handler_classname(), 'get_h5p_editor_library_base', [$filepath]);
+    }
+
+    /**
      * Register the H5P autoloader.
      */
     public static function register(): void {

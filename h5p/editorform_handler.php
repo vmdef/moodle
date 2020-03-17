@@ -36,9 +36,8 @@ $cancel = optional_param('cancel', null, PARAM_NOTAGS);
 require_login();
 
 // URLs to go after the form has been processed.
-// TODO changes before commit
-$saveurl = $CFG->wwwroot . '/h5p/test_editor.php';
-$cancelurl = $CFG->wwwroot . '/h5p/test_editor.php';
+$saveurl = $CFG->wwwroot;
+$cancelurl = $CFG->wwwroot;
 
 // Object with the necessary data to udpate/create the content.
 $content = new stdClass();

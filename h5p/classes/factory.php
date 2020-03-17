@@ -28,8 +28,7 @@ namespace core_h5p;
 defined('MOODLE_INTERNAL') || die();
 
 use core_h5p\local\library\autoloader;
-use core_h5p\framework;
-use core_h5p\core;
+use H5peditor;
 use H5PStorage as storage;
 use H5PValidator as validator;
 use H5PContentValidator as content_validator;

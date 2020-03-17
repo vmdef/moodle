@@ -66,6 +66,16 @@ abstract class handler {
     }
 
     /**
+     * Get the base path for the current H5P Editor Library.
+     *
+     * @param string $filepath The path within the H5P root
+     * @return null|string
+     */
+    public static function get_h5p_editor_library_base(?string $filepath = null): ?string {
+        return static::get_h5p_library_base() . "/editor/{$filepath}";
+    }
+
+    /**
      * Register the H5P autoloader.
      */
     public static function register(): void {
@@ -75,15 +85,15 @@ abstract class handler {
     /**
      * SPL Autoloading function for H5P.
      *
-     * @param string $classname The name of the class to load
+     * @param string $classpath The path of the class to load
      */
-    public static function autoload($classname): void {
+    public static function autoload($classpath): void {
         global $CFG;
 
         $classes = static::get_class_list();
 
-        if (isset($classes[$classname])) {
-            require_once($CFG->dirroot . static::get_h5p_core_library_base($classes[$classname]));
+        if (isset($classes[$classpath])) {
+            require_once($CFG->dirroot . $classes[$classpath]);
         }
     }
 
@@ -99,20 +109,36 @@ abstract class handler {
     }
 
     /**
+     * Get a URL for the current H5P Editor Library.
+     *
+     * @param string $filepath The path within the h5p root
+     * @param array $params these params override current params or add new
+     * @return null|moodle_url
+     */
+    public static function get_h5p_editor_library_url(?string $filepath = null, ?array $params = null): ?\moodle_url {
+        return new \moodle_url(static::get_h5p_editor_library_base($filepath), $params);
+    }
+
+    /**
      * Return the list of classes with their location within the joubel directory.
      *
      * @return array
      */
     protected static function get_class_list(): array {
         return [
-            'H5PCore' => 'h5p.classes.php',
-            'H5PFrameworkInterface' => 'h5p.classes.php',
-            'H5PContentValidator' => 'h5p.classes.php',
-            'H5PValidator' => 'h5p.classes.php',
-            'H5PStorage' => 'h5p.classes.php',
-            'H5PDevelopment' => 'h5p-development.class.php',
-            'H5PFileStorage' => 'h5p-file-storage.interface.php',
-            'H5PMetadata' => 'h5p-metadata.class.php',
+            'H5PCore' => static::get_h5p_core_library_base('h5p.classes.php'),
+            'H5PFrameworkInterface' => static::get_h5p_core_library_base('h5p.classes.php'),
+            'H5PContentValidator' => static::get_h5p_core_library_base('h5p.classes.php'),
+            'H5PValidator' => static::get_h5p_core_library_base('h5p.classes.php'),
+            'H5PStorage' => static::get_h5p_core_library_base('h5p.classes.php'),
+            'H5PDevelopment' => static::get_h5p_core_library_base('h5p-development.class.php'),
+            'H5PFileStorage' => static::get_h5p_core_library_base('h5p-file-storage.interface.php'),
+            'H5PMetadata' => static::get_h5p_core_library_base('h5p-metadata.class.php'),
+            'H5peditor' => static::get_h5p_editor_library_base('h5peditor.class.php'),
+            'H5peditorStorage' => static::get_h5p_editor_library_base('h5peditor-storage.interface.php'),
+            'H5PEditorAjaxInterface' => static::get_h5p_editor_library_base('h5peditor-ajax.interface.php'),
+            'H5PEditorAjax' => static::get_h5p_editor_library_base('h5peditor-ajax.class.php'),
+            'H5peditorFile' => static::get_h5p_editor_library_base('h5peditor-file.class.php'),
         ];
     }
 }
