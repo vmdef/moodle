@@ -36,12 +36,13 @@ defined('MOODLE_INTERNAL') || die();
  * @package    core_h5p
  * @copyright  2020 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
  * @runTestsInSeparateProcesses
  */
 class editor_framework_testcase extends \advanced_testcase {
 
-    /** @var editor_framework H5P editor framework instance */
-    protected $editor_framework;
+    /** @var editorframework H5P editor framework instance */
+    protected $editorframework;
 
     /**
      * Set up function for tests.
@@ -52,7 +53,7 @@ class editor_framework_testcase extends \advanced_testcase {
 
         autoloader::register();
 
-        $this->editor_framework = new editor_framework();
+        $this->editorframework = new editor_framework();
     }
 
     /**
@@ -81,10 +82,10 @@ class editor_framework_testcase extends \advanced_testcase {
      */
     public function test_getLibraries() {
         $generator = \testing_util::get_data_generator();
-        $h5p_generator = $generator->get_plugin_generator('core_h5p');
+        $h5pgenerator = $generator->get_plugin_generator('core_h5p');
 
         // Generate some h5p related data.
-        $data = $h5p_generator->generate_h5p_data();
+        $data = $h5pgenerator->generate_h5p_data();
 
         $expectedlibraries = [];
         foreach ($data as $key => $value) {
@@ -98,7 +99,7 @@ class editor_framework_testcase extends \advanced_testcase {
         ksort($expectedlibraries);
 
         // Get all libraries.
-        $libraries = $this->editor_framework->getLibraries();
+        $libraries = $this->editorframework->getLibraries();
         foreach ($libraries as $library) {
             $actuallibraries[] = $library->title;
         }
@@ -110,7 +111,7 @@ class editor_framework_testcase extends \advanced_testcase {
         $librariessubset = array_slice($expectedlibraries, 0, 4);
 
         $actuallibraries = [];
-        $libraries = $this->editor_framework->getLibraries($librariessubset);
+        $libraries = $this->editorframework->getLibraries($librariessubset);
         foreach ($libraries as $library) {
             $actuallibraries[] = $library->title;
         }
@@ -132,8 +133,7 @@ class editor_framework_testcase extends \advanced_testcase {
         }
 
         // Create several subfolders and files inside folder.
-        $filesexpected = array();
-        $numfolders = random_int(2,5);
+        $numfolders = random_int(2, 5);
         for ($numfolder = 1; $numfolder < $numfolders; $numfolder++) {
             $foldername = '/folder' . $numfolder;
             $newfolder = $h5pfolder . $foldername;
@@ -144,13 +144,12 @@ class editor_framework_testcase extends \advanced_testcase {
             for ($numfile = 1; $numfile < $numfiles; $numfile++) {
                 $filename = '/file' . $numfile . '.ext';
                 touch($newfolder . $filename);
-                $filesexpected[] =  $foldername . $filename;
             }
         }
 
         $this->assertDirectoryExists($h5pfolder);
 
-        $this->editor_framework::removeTemporarilySavedFiles($h5pfolder);
+        $this->editorframework::removeTemporarilySavedFiles($h5pfolder);
 
         $this->assertDirectoryNotExists($h5pfolder);
     }
@@ -162,7 +161,7 @@ class editor_framework_testcase extends \advanced_testcase {
         global $DB;
         // Fetch generator.
         $generator = \testing_util::get_data_generator();
-        $h5p_generator = $generator->get_plugin_generator('core_h5p');
+        $h5pgenerator = $generator->get_plugin_generator('core_h5p');
 
         // Create H5P library record in database.
         $name = 'TestLib';
@@ -171,7 +170,7 @@ class editor_framework_testcase extends \advanced_testcase {
         $minor = '0';
         $lang = 'es';
         $langjson = '{"libraryStrings": {"distributeButtonLabel": "Distribuir Parejo"}}';
-        $lib = $h5p_generator->create_library_record($name, $title, $major, $minor);
+        $lib = $h5pgenerator->create_library_record($name, $title, $major, $minor);
 
         $langrecord = [
             'libraryid' => $lib->id,
@@ -180,11 +179,11 @@ class editor_framework_testcase extends \advanced_testcase {
         ];
         $DB->insert_record('h5p_libraries_languages', $langrecord);
 
-        $languagejson = $this->editor_framework->getLanguage($name, $major, $minor, $lang);
+        $languagejson = $this->editorframework->getLanguage($name, $major, $minor, $lang);
 
         $this->assertEquals($langjson, $languagejson);
 
-        $languagejson = $this->editor_framework->getLanguage($name, $major, $minor, 'ru');
+        $languagejson = $this->editorframework->getLanguage($name, $major, $minor, 'ru');
 
         $this->assertFalse($languagejson);
     }
@@ -197,14 +196,14 @@ class editor_framework_testcase extends \advanced_testcase {
 
         // Fetch generator.
         $generator = \testing_util::get_data_generator();
-        $h5p_generator = $generator->get_plugin_generator('core_h5p');
+        $h5pgenerator = $generator->get_plugin_generator('core_h5p');
 
         // Create H5P library record in database.
         $name = 'TestLib';
         $title = 'Lib';
         $major = '1';
         $minor = '0';
-        $lib = $h5p_generator->create_library_record($name, $title, $major, $minor);
+        $lib = $h5pgenerator->create_library_record($name, $title, $major, $minor);
 
         $langs[] = 'es';
         $langs[] = 'en';
@@ -220,7 +219,7 @@ class editor_framework_testcase extends \advanced_testcase {
             $DB->insert_record('h5p_libraries_languages', $langrecord);
         }
 
-        $actuallanguages = $this->editor_framework->getAvailableLanguages($name, $major, $minor);
+        $actuallanguages = $this->editorframework->getAvailableLanguages($name, $major, $minor);
         sort($actuallanguages);
         sort($langs);
 
