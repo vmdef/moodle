@@ -793,7 +793,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
 
         // Create several folders and files inside content folder.
         $filesexpected = array();
-        $numfolders = random_int(2,5);
+        $numfolders = random_int(2, 5);
         for ($numfolder = 1; $numfolder < $numfolders; $numfolder++) {
             $foldername = '/folder' . $numfolder;
             $newfolder = $contentfolder . $foldername;
@@ -804,7 +804,7 @@ class h5p_file_storage_testcase extends \advanced_testcase {
             for ($numfile = 1; $numfile < $numfiles; $numfile++) {
                 $filename = '/file' . $numfile . '.ext';
                 touch($newfolder . $filename);
-                $filesexpected[] =  $foldername . $filename;
+                $filesexpected[] = $foldername . $filename;
             }
         }
 

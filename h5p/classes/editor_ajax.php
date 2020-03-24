@@ -62,7 +62,8 @@ class editor_ajax implements H5PEditorAjaxInterface {
                                       AND hl1.majorversion = hl2.majorversion
                              GROUP BY hl2.machinename, hl2.majorversion";
 
-        $sql = " SELECT hl4.id, hl4.machinename as machine_name, hl4.title, hl4.majorversion as major_version, hl4.minorversion as minor_version, hl4.patchversion as patch_version
+        $sql = " SELECT hl4.id, hl4.machinename as machine_name, hl4.title, hl4.majorversion as major_version,
+                        hl4.minorversion as minor_version, hl4.patchversion as patch_version, '' as has_icon, 0 as restricted
                    FROM {h5p_libraries} hl4
                    JOIN ({$maxminorversionsql}) hl3 ON hl4.machinename = hl3.machinename
                         AND hl4.majorversion = hl3.majorversion

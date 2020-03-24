@@ -28,6 +28,8 @@ namespace core_h5p;
 use core_h5p\local\library\autoloader;
 use ReflectionMethod;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  *
  * Test class covering the H5PEditorAjaxInterface interface implementation.
@@ -35,12 +37,13 @@ use ReflectionMethod;
  * @package    core_h5p
  * @copyright  2020 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
  * @runTestsInSeparateProcesses
  */
 class editor_ajax_testcase extends \advanced_testcase {
 
-    /** @var editor_ajax H5P editor ajax instance */
-    protected $editor_ajax;
+    /** @var editorajax H5P editor ajax instance */
+    protected $editorajax;
 
     /**
      * Set up function for tests.
@@ -50,7 +53,7 @@ class editor_ajax_testcase extends \advanced_testcase {
 
         autoloader::register();
 
-        $this->editor_ajax = new editor_ajax();
+        $this->editorajax = new editor_ajax();
     }
 
     /**
@@ -60,19 +63,21 @@ class editor_ajax_testcase extends \advanced_testcase {
         $this->resetAfterTest();
 
         $generator = \testing_util::get_data_generator();
-        $h5p_generator = $generator->get_plugin_generator('core_h5p');
+        $h5pgenerator = $generator->get_plugin_generator('core_h5p');
 
         // Create several libraries records.
-        $h5p_generator->create_library_record('Library1', 'Lib1', 2, 0);
-        $lib2 = $h5p_generator->create_library_record('Library2', 'Lib2', 2, 1);
+        $h5pgenerator->create_library_record('Library1', 'Lib1', 2, 0);
+        $lib2 = $h5pgenerator->create_library_record('Library2', 'Lib2', 2, 1);
         $expectedlibraries[] = $lib2->id;
-        $lib3 = $h5p_generator->create_library_record('Library3', 'Lib3', 1, 3);
+        $lib3 = $h5pgenerator->create_library_record('Library3', 'Lib3', 1, 3);
         $expectedlibraries[] = $lib3->id;
-        $h5p_generator->create_library_record('Library1', 'Lib1', 2, 1);
-        $lib12 = $h5p_generator->create_library_record('Library1', 'Lib1', 3, 0);
+        $h5pgenerator->create_library_record('Library1', 'Lib1', 2, 1);
+        $lib12 = $h5pgenerator->create_library_record('Library1', 'Lib1', 3, 0);
         $expectedlibraries[] = $lib12->id;
 
-        $actuallibraries = $this->editor_ajax->getLatestLibraryVersions();
+        $actuallibraries = $this->editorajax->getLatestLibraryVersions();
+
+        ksort($actuallibraries);
 
         $this->assertEquals($expectedlibraries, array_keys($actuallibraries));
     }
@@ -96,7 +101,7 @@ class editor_ajax_testcase extends \advanced_testcase {
 
         $token = $method->invoke($core, 'editorajax', $timefactor);
 
-        $validtoken = $this->editor_ajax->validateEditorToken($token);
+        $validtoken = $this->editorajax->validateEditorToken($token);
 
         $this->assertTrue($validtoken);
     }

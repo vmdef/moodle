@@ -25,6 +25,7 @@
 namespace core_h5p;
 
 use coding_exception;
+use core_h5p\local\library\autoloader;
 use H5PEditorEndpoints;
 
 define('AJAX_SCRIPT', true);
@@ -69,7 +70,7 @@ switch ($action) {
 
         break;
 
-    //Load content type cache list to display available libraries in hub.
+    // Load content type cache list to display available libraries in hub.
     case 'contenttypecache':
         $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);
         break;
@@ -104,7 +105,7 @@ switch ($action) {
         $editor->ajax->action(H5PEditorEndpoints::TRANSLATIONS, $language);
         break;
 
-    //Handle filtering of parameters through AJAX.
+    // Handle filtering of parameters through AJAX.
     case 'filter':
         $token = required_param('token', PARAM_RAW);
         $libraryparameters = required_param('libraryParameters', PARAM_RAW);
