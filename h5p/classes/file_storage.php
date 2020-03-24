@@ -416,7 +416,7 @@ class file_storage implements \H5PFileStorage {
         $contentsource = $source . '/content';
 
         // Move all temporary content files to editor.
-        $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($contentsource,\RecursiveDirectoryIterator::SKIP_DOTS),
+        $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($contentsource, \RecursiveDirectoryIterator::SKIP_DOTS),
                                        \RecursiveIteratorIterator::SELF_FIRST);
 
         $it->rewind();
@@ -790,7 +790,7 @@ class file_storage implements \H5PFileStorage {
         $record = array(
             'contextid' => $this->context->id,
             'component' => self::COMPONENT,
-            'filearea' => $contentid > 0 ? self::CONTENT_FILEAREA : self::EDITOR_FILEAREA,
+            'filearea' => $contentid > 0 ? 'content' : 'editor',
             'itemid' => $contentid > 0 ? $contentid : 0,
             'filepath' => '/' . $foldername . '/',
             'filename' => $filename

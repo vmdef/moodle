@@ -160,7 +160,7 @@ class factory {
         return $this->content_validator;
     }
 
-    /*
+    /**
      * Returns an instance of H5Peditor class.
      *
      * @return H5peditor

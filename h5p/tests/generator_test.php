@@ -495,6 +495,7 @@ class generator_testcase extends \advanced_testcase {
      *
      * @dataProvider test_create_content_file_provider
      * @param array $filedata Data from the file to be created.
+     * @param array $expecteddata Data expected.
      */
     public function test_create_content_file($filedata, $expecteddata): void {
         $this->resetAfterTest();
@@ -524,8 +525,6 @@ class generator_testcase extends \advanced_testcase {
 
     /**
      * Data provider for test_create_content_file(). Data from different files to be created.
-     *
-     * @param \stdClass $expected The expected saved data.
      *
      * @return array
      **/
