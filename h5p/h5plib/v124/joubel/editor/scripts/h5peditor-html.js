@@ -302,12 +302,12 @@ ns.Html.prototype.appendTo = function ($wrapper) {
   var that = this;
 
   this.$item = ns.$(this.createHtml()).appendTo($wrapper);
-  this.$input = this.$item.children('.ckeditor');
+  this.$input = this.$item.children('.htmleditor');
   this.$errors = this.$item.children('.h5p-errors');
 
   ns.bindImportantDescriptionEvents(this, this.field.name, this.parent);
 
-  var ckConfig = {
+/*  var ckConfig = {
     extraPlugins: "",
     startupFocus: true,
     enterMode: CKEDITOR.ENTER_DIV,
@@ -316,7 +316,7 @@ ns.Html.prototype.appendTo = function ($wrapper) {
     contentsCss: ns.basePath + 'styles/css/cke-contents.css', // We want to customize the CSS inside the editor
     codeSnippet_codeClass: 'h5p-hl'
   };
-  ns.$.extend(ckConfig, this.createToolbar());
+  ns.$.extend(ckConfig, this.createToolbar());*/
 
   // Look for additions in HtmlAddons
   if (ns.HtmlAddons) {
@@ -329,16 +329,16 @@ ns.Html.prototype.appendTo = function ($wrapper) {
     }
   }
 
-  this.$item.children('.ckeditor').focus(function () {
+  this.$item.children('.htmleditor').focus(function () {
 
     // Blur is not fired on destroy. Therefore we need to keep track of it!
     var blurFired = false;
 
     // Remove placeholder
-    that.$placeholder = that.$item.find('.h5peditor-ckeditor-placeholder').detach();
+    that.$placeholder = that.$item.find('.h5peditor-htmleditor-placeholder').detach();
 
     if (ns.Html.first) {
-      CKEDITOR.basePath = ns.basePath + '/ckeditor/';
+      // CKEDITOR.basePath = ns.basePath + '/ckeditor/';
     }
 
     if (ns.Html.current === that) {
@@ -347,13 +347,14 @@ ns.Html.prototype.appendTo = function ($wrapper) {
     // Remove existing CK instance.
     ns.Html.removeWysiwyg();
 
-    CKEDITOR.document.getBody = function () {
+/*    CKEDITOR.document.getBody = function () {
       return new CKEDITOR.dom.element(that.$item[0]);
-    };
+    };*/
 
     ns.Html.current = that;
-    ckConfig.width = this.offsetWidth - 8; // Avoid miscalculations
-    that.ckeditor = CKEDITOR.replace(this, ckConfig);
+    //ckConfig.width = this.offsetWidth - 8; // Avoid miscalculations
+    //that.ckeditor = CKEDITOR.replace(this, ckConfig);
+    tinyMCE.execCommand("mceAddControl", true, that.$input[0].id);
 
     that.ckeditor.on('focus', function () {
       blurFired = false;
@@ -440,12 +441,12 @@ ns.Html.prototype.createHtml = function () {
   if (this.field.description !== undefined) {
     input += ' aria-describedby="' + ns.getDescriptionId(id) + '"';
   }
-  input += ' class="ckeditor" tabindex="0" contenteditable="true">';
+  input += ' class="htmleditor" tabindex="0" contenteditable="true">';
   if (this.value !== undefined) {
     input += this.value;
   }
   else if (this.field.placeholder !== undefined) {
-    input += '<span class="h5peditor-ckeditor-placeholder">' + this.field.placeholder + '</span>';
+    input += '<span class="h5peditor-htmleditor-placeholder">' + this.field.placeholder + '</span>';
   }
   input += '</div>';
 

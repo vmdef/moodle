@@ -207,6 +207,13 @@ class editor {
             }
         }
 
+        // Add TinyMCE editor and configuration.
+        $editorpath = new \moodle_url('lib/editor/tinymce/tiny_mce/3.5.11/tiny_mce_src.js');
+        $editorconf = new \moodle_url('/h5p/js/tinymceconf.js');
+
+        $assets['js'][] = $editorpath->out();
+        $assets['js'][] = $editorconf->out();
+
         // Add JavaScript with library framework integration (editor part).
         $PAGE->requires->js(autoloader::get_h5p_editor_library_url('scripts/h5peditor-editor.js' . $cachebuster), true);
         $PAGE->requires->js(autoloader::get_h5p_editor_library_url('scripts/h5peditor-init.js' . $cachebuster), true);
