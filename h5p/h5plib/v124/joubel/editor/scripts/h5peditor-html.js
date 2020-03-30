@@ -1,4 +1,4 @@
-/* global ns CKEDITOR */
+/* global ns htmleditor */
 /**
  * Adds a html text field to the form.
  *
@@ -337,31 +337,36 @@ ns.Html.prototype.appendTo = function ($wrapper) {
     // Remove placeholder
     that.$placeholder = that.$item.find('.h5peditor-htmleditor-placeholder').detach();
 
-    if (ns.Html.first) {
-      // CKEDITOR.basePath = ns.basePath + '/ckeditor/';
-    }
-
     if (ns.Html.current === that) {
       return;
     }
     // Remove existing CK instance.
     ns.Html.removeWysiwyg();
 
-/*    CKEDITOR.document.getBody = function () {
-      return new CKEDITOR.dom.element(that.$item[0]);
-    };*/
-
     ns.Html.current = that;
     //ckConfig.width = this.offsetWidth - 8; // Avoid miscalculations
-    //that.ckeditor = CKEDITOR.replace(this, ckConfig);
-    tinyMCE.execCommand("mceAddControl", true, that.$input[0].id);
+    that.htmleditor = new tinymce.Editor(that.$input[0].id,
+                                          {
+                                            selector: that.$input[0].id,
+                                            inline: false,
+                                            theme: "simple"
+                                            // more options ….
+                                          },
+                                          tinymce.EditorManager);
+    that.htmleditor.render();
 
-    that.ckeditor.on('focus', function () {
-      blurFired = false;
+    //var ed = tinymce.get(that.$input[0].id);
+    tinyMCEHack_timer = setTimeout("",100);
+    var ed = tinymce.activeEditor;
+    tinymce.dom.Event.add(ed, 'blur', function() {
+      blurFired = true;
+      // Do not validate if the field has been hidden.
+      if (that.$item.is(':visible')) {
+        that.validate();
+      }
     });
 
-    that.ckeditor.once('destroy', function () {
-
+    ed.on('destroy', function () {
       // In some cases, the blur event is not fired. Need to be sure it is, so that
       // validation and saving is done
       if (!blurFired) {
@@ -372,27 +377,20 @@ ns.Html.prototype.appendTo = function ($wrapper) {
       // -- The value held by the field is empty AND
       // -- The value shown in the UI is empty AND
       // -- A placeholder is defined
-      var value = that.ckeditor !== undefined ? that.ckeditor.getData() : that.$input.html();
+      var value = that.htmleditor !== undefined ? that.htmleditor.getContent() : that.$input.html();
       if (that.$placeholder.length !== 0 && (value === undefined || value.length === 0) && (that.value === undefined || that.value.length === 0)) {
         that.$placeholder.appendTo(that.$item.find('.ckeditor'));
       }
     });
 
-    var blur = function () {
-      blurFired = true;
-      // Do not validate if the field has been hidden.
-      if (that.$item.is(':visible')) {
-        that.validate();
-      }
-    };
-
-    that.ckeditor.on('blur', blur);
+    // Added during tinymce instance construction
+    // that.ckeditor.on('blur', blur);
 
     // Add events to ckeditor. It is beeing done here since we know it exists
     // at this point... Use case from commit message: "Make the default
     // linkTargetType blank for ckeditor" - STGW
     if (ns.Html.first) {
-      CKEDITOR.on('dialogDefinition', function (e) {
+/*      CKEDITOR.on('dialogDefinition', function (e) {
         // Take the dialog name and its definition from the event data.
         var dialogName = e.data.name;
         var dialogDefinition = e.data.definition;
@@ -426,7 +424,7 @@ ns.Html.prototype.appendTo = function ($wrapper) {
 
           this.move(x, y, true);
         };
-      });
+      });*/
       ns.Html.first = false;
     }
   });
@@ -441,7 +439,7 @@ ns.Html.prototype.createHtml = function () {
   if (this.field.description !== undefined) {
     input += ' aria-describedby="' + ns.getDescriptionId(id) + '"';
   }
-  input += ' class="htmleditor" tabindex="0" contenteditable="true">';
+  input += ' class="htmleditor ckeditor" tabindex="0" contenteditable="true">';
   if (this.value !== undefined) {
     input += this.value;
   }
@@ -465,11 +463,11 @@ ns.Html.prototype.validate = function () {
   }
 
   // Get contents from editor
-  var value = this.ckeditor !== undefined ? this.ckeditor.getData() : this.$input.html();
+  var value = this.htmleditor !== undefined ? this.htmleditor.getContent() : this.$input.html();
 
   value = value
     // Remove placeholder text if any:
-    .replace(/<span class="h5peditor-ckeditor-placeholder">.*<\/span>/, '')
+    .replace(/<span class="h5peditor-htmleditor-placeholder">.*<\/span>/, '')
     // Workaround for Microsoft browsers that otherwise can produce non-emtpy fields causing trouble
     .replace(/^<br>$/, '');
 
@@ -510,12 +508,12 @@ ns.Html.prototype.validate = function () {
 };
 
 /**
- * Destroy H5PEditor existing CK instance. If it exists.
+ * Destroy H5PEditor existing htmleditor instance. If it exists.
  */
 ns.Html.removeWysiwyg = function () {
   if (ns.Html.current !== undefined) {
     try {
-      ns.Html.current.ckeditor.destroy();
+      ns.Html.current.htmleditor.remove();
     }
     catch (e) {
       // No-op, just stop error from propagating. This usually occurs if
@@ -542,7 +540,7 @@ ns.Html.prototype.forceValue = function (value) {
     this.$input.html(value);
   }
   else {
-    this.ckeditor.setData(value);
+    this.htmleditor.setContent(value);
   }
   this.validate();
 };
