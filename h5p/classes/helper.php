@@ -24,6 +24,9 @@
 
 namespace core_h5p;
 
+use context_system;
+use core_h5p\local\library\autoloader;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -182,7 +185,7 @@ class helper {
     public static function create_fake_stored_file_from_path(string $filepath, int $userid = 0,
             \context $context = null): \stored_file {
         if (is_null($context)) {
-            $context = \context_system::instance();
+            $context = context_system::instance();
         }
         $filerecord = [
             'contextid' => $context->id,
@@ -216,7 +219,7 @@ class helper {
 
         // Check the Display H5P filter status.
         $link = \core\plugininfo\filter::get_manage_url();
-        $status = filter_get_active_state('displayh5p', \context_system::instance()->id);
+        $status = filter_get_active_state('displayh5p', context_system::instance()->id);
         $tools[] = self::convert_info_into_array('filter_displayh5p', $link, $status);
 
         // Check H5P scheduled task.
@@ -276,5 +279,95 @@ class helper {
             'status_class' => $statusclasses[$status],
             'status_action' => $statusaction,
         ];
+    }
+
+    /**
+     * Get a query string with the theme revision number to include at the end
+     * of URLs. This is used to force the browser to reload the asset when the
+     * theme caches are cleared.
+     *
+     * @return string
+     */
+    public static function get_cache_buster(): string {
+        global $CFG;
+        return '?ver=' . $CFG->themerev;
+    }
+
+    /**
+     * Get the settings needed by the H5P library.
+     *
+     * @return array The settings.
+     */
+    public static function get_core_settings(): array {
+        global $CFG;
+
+        $basepath = $CFG->wwwroot . '/';
+        $systemcontext = context_system::instance();
+
+        // Generate AJAX paths.
+        $ajaxpaths = [];
+        $ajaxpaths['xAPIResult'] = '';
+        $ajaxpaths['contentUserData'] = '';
+
+        $factory = new factory();
+        $core = $factory->get_core();
+
+        $settings = array(
+            'baseUrl' => $basepath,
+            'url' => "{$basepath}pluginfile.php/{$systemcontext->instanceid}/core_h5p",
+            'urlLibraries' => "{$basepath}pluginfile.php/{$systemcontext->id}/core_h5p/libraries",
+            'postUserStatistics' => false,
+            'ajax' => $ajaxpaths,
+            'saveFreq' => false,
+            'siteUrl' => $CFG->wwwroot,
+            'l10n' => array('H5P' => $core->getLocalization()),
+            'user' => [],
+            'hubIsEnabled' => true,
+            'reportingIsEnabled' => false,
+            'crossorigin' => null,
+            'libraryConfig' => $core->h5pF->getLibraryConfig(),
+            'pluginCacheBuster' => self::get_cache_buster(),
+            'libraryUrl' => autoloader::get_h5p_core_library_url('core/js')
+        );
+
+        return $settings;
+    }
+
+    /**
+     * Get the core H5P assets, including all core H5P JavaScript and CSS.
+     *
+     * @return Array core H5P assets.
+     */
+    public static function get_core_assets(): array {
+        global $CFG, $PAGE;
+
+        // Get core settings.
+        $settings = self::get_core_settings();
+        $settings['core'] = [
+            'styles' => [],
+            'scripts' => []
+        ];
+        $settings['loadedJs'] = [];
+        $settings['loadedCss'] = [];
+
+        // Make sure files are reloaded for each plugin update.
+        $cachebuster = self::get_cache_buster();
+
+        // Use relative URL to support both http and https.
+        $liburl = autoloader::get_h5p_core_library_url()->out();
+        $relpath = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $liburl);
+
+        // Add core stylesheets.
+        foreach (core::$styles as $style) {
+            $settings['core']['styles'][] = $relpath . $style . $cachebuster;
+            $PAGE->requires->css = new \moodle_url($liburl . $style . $cachebuster);
+        }
+        // Add core JavaScript.
+        foreach (core::get_scripts() as $script) {
+            $settings['core']['scripts'][] = $script->out(false);
+            $PAGE->requires->js($script, true);
+        }
+
+        return $settings;
     }
 }
