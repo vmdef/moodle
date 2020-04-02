@@ -583,7 +583,8 @@ class file_storage implements \H5PFileStorage {
      */
     private function copy_directory(string $source, array $options): void {
         $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::SELF_FIRST);
+                                       \RecursiveIteratorIterator::SELF_FIRST
+                                            );
 
         $root = $options['filepath'];
 

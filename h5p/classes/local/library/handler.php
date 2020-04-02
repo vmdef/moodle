@@ -68,10 +68,10 @@ abstract class handler {
     /**
      * Get the base path for the current H5P Editor Library.
      *
-     * @param string $filepath The path within the H5P root
-     * @return null|string
+     * @param string $filepath The path within the H5P root.
+     * @return string Path to a file in the H5P Editor library.
      */
-    public static function get_h5p_editor_library_base(?string $filepath = null): ?string {
+    public static function get_h5p_editor_library_base(?string $filepath = null): string {
         return static::get_h5p_library_base() . "/editor/{$filepath}";
     }
 
@@ -102,7 +102,7 @@ abstract class handler {
      *
      * @param string $filepath The path within the h5p root
      * @param array $params these params override current params or add new
-     * @return null|moodle_url
+     * @return null|\moodle_url
      */
     public static function get_h5p_core_library_url(?string $filepath = null, ?array $params = null): ?\moodle_url {
         return new \moodle_url(static::get_h5p_core_library_base($filepath), $params);
@@ -111,9 +111,9 @@ abstract class handler {
     /**
      * Get a URL for the current H5P Editor Library.
      *
-     * @param string $filepath The path within the h5p root
-     * @param array $params these params override current params or add new
-     * @return null|moodle_url
+     * @param string $filepath The path within the h5p root.
+     * @param array $params These params override current params or add new.
+     * @return null|\moodle_url The moodle_url to a file in the H5P Editor library.
      */
     public static function get_h5p_editor_library_url(?string $filepath = null, ?array $params = null): ?\moodle_url {
         return new \moodle_url(static::get_h5p_editor_library_base($filepath), $params);
