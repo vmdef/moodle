@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Testing the Moodle local class for managing the H5P Editor.
@@ -16,6 +30,16 @@ use moodleform;
 use MoodleQuickForm;
 use page_requirements_manager;
 
+/**
+ *
+ * Test class covering the editor class.
+ *
+ * @package    core_h5p
+ * @copyright  2020 Victor Deniz <victor@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @runTestsInSeparateProcesses
+ */
 class editor_testcase extends advanced_testcase {
 
     /**
@@ -160,7 +184,7 @@ class editor_testcase extends advanced_testcase {
             $item = $h5pcorepath . $item . $cachebuster;
         });
 
-        // Add translation script
+        // Add translation script.
         $language = framework::get_language();
         $languagescript = "language/{$language}.js";
 

@@ -395,7 +395,7 @@ class editor {
         $factory = new factory();
         $contentvalidator = $factory->get_content_validator();
 
-        $editorajaxtoken = H5PCore::createToken(editor_ajax::EDITOR_AJAX_TOKEN);
+        $editorajaxtoken = core::createToken(editor_ajax::EDITOR_AJAX_TOKEN);
         $settings['editor'] = [
             'filesPath' => $filespathbase . 'editor',
             'fileIcon' => [
