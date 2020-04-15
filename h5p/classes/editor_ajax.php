@@ -98,7 +98,7 @@ class editor_ajax implements H5PEditorAjaxInterface {
      * @return bool True if successful validation
      */
     public function validateEditorToken($token): bool {
-        return \H5PCore::validToken(self::EDITOR_AJAX_TOKEN, $token);
+        return core::validToken(self::EDITOR_AJAX_TOKEN, $token);
     }
 
     /**

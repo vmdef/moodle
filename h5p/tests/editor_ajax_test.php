@@ -83,16 +83,17 @@ class editor_ajax_testcase extends \advanced_testcase {
      * Test that the method validateEditorToken validates an existing token.
      */
     public function test_validateEditorToken(): void {
-        $token = \H5PCore::createToken('editorajax');
-        $wrongaction = \H5PCore::createToken('wrongaction');
+        // The action param is not used at all.
+        $token = core::createToken('editorajax');
+        $wrongaction = core::createToken('wrongaction');
         $badtoken = 'xkadfpuealkdjsflkajsñf';
 
         $validtoken = $this->editorajax->validateEditorToken($token);
-        $invalidtoken = $this->editorajax->validateEditorToken($badtoken);
         $invalidaction = $this->editorajax->validateEditorToken($wrongaction);
+        $invalidtoken = $this->editorajax->validateEditorToken($badtoken);
 
         $this->assertTrue($validtoken);
+        $this->assertTrue($invalidaction);
         $this->assertFalse($invalidtoken);
-        $this->assertFalse($invalidaction);
     }
 }
