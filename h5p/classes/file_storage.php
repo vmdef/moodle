@@ -490,6 +490,10 @@ class file_storage implements \H5PFileStorage {
      * @return void
      */
     public function removeContentFile($file, $contentid): void {
+        // Although the interface defines $contentid as int, object given in \H5peditor::processParameters.
+        if (is_object($contentid)) {
+            $contentid = $contentid->id;
+        }
         $existingfile = $this->get_file(self::CONTENT_FILEAREA, $contentid, $file);
         if ($existingfile !== null) {
             $existingfile->delete();
