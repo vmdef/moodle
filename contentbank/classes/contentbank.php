@@ -32,6 +32,8 @@ namespace core_contentbank;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class contentbank {
+    /** @var array Enabled content types. */
+    private $enabledcontenttypes = [];
 
     /**
      * Obtains the list of core_contentbank_content objects currently active.
@@ -41,15 +43,19 @@ class contentbank {
      * @return string[] Array of contentbank contenttypes.
      */
     private function get_enabled_content_types(): array {
+        if (!empty($this->enabledcontenttypes)) {
+            return $this->enabledcontenttypes;
+        }
+
         $enabledtypes = \core\plugininfo\contenttype::get_enabled_plugins();
         $types = [];
         foreach ($enabledtypes as $name) {
             $classname = "\\contenttype_$name\\contenttype";
             if (class_exists($classname)) {
-                $types[] = $name;
+                $types[$classname] = $name;
             }
         }
-        return $types;
+        return $this->enabledcontenttypes = $types;
     }
 
     /**
@@ -154,5 +160,28 @@ class contentbank {
             return $supporters[$extension];
         }
         return null;
+    }
+
+    /**
+     * Get the list of content types that have the edition feature.
+     *
+     * @param null|\context $context Optional context to check (default null)
+     *
+     * @return array
+     */
+    public function get_editable_content_types(\context $context = null): array {
+        $editablecontenttypes = [];
+        if (empty($this->enabledcontenttypes)) {
+            $this->get_enabled_content_types();
+        }
+
+        foreach ($this->enabledcontenttypes as $classname => $name) {
+            $manager = new $classname($context);
+            if ($manager->can_edit()) {
+                $editablecontenttypes[$classname] = $name;
+            }
+        }
+
+        return $editablecontenttypes;
     }
 }

@@ -61,6 +61,25 @@ foreach ($contents as $content) {
 
 // Get the toolbar ready.
 $toolbar = array ();
+
+// Place the Add button in the toolbar.
+if (has_capability('moodle/contentbank:edit', $context)) {
+    $cb = $cb ?? new \core_contentbank\contentbank();
+    $editabletypes = $cb->get_editable_content_types();
+    if (!empty($editabletypes)) {
+        $addoptions = [];
+        foreach ($editabletypes as $class=>$type) {
+            $contentype = new $class($context);
+            $addcontenttype = new stdClass();
+            $addcontenttype->name = $type;
+            $addcontenttype->items = $contentype->get_contenttype_items();
+            $addoptions[] = $addcontenttype;
+        }
+        $toolbar[] = array('name' => 'Add', 'dropdown' => true, 'contenttypes' => $addoptions);
+    }
+}
+
+// Place the Upload button in the toolbar.
 if (has_capability('moodle/contentbank:upload', $context)) {
     // Don' show upload button if there's no plugin to support any file extension.
     $cb = new \core_contentbank\contentbank();

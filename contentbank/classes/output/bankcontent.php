@@ -89,6 +89,7 @@ class bankcontent implements renderable, templatable {
                 }
             }
         }
+
         $data->contents = $contentdata;
         $data->tools = $this->toolbar;
         return $data;

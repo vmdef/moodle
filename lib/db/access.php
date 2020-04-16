@@ -2501,5 +2501,16 @@ $capabilities = array(
             'coursecreator' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
         )
+    ),
+
+    'moodle/contentbank:edit' => array(
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'coursecreator' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+        )
     )
 );
