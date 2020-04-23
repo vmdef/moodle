@@ -47,21 +47,24 @@ $returnurl = new \moodle_url('/contentbank/index.php', ['contextid' => $context-
 $PAGE->set_url(new \moodle_url('/contentbank/view.php', ['id' => $id]));
 $PAGE->set_context($context);
 $PAGE->navbar->add($record->name);
-$PAGE->set_heading($title);
+$PAGE->set_heading($record->name);
 $title .= ": ".$record->name;
 $PAGE->set_title($title);
 $PAGE->set_pagetype('contenbank');
 
 echo $OUTPUT->header();
-echo $OUTPUT->box_start('generalbox');
 
 $managerlass = "\\$record->contenttype\\contenttype";
 if (class_exists($managerlass)) {
     $manager = new $managerlass($context);
     if ($manager->can_access()) {
-        echo $manager->get_view_content($record);
+        $content = new core_contentbank\output\view_content_page($manager, $record);
+        $contentoutput = $PAGE->get_renderer('core_contentbank');
+        echo $contentoutput->render($content);
+    } else {
+        $message = get_string('contenttypenoaccess', 'core_contentbank', $record->contenttype);
+        echo $OUTPUT->notification($message, 'error');
     }
 }
 
-echo $OUTPUT->box_end();
 echo $OUTPUT->footer();

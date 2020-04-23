@@ -20,12 +20,12 @@
     Example context (json):
     {
         {
-            "name": "Add",
-            "dropdown": true,
+            "name": "H5P Interactive Content",
+            "baseurl": http://example.com/contenbank/edit/contextid=1&plugin=h5p,
             "items": [
                 {
                     "itemname": "Accordion",
-                    "itemlink": "http://link.to/plugin/editor
+                    "itemlinkparams": "library=H5P.Accordion 1.1"
                     "itemicon": "icon.png"
                 }
             ]
@@ -41,7 +41,7 @@
         {{#contenttypes}}
             <h6 class="dropdown-header">{{ name }}</h6>
             {{#items}}
-                <a class="dropdown-item" href="{{{ itemlink }}}">
+                <a class="dropdown-item" href="{{{ baseurl }}}&{{{ itemlinkparams }}}">
                     <img alt="" class="icon" src="{{{ itemicon }}}"> {{ itemname }}
                 </a>
             {{/items}}

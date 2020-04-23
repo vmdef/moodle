@@ -62,8 +62,7 @@ class contenttype extends \core_contentbank\contenttype {
     public function get_view_content(\stdClass $record): string {
         $content = new content($record);
         $fileurl = $content->get_file_url();
-        $html = html_writer::tag('h2', $content->get_name());
-        $html .= \core_h5p\player::display($fileurl, new \stdClass(), true);
+        $html = \core_h5p\player::display($fileurl, new \stdClass(), true);
         return $html;
     }
 
@@ -123,7 +122,7 @@ class contenttype extends \core_contentbank\contenttype {
             $library = new stdClass();
             $library->key = $key;
             $library->itemname = $h5pcontenttype->title;
-            $library->itemlink = 'library=' . $h5pcontenttype->title;
+            $library->itemlinkparams = 'library=' . $key;
             $h5p_file_storage = new file_storage();
             $library->itemicon = $h5p_file_storage->get_icon_url(
                 $h5pcontenttype->id,
