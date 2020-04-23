@@ -40,18 +40,6 @@ use html_writer;
  */
 class contenttype extends \core_contentbank\contenttype {
 
-    /** The component for H5P. */
-    public const COMPONENT   = 'contenttype_h5p';
-
-    /**
-     * Fill content type.
-     *
-     * @param stdClass $content Content object to fill and validate
-     */
-    protected static function validate_content(stdClass &$content) {
-        $content->contenttype = self::COMPONENT;
-    }
-
     /**
      * Returns the HTML content to add to view.php visualizer.
      *
@@ -62,8 +50,7 @@ class contenttype extends \core_contentbank\contenttype {
     public function get_view_content(\stdClass $record): string {
         $content = new content($record);
         $fileurl = $content->get_file_url();
-        $html = html_writer::tag('h2', $content->get_name());
-        $html .= \core_h5p\player::display($fileurl, new \stdClass(), true);
+        $html = \core_h5p\player::display($fileurl, new \stdClass(), true);
         return $html;
     }
 
@@ -123,7 +110,7 @@ class contenttype extends \core_contentbank\contenttype {
             $library = new stdClass();
             $library->key = $key;
             $library->itemname = $h5pcontenttype->title;
-            $library->itemlink = 'library=' . $h5pcontenttype->title;
+            $library->itemlinkparams = 'library=' . $key;
             $h5p_file_storage = new file_storage();
             $library->itemicon = $h5p_file_storage->get_icon_url(
                 $h5pcontenttype->id,

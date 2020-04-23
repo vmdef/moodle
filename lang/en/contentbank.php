@@ -24,6 +24,7 @@
 
 $string['aria:adddropdown'] = "Add new content";
 $string['author'] = 'Author';
+$string['contenttypenoaccess'] = 'You can not view this {$a} instances';
 $string['file'] = 'Upload content';
 $string['file_help'] = 'Files may be stored in the content bank for use in courses. Only files used by content types enabled on the site may be uploaded.';
 $string['name'] = 'Content';
