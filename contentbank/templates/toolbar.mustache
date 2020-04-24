@@ -34,14 +34,19 @@
 }}
 <div class="content-bank-toolbar card border-0 mb-3">
     <div class="content-bank">
-        <div class="cb-toolbar float-sm-right">
-        {{#tools}}
-            {{#link}}<a href="{{{ link }}}" title="{{{ name }}}">{{/link}}
-                <div class="cb-tool btn btn-secondary btn-sm">
-                    {{#pix}} {{{ icon }}} {{/pix}}
-                </div>
-            {{#link}}</a>{{/link}}
-        {{/tools}}
+        <div data-region="toolbar" class="mb-1 mr-1 d-flex flex-wrap float-sm-right btn-group">
+            {{#tools}}
+                {{#dropdown}}
+                    {{>core_contentbank/toolbar_dropdown}}
+                {{/dropdown}}
+                {{^dropdown}}
+                    {{#link}}<a href="{{{ link }}}" title="{{{ name }}}">{{/link}}
+                    <div class="cb-tool btn btn-secondary btn-sm">
+                        {{#pix}} {{{ icon }}} {{/pix}}
+                    </div>
+                    {{#link}}</a>{{/link}}
+                {{/dropdown}}
+            {{/tools}}
         </div>
     </div>
 </div>

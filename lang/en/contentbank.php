@@ -22,9 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['aria:adddropdown'] = "Add new content";
 $string['author'] = 'Author';
 $string['contentdeleted'] = 'The content has been deleted.';
 $string['contentnotdeleted'] = 'An error was encountered while trying to delete the content.';
+$string['contenttypenoaccess'] = 'You can not view this {$a} instances';
 $string['deletecontent'] = 'Delete content';
 $string['deletecontentconfirm'] = '<p>Are you sure you want to delete content <em>\'{$a->name}\'</em>? It will remove the content and all its files.</p><p>This operation can not be undone.</p>';
 $string['file'] = 'Upload content';

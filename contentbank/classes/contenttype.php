@@ -39,6 +39,9 @@ abstract class contenttype {
     /** Plugin implements uploading feature */
     const CAN_UPLOAD = 'upload';
 
+    /** Plugin implements edition feature */
+    const CAN_EDIT = 'editor';
+
     /** @var context This content's context. **/
     protected $context = null;
 
@@ -236,6 +239,38 @@ abstract class contenttype {
      * @return bool True if content allows uploading. False otherwise.
      */
     protected function is_delete_allowed(content $content): bool {
+        // Plugins can overwrite this function to add any check they need.
+        return true;
+    }
+
+    /**
+     * Returns the user has permission to use the editor to edit or create content.
+     *
+     * @return bool     True if content could be edited or created. False otherwise.
+     * @throws coding_exception
+     */
+    final public function can_edit(): bool {
+        if (!$this->is_feature_supported(self::CAN_EDIT)) {
+            return false;
+        }
+
+        $pluginname = 'contenttype/'.$this->get_plugin_name();
+
+        $editioncap = $pluginname.':edit';
+        $accesscap = $pluginname.':access';
+        return has_capability('moodle/contentbank:edit', $this->context) &&
+            has_capability($editioncap, $this->context) &&
+            has_capability('moodle/contentbank:access', $this->context) &&
+            has_capability($accesscap, $this->context) &&
+            $this->is_edition_allowed();
+    }
+
+    /**
+     * Returns plugin allows edition.
+     *
+     * @return bool     True if plugin allows edition. False otherwise.
+     */
+    protected function is_edition_allowed(): bool {
         // Plugins can overwrite this function to add any check they need.
         return true;
     }
