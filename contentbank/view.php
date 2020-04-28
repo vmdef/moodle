@@ -51,7 +51,7 @@ $returnurl = new \moodle_url('/contentbank/index.php', ['contextid' => $context-
 $PAGE->set_url(new \moodle_url('/contentbank/view.php', ['id' => $id]));
 $PAGE->set_context($context);
 $PAGE->navbar->add($record->name);
-$PAGE->set_heading($title);
+$PAGE->set_heading($record->name);
 $title .= ": ".$record->name;
 $PAGE->set_title($title);
 $PAGE->set_pagetype('contenbank');
@@ -88,11 +88,13 @@ if ($contenttype->can_delete($content)) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->box_start('generalbox');
 
 if ($contenttype->can_access()) {
-    echo $contenttype->get_view_content($record);
+    $viewcontent = new core_contentbank\output\view_content($contenttype, $record);
+    echo $OUTPUT->render($viewcontent);
+} else {
+    $message = get_string('contenttypenoaccess', 'core_contentbank', $record->contenttype);
+    echo $OUTPUT->notification($message, 'error');
 }
 
-echo $OUTPUT->box_end();
 echo $OUTPUT->footer();
