@@ -32,6 +32,8 @@ namespace core_contentbank;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class contentbank {
+    /** @var array Enabled content types. */
+    private $enabledcontenttypes = null;
 
     /**
      * Obtains the list of core_contentbank_content objects currently active.
@@ -41,15 +43,19 @@ class contentbank {
      * @return string[] Array of contentbank contenttypes.
      */
     private function get_enabled_content_types(): array {
+        if (!is_null($this->enabledcontenttypes)) {
+            return $this->enabledcontenttypes;
+        }
+
         $enabledtypes = \core\plugininfo\contenttype::get_enabled_plugins();
         $types = [];
         foreach ($enabledtypes as $name) {
             $classname = "\\contenttype_$name\\contenttype";
             if (class_exists($classname)) {
-                $types[] = $name;
+                $types[$classname] = $name;
             }
         }
-        return $types;
+        return $this->enabledcontenttypes = $types;
     }
 
     /**
@@ -154,5 +160,34 @@ class contentbank {
             return $supporters[$extension];
         }
         return null;
+    }
+
+    /**
+     * Get the list of content types that have the requested feature.
+     *
+     * @param string $feature Feature code e.g CAN_UPLOAD.
+     * @param null|\context $context Optional context to check the permission to use the feature.
+     * @param bool $enabled Whether check only the enabled content types or all of them.
+     *
+     * @return array List of content types where the user has permission to access the feature.
+     */
+    public function get_contenttypes_can_feature(string $feature, \context $context = null, bool $enabled = true): array {
+        $contenttypes = [];
+        // Check enabled content types or all of them.
+        if ($enabled) {
+            $contenttypestocheck = $this->get_enabled_content_types();
+        } else {
+            $contenttypestocheck = \core\plugininfo\contenttype::get_plugins();
+        }
+
+        foreach ($contenttypestocheck as $classname => $name) {
+            $contenttype = new $classname($context);
+            // The method names that check the features permissions must follow the pattern can_feature.
+            if ($contenttype->{"can_$feature"}()) {
+                $contenttypes[$classname] = $name;
+            }
+        }
+
+        return $contenttypes;
     }
 }

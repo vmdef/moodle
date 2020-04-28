@@ -90,7 +90,61 @@ class bankcontent implements renderable, templatable {
             }
         }
         $data->contents = $contentdata;
-        $data->tools = $this->toolbar;
+        // The tools are displayed in the action bar on the index page.
+        foreach ($this->toolbar as $tool) {
+            if ($tool['name'] == 'add') {
+                $addoptions = $this->get_add_options($tool);
+                if (empty($addoptions)) {
+                    continue;
+                } else {
+                    $tool['contenttypes'] = $addoptions;
+                }
+            }
+            // Get the localization of the tool names.
+            $tool['name'] = get_string($tool['name']);
+            $data->tools[] = $tool;
+        }
+
         return $data;
+    }
+
+    /**
+     * Return the options to display in the Add dropdown.
+     *
+     * @param array $tool Editable content types.
+     *
+     * @return array An object for every content type to display in the add dropdown:
+     *     - name: the name of the content type.
+     *     - baseurl: the base content type editor URL.
+     *     - types: different types of the content type that can be created.
+     */
+    private function get_add_options(array $tool): array {
+        $editabletypes = $tool['contenttypes'];
+
+        $addoptions = [];
+        foreach ($editabletypes as $class => $type) {
+            $contentype = new $class($this->context);
+            // Get the creation options of each content type.
+            $types = $contentype->get_contenttype_types();
+            if ($types) {
+                // Add a text describing the content type as first option. This will be displayed in the drop down to
+                // separate the options for the different content types.
+                $contentdesc = new stdClass();
+                $contentdesc->typename = get_string('description', $contentype->get_contenttype_name());
+                array_unshift($types, $contentdesc);
+                // Context data for the template.
+                $addcontenttype = new stdClass();
+                // Content type name.
+                $addcontenttype->name = $type;
+                // Content type editor base URL.
+                $tool['link']->param('plugin', $type);
+                $addcontenttype->baseurl = $tool['link']->out();
+                // Different types of the content type.
+                $addcontenttype->types = $types;
+                $addoptions[] = $addcontenttype;
+            }
+        }
+
+        return $addoptions;
     }
 }
