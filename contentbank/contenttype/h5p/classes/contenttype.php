@@ -64,8 +64,7 @@ class contenttype extends \core_contentbank\contenttype {
     public function get_view_content(\stdClass $record): string {
         $content = new content($record);
         $fileurl = $content->get_file_url();
-        $html = html_writer::tag('h2', $content->get_name());
-        $html .= \core_h5p\player::display($fileurl, new \stdClass(), true);
+        $html = \core_h5p\player::display($fileurl, new \stdClass(), true);
         return $html;
     }
 
