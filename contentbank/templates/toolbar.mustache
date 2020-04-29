@@ -21,6 +21,27 @@
     {
         "tools": [
             {
+                "name": "Add",
+                "dropdown": true,
+                "link": "http://something/contentbank/edit.php?contextid=1",
+                "contenttypes": [
+                    {
+                        "name": "h5p",
+                        "baseurl": "http://something/contentbank/edit.php?contextid=1&plugin=h5p",
+                        "types": [
+                            {
+                                "typename": "H5P Interactive Content"
+                            },
+                            {
+                                "typename": "Accordion",
+                                "typeeditorparams": "library=Accordion-1.4",
+                                "typeicon": "http://something/pluginfile.php/1/core_h5p/libraries/13/H5P.Accordion-1.4/icon.svg"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "name": "Upload",
                 "link": "http://something/contentbank/contenttype/h5p/view.php?url=http://something/pluginfile.php/1/contentbank/public/accordion.h5p",
                 "icon" : "i/upload"
@@ -34,14 +55,19 @@
 }}
 <div class="content-bank-toolbar card border-0 mb-3">
     <div class="content-bank">
-        <div class="cb-toolbar float-sm-right">
-        {{#tools}}
-            {{#link}}<a href="{{{ link }}}" title="{{{ name }}}">{{/link}}
-                <div class="cb-tool icon-no-margin btn btn-secondary btn-lg">
-                    {{#pix}} {{{ icon }}} {{/pix}}
-                </div>
-            {{#link}}</a>{{/link}}
-        {{/tools}}
+        <div data-region="toolbar" class="cb-toolbar float-sm-right btn-group">
+            {{#tools}}
+                {{#dropdown}}
+                    {{>core_contentbank/toolbar_dropdown}}
+                {{/dropdown}}
+                {{^dropdown}}
+                    {{#link}}<a href="{{{ link }}}" title="{{{ name }}}">{{/link}}
+                    <div class="cb-tool icon-no-margin btn btn-secondary">
+                        {{#name}} {{name}} {{/name}} {{#pix}} {{{ icon }}} {{/pix}}
+                    </div>
+                    {{#link}}</a>{{/link}}
+                {{/dropdown}}
+            {{/tools}}
         </div>
     </div>
 </div>
