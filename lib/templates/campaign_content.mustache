@@ -33,15 +33,14 @@
     Example context (json):
     { "lang": "en"}
 }}
-<div class="alert alert-secondary alert-block fade in alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
+<div class="alert alert-secondary alert-block fade in">
     <iframe id="campaign-content" class="w-100 border-0"></iframe>
 </div>
 {{#js}}
 (function() {
     var iframe = document.getElementById('campaign-content');
     iframe.src = 'https://campaign.moodle.org/current/lms/{{lang}}/';
-    window.addEventListener('message', function (event) {
+    window.addEventListener('message', function(event) {
         if (event.origin === 'https://campaign.moodle.org') {
             iframe.style.height = event.data + 'px';
         }
