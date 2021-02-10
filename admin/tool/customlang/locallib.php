@@ -211,14 +211,22 @@ class tool_customlang_utils {
             return false;
         }
 
-        // get all customized strings from updated components
+        if (is_null(self::$components)) {
+            self::$components = self::list_components();
+        }
+
+        list($insql, $inparams) = $DB->get_in_or_equal(self::$components);
+
+        // get all customized strings from updated valid components
         $sql = "SELECT s.*, c.name AS component
                   FROM {tool_customlang} s
                   JOIN {tool_customlang_components} c ON s.componentid = c.id
                  WHERE s.lang = ?
                        AND (s.local IS NOT NULL OR s.modified = 1)
+                       AND c.name $insql
               ORDER BY componentid, stringid";
-        $strings = $DB->get_records_sql($sql, array($lang));
+        array_unshift($inparams, $lang);
+        $strings = $DB->get_records_sql($sql, $inparams);
 
         $files = array();
         foreach ($strings as $string) {
