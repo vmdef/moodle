@@ -1,0 +1,33 @@
+INSTALL
+=======
+
+This plugin should be installed into the /local/ 
+directory of moodle, e.g:
+
+cd /var/www/vhosts/moodle.org/local/
+git clone git@github.com:moodlehq/moodle-local_chatlogs.git chatlogs
+
+The CLI instaled should then be run to install the module.
+
+SYNC WITH LOGS
+==============
+
+The script local/chatlogs/syncchatlogs.php should be run periodically by
+cron to retrieve chat logs from the jabber server.
+
+
+In order to sync the logs from the chat server the sync script needs 
+config. This should be put in local/chatlogs/sync-config.php and the
+format is as follows:
+
+cat sync-config.php 
+<?php
+defined('MOODLE_INTERNAL') || die();
+
+$SYNC_DBHOST = '';
+$SYNC_DBUSER = '';
+$SYNC_DBPASSWORD = '';
+$SYNC_DBNAME = '';
+$SYNC_TABLE  = '';
+$SYNC_DBPREFIX = '';
+$SYNC_DBPORT = 3307;

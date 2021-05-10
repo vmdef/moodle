@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/chatlogs/db" VERSION="20120229" COMMENT="XMLDB file for Moodle local/chatlogs"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_chatlogs_conversations" COMMENT="conversations table retrofitted from MySQL" NEXT="local_chatlogs_messages">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="conversationid"/>
+        <FIELD NAME="conversationid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="timestart"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="conversationid" NEXT="timeend"/>
+        <FIELD NAME="timeend" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="timestart" NEXT="messagecount"/>
+        <FIELD NAME="messagecount" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="timeend"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="conversationid"/>
+        <KEY NAME="conversationid" TYPE="unique" FIELDS="conversationid" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="startdatelastactivity" UNIQUE="false" FIELDS="timestart, timeend"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_chatlogs_messages" COMMENT="cvsadmin_talk_messages table retrofitted from MySQL" PREVIOUS="local_chatlogs_conversations" NEXT="local_chatlogs_participants">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="conversationid"/>
+        <FIELD NAME="conversationid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="fromemail"/>
+        <FIELD NAME="fromemail" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="conversationid" NEXT="fromplace"/>
+        <FIELD NAME="fromplace" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="fromemail" NEXT="fromnick"/>
+        <FIELD NAME="fromnick" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="fromplace" NEXT="timejava"/>
+        <FIELD NAME="timejava" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="fromnick" NEXT="timesent"/>
+        <FIELD NAME="timesent" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="timejava" NEXT="message"/>
+        <FIELD NAME="message" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" PREVIOUS="timesent"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="conversations"/>
+        <KEY NAME="conversations" TYPE="foreign" FIELDS="conversationid" REFTABLE="local_chatlogs_conversations" REFFIELDS="conversationid" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_chatlogs_participants" COMMENT="local_chatlogs_participants table retrofitted from MySQL" PREVIOUS="local_chatlogs_messages">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="fromemail"/>
+        <FIELD NAME="fromemail" TYPE="char" LENGTH="200" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid" NEXT="nickname"/>
+        <FIELD NAME="nickname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" PREVIOUS="fromemail"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="users"/>
+        <KEY NAME="users" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

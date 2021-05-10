@@ -1,0 +1,42 @@
+.path-local-chatlogs table.devchatslist td {
+    font-size: 0.8em;
+    padding: 4px;
+}
+
+.path-local-chatlogs table.devchat {
+    margin: 40px;
+}
+
+.path-local-chatlogs table.devchat td {
+    border: 0;
+}
+
+.path-local-chatlogs table.devchat .userinfo {
+    font-size: 0.8em;
+}
+
+.path-local-chatlogs table.devchat .chataction {
+    font-style: italic;
+}
+
+.path-local-chatlogs table.devchat td.talkmessage {
+    text-align: left;
+    display: block;
+    padding: 8px;
+    background-color: #eaeaea;
+    border-radius: 0 5px 5px 5px;
+    margin-bottom: 15px;
+}
+
+.path-local-chatlogs table.devchat td.usersays {
+    background: #fff url([[pix:local_chatlogs|speak]]) no-repeat right top;
+}
+
+.path-local-chatlogs table.devchat td.userinfo {
+    padding-left: 5px;
+    padding-right: 20px;
+}
+
+.path-local-chatlogs div.searchform {
+    text-align: center;
+}
