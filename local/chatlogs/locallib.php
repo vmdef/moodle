@@ -299,7 +299,7 @@ class local_chatlogs_conversation {
         $PAGE->requires->yui_module('moodle-local_chatlogs-keyboard', 'M.local_chatlogs.init_keyboard');
 
         $sql = 'SELECT m.id AS messageid, m.fromemail, m.fromplace, m.timesent,
-                m.message, p.nickname, p.userid, '.user_picture::fields('u').
+                m.message, p.nickname, p.userid' . \core_user\fields::for_userpic()->get_sql('u')->selects .
                ' FROM {local_chatlogs_messages} m
                 LEFT JOIN {local_chatlogs_participants} p
                     ON m.fromemail = p.fromemail
@@ -391,7 +391,7 @@ class local_chatlogs_search_table extends table_sql {
 
         $this->sql->fields = 'm.id AS messageid, m.fromemail, m.fromplace, m.timesent,
                               m.message, m.conversationid, p.nickname,
-                              p.userid, '.user_picture::fields('u');
+                              p.userid ' . \core_user\fields::for_userpic()->get_sql('u')->selects;
 
         $this->sql->from = '{local_chatlogs_messages} m
                             LEFT JOIN {local_chatlogs_participants} p
