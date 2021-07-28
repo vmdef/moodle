@@ -203,6 +203,7 @@ class phpunit_util extends testing_util {
         $ME = null;
         $SCRIPT = null;
         $FILTERLIB_PRIVATE = null;
+        $SESSION->notifications = [];
 
         // Empty sessison and set fresh new not-logged-in user.
         \core\session\manager::init_empty_session();
