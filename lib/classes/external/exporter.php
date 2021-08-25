@@ -88,7 +88,7 @@ abstract class exporter {
             } else if ($isarray) {
                 if (array_key_exists($key, $related) && is_array($related[$key])) {
                     foreach ($related[$key] as $index => $value) {
-                        if (!$value instanceof $classname && !$scalarcheck($value)) {
+                        if (!$value instanceof $classname && (in_array($classname, $scalartypes) && !$scalarcheck($value))) {
                             throw new coding_exception($missingdataerr . $key . ' => ' . $classname . '[]');
                         }
                     }
