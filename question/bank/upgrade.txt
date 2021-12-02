@@ -1,2 +1,0 @@
-This file describes core qbank plugin changes in /question/bank/*,
-information provided here is intended especially for developers.
