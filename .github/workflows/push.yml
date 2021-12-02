@@ -25,5 +25,5 @@ jobs:
 
       - name: Installing node stuff
         shell: bash -l {0}
-        run: nvm ls
+        run: npm install
 
