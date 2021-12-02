@@ -14,13 +14,15 @@ env:
 jobs:
   Grunt:
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        shell: bash -l {0}  
 
     steps:
       - name: Checking out code
         uses: actions/checkout@v2
 
       - name: Configuring node & npm
-        shell: bash -l {0}
         run: nvm install
 
       - name: Installing node stuff
