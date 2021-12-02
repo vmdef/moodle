@@ -19,11 +19,7 @@ jobs:
       - name: Checking out code
         uses: actions/checkout@v2
 
-      - name: Configuring node & npm
-        shell: bash -l {0}
-        run: nvm install
-
       - name: Installing node stuff
         shell: bash -l {0}
-        run: npm install
+        run: nvm ls
 
