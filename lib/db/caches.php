@@ -532,4 +532,12 @@ $definitions = array(
         'staticacceleration' => true,
         'ttl' => 1800,
     ],
+
+    // Public key to encrypt data to send to Moodle statistic server.
+    'stats_public_key' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+    ],
 );

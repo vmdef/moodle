@@ -517,6 +517,11 @@ define('HOMEPAGE_MYCOURSES', 3);
 defined('HUB_MOODLEORGHUBURL') || define('HUB_MOODLEORGHUBURL', 'https://stats.moodle.org');
 
 /**
+ * URL of the statistic server public key.
+ */
+define('HUB_STATSPK', HUB_MOODLEORGHUBURL . '/sites/statsmoodleorg.pem');
+
+/**
  * Moodle mobile app service name
  */
 define('MOODLE_OFFICIAL_MOBILE_SERVICE', 'moodle_mobile_app');

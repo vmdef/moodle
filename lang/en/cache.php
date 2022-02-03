@@ -84,6 +84,7 @@ $string['cachedef_recommendation_favourite_course_content_items'] = 'Recommendat
 $string['cachedef_reportbuilder_allowed_reports'] = 'Users allowed reports according to audience';
 $string['cachedef_repositories'] = 'Repositories instances data';
 $string['cachedef_roledefs'] = 'Role definitions';
+$string['cachedef_stats_public_key'] = 'Moodle statistics server public key';
 $string['cachedef_grade_categories'] = 'Grade category queries';
 $string['cachedef_grade_letters'] = 'Grade letter queries';
 $string['cachedef_string'] = 'Language string cache';

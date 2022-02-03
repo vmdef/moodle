@@ -26,15 +26,30 @@
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir.'/filelib.php');
 
-// Get public key.
-$public_key = download_file_content('http://moodle.test/public.pem');
+// Check if public key is cached.
+$cache = cache::make('core', 'stats_public_key');
+$public_key_str = $cache->get('publickey');
+
+// If public key is not cached, get from stats site.
+if ($public_key_str === false) {
+    // Get public key.
+    $key = download_file_content(HUB_STATSPK);
+    // Check $key is a valid public key.
+    $public_key = openssl_pkey_get_public($key);
+    if ($public_key !== false) {
+        $public_key_str = openssl_pkey_get_details($public_key)['key'];
+        $cache->set('publickey', $public_key_str);
+    } else {
+        die('Error getting a valid public key');
+    }
+}
 
 // Encrypt info.
 $message = $CFG->release;
-$success = openssl_public_encrypt(utf8_encode($message), $encrypted_data, $public_key);
+$success = openssl_public_encrypt(utf8_encode($message), $encrypted_data, $public_key_str);
 
 if ($success) {
     echo base64_encode($encrypted_data);
 } else {
-    echo '';
+    die ('Error encripting the data');
 }
