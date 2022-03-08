@@ -37,6 +37,7 @@ define(
     ) {
 
         var NUM_ITEMS = 9;
+        var NUM_ITEMS_INIT = 3;
 
         var SELECTORS = {
             CARDDECK_CONTAINER: '[data-region="recentlyaccesseditems-view"]',
@@ -64,8 +65,17 @@ define(
          */
         var renderItems = function(root, items) {
             if (items.length > 0) {
+                let moreitems = 0;
+                let hasmoreitems = false;
+                if (items.length > NUM_ITEMS_INIT) {
+                    moreitems = items.slice(3);
+                    items = items.slice(0, 3);
+                    hasmoreitems = true;
+                }
                 return Templates.render('block_recentlyaccesseditems/view-cards', {
-                    items: items
+                    items: items,
+                    hasmoreitems: hasmoreitems,
+                    moreitems: moreitems
                 });
             } else {
                 var noitemsimgurl = root.attr('data-noitemsimgurl');

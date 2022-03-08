@@ -30,4 +30,22 @@ Feature: The recently accessed items block allows users to easily access their m
     Given I change window size to "large"
     When I am on the "Test forum name" "forum activity" page
     And I follow "Dashboard"
-    Then I should see "Test forum name" in the "Recently accessed items" "block"
+    And I should not see "Show/hide more" in the "Recently accessed items" "block"
+
+  Scenario: User has accessed more than 3 items
+    Given the following "activities" exist:
+      | activity   | name                   | intro                         | course | idnumber    |
+      | assign     | Test assignment name   | Test assignment description   | C1     | assign1     |
+      | book       | Test book name         | Test book description         | C1     | book1       |
+      | choice     | Test choice name       | Test choice description       | C1     | choice1     |
+      | data       | Test database name     | Test database description     | C1     | data1       |
+    And I change window size to "large"
+    And I am on the "Test forum name" "forum activity" page
+    And I am on the "Test assignment name" "assign activity" page
+    And I am on the "Test book name" "book activity" page
+    And I am on the "Test choice name" "choice activity" page
+    When I follow "Dashboard"
+    Then I should see "Show/hide more" in the "Recently accessed items" "block"
+    And I should not see "Test forum name" in the "Recently accessed items" "block"
+    And I follow "Show/hide more..."
+    And I should see "Test forum name" in the "Recently accessed items" "block"

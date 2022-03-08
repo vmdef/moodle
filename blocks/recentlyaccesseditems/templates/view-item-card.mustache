@@ -1,0 +1,51 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public Licensebllsdsadfasfd
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_recentlyaccesseditems/view-item-card
+
+    Item card of the "Recently accessed items" block.
+
+    Classes required for JS:
+    * none
+
+    Context variables required for this template:
+    * item - object defining a recent visited activity or resource.
+
+    Example context (json):
+    {
+        "coursename": "Course",
+        "icon": "<img class=\"icon\" alt=\"Forum\" title=\"Forum\" src=\"http://moodlesite/theme/image.php/boost/forum/1539858121/icon\" />",
+        "name": "Forum",
+        "purpose": "collaboration",
+        "viewurl": "http://moodlesite/mod/forum?id=64"
+    }
+}}
+<div class="list-group-item flex-column pt-2 pb-0 border-0 px-2">
+    <a class="card dashboard-card" href="{{{viewurl}}}">
+        <div class="d-flex flex-wrap mw-100 course-info-container">
+            <div class="d-flex text-truncate">
+                <div class="d-flex align-self-center activityiconcontainer {{purpose}} mx-3 mb-1">
+                    {{{icon}}}
+                </div>
+                <div class="w-100 line-height-3 text-truncate ml-2">
+                    <h6 class="mb-0 text-truncate">{{{name}}}</h6>
+                    <small class="text-muted text-truncate mb-0">{{{coursename}}}</small>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
