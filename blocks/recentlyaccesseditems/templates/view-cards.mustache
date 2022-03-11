@@ -40,10 +40,10 @@
     }
 }}
 
-<div class="card-deck dashboard-card-deck one-row" role="list">
+<div class="card-deck dashboard-card-deck one-row" data-region="items-list" role="list">
     {{#items}}
-        <a class="card dashboard-card mb-1 py-2 coursename" href="{{{viewurl}}}">
-            <div class="card-body course-info-container">
+        <a class="card dashboard-card mb-1" href="{{{viewurl}}}">
+            <div class="card-body p-2 m-1">
                 <div class="d-flex text-truncate">
                     <div class="d-flex align-self-center activityiconcontainer {{purpose}}">
                         {{{icon}}}
@@ -57,3 +57,10 @@
         </a>
     {{/items}}
 </div>
+{{#hasmoreitems}}
+    <div id="other-items-link" class="mt-2 px-2 border-0">
+        <a data-action="more-items" href="#">
+            {{#str}}moreitems, block_recentlyaccesseditems{{/str}}
+        </a>
+    </div>
+{{/hasmoreitems}}
