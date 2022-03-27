@@ -1,0 +1,3 @@
+MDTCOMPONENT=repository_github
+MDTRELPATH=repository/github/
+MDTEXPORT=origin/master
