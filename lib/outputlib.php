@@ -2087,6 +2087,19 @@ class theme_config {
             }
             return null;
 
+        } else if (basename($image) === 'favicon.ico') {
+            if (file_exists("{$this->dir}/pix/{$image}")) {
+                return "$this->dir/pix/{$image}";
+            }
+
+            foreach (array_reverse($this->parent_configs) as $parent_config) {
+                if (file_exists("$parent_config->dir/pix/{$image}")) {
+                    return "$parent_config->dir/pix/{$image}";
+                }
+            }
+
+            return null;
+
         } else if ($component === 'theme') { //exception
             if ($image === 'favicon') {
                 return "$this->dir/pix/favicon.ico";
