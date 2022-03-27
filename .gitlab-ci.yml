@@ -1,0 +1,44 @@
+image: moodlehq/moodle-php-apache:7.3
+
+cache:
+  paths:
+  - vendor/
+
+before_script:
+  - apt-get update -qq
+  - apt-get install -y -qq git
+  - git --version
+  - git config --global user.email "gitlab@example.com"
+  - git config --global user.name "Gitlab Test"
+
+services:
+  - mysql:5.7
+
+variables:
+  MYSQL_DATABASE: "moodle"
+  MYSQL_ROOT_PASSWORD: ""
+  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+test:
+  # Execute this only on the final -test branch, not on all individual features branches.
+  only:
+  - /-test$/
+
+  script:
+  # Create the main config.php file.
+  - php admin/cli/install.php --non-interactive --wwwroot=http://localhost --fullname=test --shortname=test --adminpass=test --agree-license --dataroot=/var/www/moodledata --dbtype=mysqli --dbhost=mysql --dbuser=root --dbpass= --dbname=moodle --skip-database --allow-unstable
+  # Inject the PHPUnit settings into the config.php file.
+  - sed -i '25i$CFG->phpunit_prefix = "phpu_"; $CFG->phpunit_dataroot = "/var/www/phpunitdata";' config.php
+  # Initialize PHPunit.
+  - php admin/tool/phpunit/cli/init.php
+  - php admin/tool/phpunit/cli/util.php --buildcomponentconfigs
+  # Run unit tests for the custom plugins on the site.
+  - vendor/bin/phpunit -c blocks/partners/
+  - vendor/bin/phpunit -c blocks/spam_deletion/
+  - vendor/bin/phpunit -c enrol/groupsync/
+  - vendor/bin/phpunit -c filter/moodledocs/
+  - vendor/bin/phpunit -c filter/moodlelinks/
+  - vendor/bin/phpunit -c lib/editor/marklar/
+  - vendor/bin/phpunit -c local/chatlogs/
+  - vendor/bin/phpunit -c local/plugins/
+  - vendor/bin/phpunit -c mod/bigbluebuttonbn/
