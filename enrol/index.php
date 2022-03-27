@@ -93,10 +93,10 @@ if (is_enrolled($context, $USER, '', true)) {
 
 $PAGE->set_title($course->shortname);
 $PAGE->set_heading($course->fullname);
-$PAGE->navbar->add(get_string('enrolmentoptions','enrol'));
+$PAGE->navbar->add(get_string('communityenrolmentoptions', 'local_moodleorg'));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('enrolmentoptions','enrol'));
+echo $OUTPUT->heading(get_string('communityenrolmentoptions', 'local_moodleorg'));
 
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $courserenderer->course_info_box($course);
@@ -109,15 +109,15 @@ foreach ($forms as $form) {
 
 if (!$forms) {
     if (isguestuser()) {
-        notice(get_string('noguestaccess', 'enrol'), get_login_url());
+        notice(get_string('communitynoguestaccess', 'local_moodleorg'), get_login_url());
     } else if ($returnurl) {
-        notice(get_string('notenrollable', 'enrol'), $returnurl);
+        notice(get_string('communitynotenrollable', 'local_moodleorg'), $returnurl);
     } else {
         $url = get_local_referer(false);
         if (empty($url)) {
             $url = new moodle_url('/index.php');
         }
-        notice(get_string('notenrollable', 'enrol'), $url);
+        notice(get_string('communitynotenrollable', 'local_moodleorg'), $url);
     }
 }
 

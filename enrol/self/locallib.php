@@ -74,9 +74,6 @@ class enrol_self_enrol_form extends moodleform {
         $this->instance = $instance;
         $plugin = enrol_get_plugin('self');
 
-        $heading = $plugin->get_instance_name($instance);
-        $mform->addElement('header', 'selfheader', $heading);
-
         if ($instance->password) {
             // Change the id of self enrolment key input as there can be multiple self enrolment methods.
             $mform->addElement('password', 'enrolpassword', get_string('password', 'enrol_self'),
@@ -102,12 +99,9 @@ class enrol_self_enrol_form extends moodleform {
                 $profilepic = $OUTPUT->user_picture($keyholder, array('size' => 35, 'courseid' => $this->instance->courseid));
                 $mform->addElement('static', 'keyholder'.$keyholdercount, '', $profilepic . $profilelink);
             }
-
-        } else {
-            $mform->addElement('static', 'nokey', '', get_string('nopassword', 'enrol_self'));
         }
 
-        $this->add_action_buttons(false, get_string('enrolme', 'enrol_self'));
+        $this->add_action_buttons(false, get_string('communityenrolme', 'local_moodleorg'));
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
