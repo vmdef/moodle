@@ -43,7 +43,7 @@ define(
         var SELECTORS = {
             CARDDECK_CONTAINER: '[data-region="recentlyaccesseditems-view"]',
             CARDDECK: '[data-region="recentlyaccesseditems-view-content"]',
-            SHOWMORE_LINK: '[data-action="more-items"]',
+            SHOWMORE_LINK: '[data-region="recentlyaccesseditems-view"] [data-action="more-items"]',
         };
 
         /**

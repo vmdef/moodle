@@ -13102,7 +13102,7 @@ aside[id^="block-region-side-"] .block_recentlyaccesseditems .dashboard-card-dec
 aside[id^="block-region-side-"] .block_recentlyaccesseditems .dashboard-card-deck .card:nth-of-type(n+4) {
   display: none; }
 
-#block-region-content .block_recentlyaccesseditems #other-items-link {
+#block-region-content .block_recentlyaccesseditems [data-region="more-items-button-container"] {
   display: none; }
 
 .block_myoverview .content {

@@ -281,7 +281,7 @@ $card-gutter : $card-deck-margin * 2;
         display: none;
     }
 
-    #block-region-content & #other-items-link {
+    #block-region-content & [data-region="more-items-button-container"] {
         display: none;
     }
 }
