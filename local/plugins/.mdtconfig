@@ -1,0 +1,5 @@
+MDTSITE=moodle.org
+MDTVERSION=4.0
+MDTCOMPONENT=local_plugins
+MDTRELPATH=local/plugins/
+MDTEXPORT=origin/master

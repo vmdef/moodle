@@ -1,0 +1,34 @@
+UPDATES API STATS
+generated: 1420061458 (2015-01-01T05:30:58+08:00)
+from: 1417363200 (2014-12-01T00:00:00+08:00)
+to: 1420041598 (2014-12-31T23:59:58+08:00)
+lines: 52904
+skipped: 1434 (2.71%)
+incorrect: 0 (0%)
+sites: 34938
+updated: 115 (0.33%)
+api 1.2: 29376 (84.08%)
+api 1.1: 3514 (10.06%)
+api 1.0: 2048 (5.86%)
+version 2.7: 7360 (21.07%)
+version 2.9: 17 (0.05%)
+version 2.6: 12682 (36.3%)
+version 2.4: 3512 (10.05%)
+version 2.3: 2046 (5.86%)
+version 2.8: 3149 (9.01%)
+version 2.5: 6172 (17.67%)
+plugins installed sum: 297329
+plugins installed avg: 8.51
+plugins installed mode: 0
+### WARNING !
+### WARNING !!
+### Some of the plugins in the list are PRIVATE PLUGINS, so this information
+### MUST NOT BE PUBLISHED without proper FILTERING !!!
+### WARNING !!
+### WARNING !
+plugin foo_bar: 4307 (13.84%)
+plugin mod_baz: 4821 (13.8%)
+plugin theme_nice: 4307 (12.33%)
+sites with 0 plugins: 10900 (31.2%)
+sites with 1 plugins: 4525 (12.95%)
+sites with 2 plugins: 2995 (8.57%)

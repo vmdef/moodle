@@ -1,0 +1,16 @@
+{{!
+    @template local_plugins/browser_grid
+
+    Render the contents of local_plugins\output\browser
+}}
+
+<section data-widget="browser-grid" data-batch="{{ batch }}" data-batchsize="{{ batchsize }}" data-query="{{ query }}" class="grid-wrapper">
+    {{> local_plugins/browser_grid_batch }}
+    <div data-region="loadmore" class="grid-loadmore p-3 text-center" style="width: 100%">
+    </div>
+    {{^ plugins }}
+    <div class="alert alert-info">
+        <p clear="both">No plugins match the current filter settings.</p>
+    </div>
+    {{/ plugins }}
+</section>

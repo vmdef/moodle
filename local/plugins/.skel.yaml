@@ -1,0 +1,72 @@
+component: local_plugins
+name: Moodle Plugins directory
+release: DEV
+requires: 3.10
+maturity: MATURIY_STABLE
+copyright: 2021 David Mudrák <david@moodle.com>
+
+phpunit_tests:
+  - classname: precheck_manager
+
+external:
+  - name: get_maintained_plugins
+    desc: Returns a list of plugins the user is maintainer of
+    type: read
+    ajax: 'true'
+    loginrequired: 'true'
+
+    returns:
+      - multiple:
+        - single:
+          - name: id
+            type: PARAM_INT
+            desc: Plugin identifier
+            required: 'true'
+          - name: name
+            type: PARAM_TEXT
+            desc: Name of the plugin
+
+  - name: add_version
+    desc: Release a new version of the registered plugin
+    type: write
+    ajax: 'false'
+    loginrequired: 'true'
+
+    parameters:
+      - name: pluginid
+        type: PARAM_INT
+        desc: Internal identifier of the plugin
+        required: false
+      - name: frankenstyle
+        type: PARAM_PLUGIN
+        required: false
+      - name: zipcontent
+      - name: zipurl
+      - name: zipdrafitemtid
+      - name: zipfilename
+      - name: version
+      - name: releasename
+      - name: releasenotes
+      - name: releasenotesformat
+      - name: maturity
+      - name: supportedmoodle
+      - name: changelogurl
+      - name: altdownloadurl
+      - name: vcssystem
+      - name: vcssystemother
+      - name: vcsrepositoryurl
+      - name: vcsbranch
+      - name: vcstag
+
+
+## Pre-built web services provided by the plugin.
+services:
+  - name: Plugins maintenance
+    shortname: plugins_maintenance
+    functions:
+      - local_plugins_get_maintained_plugins
+    requiredcapability: local/plugins:editownplugins
+    enabled: 'true'
+    downloadfiles: 'true'
+    uploadfiles: 'true'
+

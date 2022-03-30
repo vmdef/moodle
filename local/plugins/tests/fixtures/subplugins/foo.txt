@@ -1,0 +1,4 @@
+<?php
+
+$subplugins['assignment' ]       = 'mod/assignment/type';
+$subplugins [ 'assignmentfoo']    = 'mod/assignment/bar';

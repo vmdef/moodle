@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/plugins/db" VERSION="20190121" COMMENT="XMLDB file for Moodle local/plugins"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_plugins_plugin" COMMENT="Contributed plugins and-or code">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_category.id"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the plugin"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false" COMMENT="Plugin type"/>
+        <FIELD NAME="frankenstyle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Frankenstyle name for this plugin"/>
+        <FIELD NAME="shortdescription" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A short plain text description of the module"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="A complete description of the plugin"/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="websiteurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="A url to a site/page about this plugin"/>
+        <FIELD NAME="sourcecontrolurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="A url to a system being used to manage the source for this plugin"/>
+        <FIELD NAME="faqs" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Frequently asked questions for/about this plugin"/>
+        <FIELD NAME="faqsformat" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="documentation" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Documenation for/about this plugin"/>
+        <FIELD NAME="documentationformat" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="documentationurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="A url to further documentation about this plugin"/>
+        <FIELD NAME="bugtrackerurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Link to the bug tracker for this plugin"/>
+        <FIELD NAME="discussionurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="for plugin's discussion url."/>
+        <FIELD NAME="notes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Curator notes about the plugin, cannot be edited by the maintainer."/>
+        <FIELD NAME="trackingwidgets" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Described tracking bugs that this plugin might contain eg social networking widgets, analytics"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time the plugin was created within out system"/>
+        <FIELD NAME="timelastmodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Last time the plugin or any of its versions were modified"/>
+        <FIELD NAME="timelastreleased" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Last time the available version was added to this plugin"/>
+        <FIELD NAME="timefirstapproved" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="records and separates reapprovals and modifications from first time entry approvals"/>
+        <FIELD NAME="timelastapprovedchange" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Last time the approval status was changed"/>
+        <FIELD NAME="approved" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Flag to track when this module was approved"/>
+        <FIELD NAME="approvedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Last user who approved/unapproved the plugin"/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Toggle visibility of this module easily."/>
+        <FIELD NAME="aggdownloads" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Aggregated stats - number of the plugin downloads"/>
+        <FIELD NAME="aggfavs" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Aggregated stats - number of users who had favourited this plugins"/>
+        <FIELD NAME="aggsites" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Aggregated stats - number of sites that are using this plugin"/>
+        <FIELD NAME="approvalissue" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="The issue key in the Moodle tracker where the approval process was tracked."/>
+        <FIELD NAME="statusamos" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Status of the plugin's strings registration with the AMOS. 0 - unknown / pending, negative values - errors, positive values - success."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="categoryid" TYPE="foreign" FIELDS="categoryid" REFTABLE="local_plugins_category" REFFIELDS="id" COMMENT="Relates to local_plugins_category.id"/>
+        <KEY NAME="fk_approvedby" TYPE="foreign" FIELDS="approvedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="frankenstyle" UNIQUE="true" FIELDS="frankenstyle" COMMENT="Uniqueness and easy search of plugins by their frankenstyle name"/>
+        <INDEX NAME="lastreleased" UNIQUE="false" FIELDS="timelastreleased" COMMENT="For searching and sorting the recent released plugins"/>
+        <INDEX NAME="ix_type" UNIQUE="false" FIELDS="type" COMMENT="Allows for effective searching by plugin type"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_vers" COMMENT="Tracks a version of a plugin">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_plugin.id"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user who created this version"/>
+        <FIELD NAME="version" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The version as a string"/>
+        <FIELD NAME="releasename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The release name of this version"/>
+        <FIELD NAME="maturity" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The maturity of the version, e.g. stable, development"/>
+        <FIELD NAME="releasenotes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Notes about this version of the plugin"/>
+        <FIELD NAME="releasenotesformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="changelogurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="A url to a site/page with change log of this plugin version"/>
+        <FIELD NAME="altdownloadurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="An alternative download location for this plugin version"/>
+        <FIELD NAME="md5sum" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The md5 sum for the download"/>
+        <FIELD NAME="vcssystem" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The version control system used to manage this version (git, cvs, svn)"/>
+        <FIELD NAME="vcssystemother" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The version control system specified by user"/>
+        <FIELD NAME="vcsrepositoryurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The url to the VCS used to manage this plugin version"/>
+        <FIELD NAME="vcsbranch" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The branch for this version within the VCS"/>
+        <FIELD NAME="vcstag" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The tag for this version within the VCS"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp when this version was created"/>
+        <FIELD NAME="timelastmodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp when this version was last updated in some way"/>
+        <FIELD NAME="approved" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Set to 1 when the version has been approved and is available to the public"/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="When on this version is visible to the public"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="pluginid" TYPE="foreign" FIELDS="pluginid" REFTABLE="local_plugins_plugin" REFFIELDS="id" COMMENT="Maps to local_plugins_plugin.id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Relates to user.id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_vers_updates" COMMENT="Stores version pairs where one version can be updated from another">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_vers.id as the new version"/>
+        <FIELD NAME="updateableid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_vers.id as the version that can be updated"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="local_plugins_vers" REFFIELDS="id" COMMENT="Maps to local_plugins_vers.id"/>
+        <KEY NAME="updateableid" TYPE="foreign" FIELDS="updateableid" REFTABLE="local_plugins_vers" REFFIELDS="id" COMMENT="Maps to local_plugins_vers.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="versupdate" UNIQUE="true" FIELDS="versionid, updateableid" COMMENT="Each updateable pair may only be recorded once"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_category" COMMENT="Plugin categories">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Maps to local_plugins_category.id"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of this category"/>
+        <FIELD NAME="plugintype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The Frankenstyle prefix for plugins in this category"/>
+        <FIELD NAME="shortdescription" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A short plain text description of this category"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="A full description of this category."/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="installinstructions" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Instructions for installing plugins in this category"/>
+        <FIELD NAME="installinstructionsformat" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="onfrontpage" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Flag whether to show this category on the front page"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Sort order of the category"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="parentid" TYPE="foreign" FIELDS="parentid" REFTABLE="local_plugins_category" REFFIELDS="id" COMMENT="Maps to local_plugins_category.id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_contributor" COMMENT="Tracks the contributors to a project so that no one gets forgotten.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to user.id"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_plugin.id"/>
+        <FIELD NAME="maintainer" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="If set to 2 user can edit the plugin, if set to 1 user can also edit contributors"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Enum active, inactive, primary"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp when this user became a contributor"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Maps to user.id"/>
+        <KEY NAME="pluginid" TYPE="foreign" FIELDS="pluginid" REFTABLE="local_plugins_plugin" REFFIELDS="id" COMMENT="Maps to local_plugins_plugin.id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_set" COMMENT="A set that plugins can belong to">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the set"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The set's shortname - eg used in semantic URLs"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A description of the set"/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="maxplugins" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The maximum number of plugins that can exist in this set"/>
+        <FIELD NAME="onfrontpage" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Flag whether to show this set on the front page"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uq_shortname" TYPE="unique" FIELDS="shortname"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_set_plugin" COMMENT="A set that plugins can belong to">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="setid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_set.id"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_plugin.id"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The id of the user who added this plugin to the set"/>
+        <FIELD NAME="timeadded" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp when this plugin was added to the set"/>
+        <FIELD NAME="sort" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="int"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="setid" TYPE="foreign" FIELDS="setid" REFTABLE="local_plugins_set" REFFIELDS="id" COMMENT="Maps to local_plugins_set.id"/>
+        <KEY NAME="pluginid" TYPE="foreign" FIELDS="pluginid" REFTABLE="local_plugins_plugin" REFFIELDS="id" COMMENT="Maps to local_plugins_plugin.id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Maps to user.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="set-plugin" UNIQUE="true" FIELDS="setid, pluginid" COMMENT="Each plugin can only be in a set once."/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_software_vers" COMMENT="Contains the different Moodle versions that a plugin version can support">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Name of the software plus version"/>
+        <FIELD NAME="version" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Version number for sorting"/>
+        <FIELD NAME="releasename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The software release information"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp when this version was made available to support"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_supported_vers" COMMENT="Maps a supported Moodle version to a plugin">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_vers.id"/>
+        <FIELD NAME="softwareversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_software_version.id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="local_plugins_vers" REFFIELDS="id" COMMENT="Maps to local_plugins_vers.id"/>
+        <KEY NAME="softwareversionid" TYPE="foreign" FIELDS="softwareversionid" REFTABLE="local_plugins_software_vers" REFFIELDS="id" COMMENT="Maps to local_plugins_software_vers.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="version-software" UNIQUE="true" FIELDS="versionid, softwareversionid" COMMENT="versionid + softwareid should be unique"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_review" COMMENT="Used to record plugin version reviews">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user who published the review, maps to user.id"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The version of the plugin reviewed, maps to local_plugins_vers.id"/>
+        <FIELD NAME="softwareid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The version of software used in this review, maps to local_plugins_software_version.id"/>
+        <FIELD NAME="timereviewed" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the plugin version was reviewed"/>
+        <FIELD NAME="timelastmodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Last time the review was modified"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The review status"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Maps to user.id"/>
+        <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="local_plugins_vers" REFFIELDS="id" COMMENT="Maps to local_plugins_vers.id"/>
+        <KEY NAME="softwareid" TYPE="foreign" FIELDS="softwareid" REFTABLE="local_plugins_software_vers" REFFIELDS="id" COMMENT="Maps to local_plugins_software_vers.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid-versionid" UNIQUE="true" FIELDS="userid, versionid" COMMENT="A user can only review a version once"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_review_test" COMMENT="Contains the criteria a plugins versions should be reviewed on.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the review criteria"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A description of the review criteria"/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="scaleid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The scale to rate on, maps to scale.id"/>
+        <FIELD NAME="cohortid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="If set a user must belong to the cohort to fill it out"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="scaleid" TYPE="foreign" FIELDS="scaleid" REFTABLE="scale" REFFIELDS="id" COMMENT="References scale.id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_review_outcome" COMMENT="Contains the outcome and comments of a reviewed criteria">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="reviewid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_review.id"/>
+        <FIELD NAME="criteriaid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_review_test.id"/>
+        <FIELD NAME="review" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The review of this criteria"/>
+        <FIELD NAME="reviewformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="number" LENGTH="10" NOTNULL="false" SEQUENCE="false" DECIMALS="5" COMMENT="The grade assigned by reviewer, a fraction between 0 and 1, null for no grade"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="reviewid" TYPE="foreign" FIELDS="reviewid" REFTABLE="local_plugins_review" REFFIELDS="id" COMMENT="Maps to local_plugins_review.id"/>
+        <KEY NAME="criteriaid" TYPE="foreign" FIELDS="criteriaid" REFTABLE="local_plugins_review_test" REFFIELDS="id" COMMENT="Maps to local_plugins_review_test.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="reviewid-criteriaid" UNIQUE="true" FIELDS="reviewid, criteriaid" COMMENT="Each criteria can only exist within a review once"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_awards" COMMENT="Contains the different awards that can be granted to a plugin and/or plugin version">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the award"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The award shortname - eg used in the semantic URLs"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="A description about this award"/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp from when this award was created"/>
+        <FIELD NAME="onfrontpage" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Flag whether to show this award on the front page"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uq_shortname" TYPE="unique" FIELDS="shortname"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_plugin_awards" COMMENT="Tracks the awards a plugin, or plugin version have been awarded">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="awardid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_award.id"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_plugin.id"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Maps to local_plugins_vers.id"/>
+        <FIELD NAME="timeawarded" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp from when this was awarded"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user who awarded this award"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="awardid" TYPE="foreign" FIELDS="awardid" REFTABLE="local_plugins_awards" REFFIELDS="id" COMMENT="Maps to local_plugins_award.id"/>
+        <KEY NAME="pluginid" TYPE="foreign" FIELDS="pluginid" REFTABLE="local_plugins_plugin" REFFIELDS="id" COMMENT="Maps to local_plugins_plugin.id"/>
+        <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="local_plugins_vers" REFFIELDS="id" COMMENT="Optional, maps to local_plugins_vers.id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Maps to user.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="award-plugin-version" UNIQUE="true" FIELDS="awardid, pluginid, versionid" COMMENT="Awardid, pluginid, and versionid should be unique"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_log" COMMENT="Logs edit actions on Plugins database">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="bulkid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Joins the multiple log entries performed within the same request"/>
+        <FIELD NAME="time" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timeday" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="Time truncated to day"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="ip" TYPE="char" LENGTH="45" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="action" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tableid" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="info" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Stores information and comments for logged action in internal format"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Maps to user.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="plugin" UNIQUE="false" FIELDS="pluginid" COMMENT="Index to retrieve all entries related to particular plugin"/>
+        <INDEX NAME="user" UNIQUE="false" FIELDS="userid, timeday" COMMENT="Index to retrieve all actions of particular user"/>
+        <INDEX NAME="actiontable" UNIQUE="false" FIELDS="action, tableid" COMMENT="Index to retrieve all actions on particular object"/>
+        <INDEX NAME="bulkid" UNIQUE="false" FIELDS="bulkid" COMMENT="Searches for multiple actions within the same request"/>
+        <INDEX NAME="timeday" UNIQUE="false" FIELDS="timeday" COMMENT="Helps to retrieve recent actions"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_stats_raw" COMMENT="Tracks plugin version download requests">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Maps to local_plugins_vers.id"/>
+        <FIELD NAME="timedownloaded" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp from when version was downloaded"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Optional id of user who downloaded this plugin"/>
+        <FIELD NAME="downloadmethod" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="file" SEQUENCE="false" COMMENT="The means of download"/>
+        <FIELD NAME="ip" TYPE="char" LENGTH="45" NOTNULL="false" SEQUENCE="false" COMMENT="getremoteaddr() of the client, if known"/>
+        <FIELD NAME="exclude" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Should this download be excluded from download stats?"/>
+        <FIELD NAME="info" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Extra information about the download request, usable for later analysis"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="local_plugins_vers" REFFIELDS="id" COMMENT="Maps to local_plugins_vers.id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Maps to user.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="ip" UNIQUE="false" FIELDS="ip" COMMENT="Keep index over IP addresses for faster lookup"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_stats_cache" COMMENT="Used to cache download stats. Populated from local_plugins_stats_raw">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="month" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="year" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="downloads" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timeupdated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="plugin" UNIQUE="false" FIELDS="pluginid"/>
+        <INDEX NAME="version" UNIQUE="false" FIELDS="versionid"/>
+        <INDEX NAME="pluginver" UNIQUE="false" FIELDS="pluginid, versionid"/>
+        <INDEX NAME="timeupdate" UNIQUE="false" FIELDS="timeupdated"/>
+        <INDEX NAME="monthyear" UNIQUE="false" FIELDS="month, year"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_plugin_usage" COMMENT="The estimated number of sites having the plugin installed is tracked here.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="month" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="year" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="moodlever" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle version of the sites using the plugin. If null, then the record represents all versions."/>
+        <FIELD NAME="sites" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timeupdated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="plugin" UNIQUE="false" FIELDS="pluginid"/>
+        <INDEX NAME="timeupdate" UNIQUE="false" FIELDS="timeupdated"/>
+        <INDEX NAME="monthyear" UNIQUE="false" FIELDS="month, year"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_subscription" COMMENT="Maintains subscriptions of users to plugins">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Subscription to message provider types such as comments, reviews, awards, version updates. See keys in local/plugins/db/messages.php. So this is basically messages"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Maps to user.id"/>
+        <KEY NAME="pluginid" TYPE="foreign" FIELDS="pluginid" REFTABLE="local_plugins_plugin" REFFIELDS="id" COMMENT="Maps to local_plugins_plugin.id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid-pluginid" UNIQUE="false" FIELDS="userid, pluginid" COMMENT="With this index it will be faster to look up any of the other subscription types."/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_usersite" COMMENT="This stores a moodle user's sites and each of the site's details.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sitename" TYPE="char" LENGTH="254" NOTNULL="true" SEQUENCE="false" COMMENT="The moodle site's frontpage course full name"/>
+        <FIELD NAME="siteurl" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="version" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="version of the moodle (codebase) site"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_favourite" COMMENT="Tracks plugins marked as favourite by users">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 - not marked as favourite (same as no record at all), 1 - marked as favourite"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="fk_pluginid" TYPE="foreign" FIELDS="pluginid" REFTABLE="local_plugins_plugin" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="uq_userid_pluginid" UNIQUE="true" FIELDS="userid, pluginid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_desc" COMMENT="List of defined descriptors">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Descriptor title"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="999" SEQUENCE="false" COMMENT="Sort order"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_desc_values" COMMENT="Actual descriptor values assigned to a plugin">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="descid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the descriptor"/>
+        <FIELD NAME="pluginid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Associated plugin id"/>
+        <FIELD NAME="value" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Value of the associated descriptor"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_desc" TYPE="foreign" FIELDS="descid" REFTABLE="local_plugins_desc" REFFIELDS="id"/>
+        <KEY NAME="fk_plugin" TYPE="foreign" FIELDS="pluginid" REFTABLE="local_plugins_plugin" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="ix_values" UNIQUE="false" FIELDS="value"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_plugins_vers_precheck" COMMENT="Stores the results of plugins versions prechecks">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Plugin version id, if the precheck is associated with a known version"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp of when the precheck has been requested"/>
+        <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The timestamp of when the precheck has finished"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The precheck job status job. Default 0 is pending for execution, positive values are success status, negative values indicate error status"/>
+        <FIELD NAME="console" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Raw console output of the precheck job execution"/>
+        <FIELD NAME="debuglog" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The debugging log of the build execution"/>
+        <FIELD NAME="buildurl" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false" COMMENT="The URL of the jenkins build of the precheck"/>
+        <FIELD NAME="smurfresult" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false" COMMENT="The SMURFRESULT line of the executed precheck build"/>
+        <FIELD NAME="smurfxml" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The contents of the build smurf.xml artefact file"/>
+        <FIELD NAME="smurfhtml" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The contents of the build smurf.html artefact file"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_local_plugins_vers" TYPE="foreign" FIELDS="versionid" REFTABLE="local_plugins_vers" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_plugins_amos_results" COMMENT="Stores the results of registering plugins versions with AMOS">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Plugin version id that has been registered"/>
+        <FIELD NAME="moodlebranch" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle major version for which the strings apply"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp of when this record was created"/>
+        <FIELD NAME="timeresult" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The timestamp of when we received AMOS response"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The job status code. Default 0 is pending, positive values are success status, negative values indicate error status"/>
+        <FIELD NAME="result" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Raw AMOS response"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_local_plugins_vers" TYPE="foreign" FIELDS="versionid" REFTABLE="local_plugins_vers" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

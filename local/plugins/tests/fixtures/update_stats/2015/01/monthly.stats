@@ -1,0 +1,42 @@
+UPDATES API STATS
+generated: 1422739859 (2015-02-01T05:30:59+08:00)
+from: 1420041600 (2015-01-01T00:00:00+08:00)
+to: 1422719999 (2015-01-31T23:59:59+08:00)
+lines: 1679091
+skipped: 50251 (2.99%)
+incorrect: 0 (0%)
+sites: 46407
+updated: 1377 (2.97%)
+api 1.2: 39625 (85.39%)
+api 1.0: 2476 (5.34%)
+api 1.1: 4306 (9.28%)
+version 2.6: 16000 (34.48%)
+version 2.8: 4869 (10.49%)
+version 2.7: 11083 (23.88%)
+version 2.3: 2474 (5.33%)
+version 2.4: 4303 (9.27%)
+version 2.5: 7630 (16.44%)
+version 2.9: 48 (0.1%)
+plugins installed sum: 413213
+plugins installed avg: 8.9
+plugins installed mode: 0
+### WARNING !
+### WARNING !!
+### Some of the plugins in the list are PRIVATE PLUGINS, so this information
+### MUST NOT BE PUBLISHED without proper FILTERING !!!
+### WARNING !!
+### WARNING !
+plugin foo_bar: 6891 (14.85%)
+- plugin foo_bar on moodle 3.4: 12
+- plugin foo_bar on moodle 3.3: 1067
+- plugin foo_bar on moodle 3.2: 1457
+- plugin foo_bar on moodle 3.1: 2891
+- plugin foo_bar on moodle 3.0: 1464
+plugin theme_nice: 5716 (12.32%)
+- plugin theme_nice on moodle 3.3: 1865
+- plugin theme_nice on moodle 3.2: 2345
+- plugin theme_nice on moodle 3.1: 1478
+- plugin theme_nice on moodle 3.0: 28
+sites with 0 plugins: 10900 (31.2%)
+sites with 1 plugins: 4525 (12.95%)
+sites with 2 plugins: 2995 (8.57%)

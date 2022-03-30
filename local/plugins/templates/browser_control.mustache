@@ -1,0 +1,35 @@
+<div class="browserform px-2 pt-2 bg-light border mb-2">
+    <form data-widget="browser-filter-form" class="form-inline" data-show-advanced="{{ showadvanced }}">
+        {{# descriptors }}
+        <select data-widget="descriptor-dropdown" name="{{ name }}" class="custom-select mr-1 mb-2" data-is-advanced="{{ advanced }}">
+            {{# values }}
+            <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ title }}</option>
+            {{/ values }}
+        </select>
+        {{/ descriptors }}
+        <div class="mb-2">
+            <a data-widget="advanced-filter-hide" href="#" title="Hide advanced filter options mb-2"><i class="fa fa-minus-circle" aria-hidden="true"></i> Less</a>
+            <a data-widget="advanced-filter-show" href="#" title="Show advanced filter options mb-2"><i class="fa fa-plus-circle" aria-hidden="true"></i> More</a>
+        </div>
+        <input type="hidden" name="sort-by" value="{{ sortby }}">
+        <div class="ml-auto mb-2 d-flex">
+            <input type="text" name="search" value="{{ keywords }}" class="form-control keywords mr-1" style="min-width: 12rem;" placeholder="What are you looking for?">
+            <button type="submit" class="btn btn-default">Search</button>
+        </div>
+    </form>
+</div>
+
+<div data-widget="browser-sort-form" class="d-flex flex-wrap p-2 mb-3 align-items-center browsersort text-right">
+    <span class="ml-auto mr-1" style="white-space: nowrap"><i class="fa fa-sort" aria-hidden="true" class=""></i> Sort by </span>
+    <a data-sortby="" href="?q=sort-by:relevance"><i class="fa fa-search" aria-hidden="true"></i> Relevance</a>
+    |
+    <a data-sortby="sites" href="?q=sort-by:sites"><i class="fa fa-map-marker" aria-hidden="true"></i> Sites</a>
+    |
+    <a data-sortby="downloads" href="?q=sort-by:downloads"><i class="fa fa-download" aria-hidden="true"></i> Downloads</a>
+    |
+    <a data-sortby="fans" href="?q=sort-by:fans"><i class="fa fa-heart" aria-hidden="true"></i> Fans</a>
+    |
+    <a data-sortby="release" href="?q=sort-by:release"><i class="fa fa-rocket" aria-hidden="true"></i> Recently updated</a>
+    |
+    <a data-sortby="publish" href="?q=sort-by:publish"><i class="fa fa-share-alt" aria-hidden="true"></i> Recently added</a>
+</div>

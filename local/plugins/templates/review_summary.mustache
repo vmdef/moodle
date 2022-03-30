@@ -1,0 +1,58 @@
+<article class="plugin-review border rounded p-2 mb-3">
+    <header class="d-flex align-items-start">
+        <div class="media mr-auto mb-3">
+            {{# plugin.screenshot }}
+            <div class="plugin-screenshot mr-2 border p-1 rounded">
+                <a href="{{ plugin.link }}">
+                    <img src="{{ src }}" alt="Plugin screenshot" width="90" height="90" />
+                </a>
+            </div>
+            {{/ plugin.screenshot }}
+                <div class="media-body">
+                <h3><a href="{{ viewreviewlink }}">{{ plugin.name }}</a></h3>
+                <div class="review-reviewer">
+                    Reviewed by {{{ reviewer.picture }}} {{{ reviewer.fullname }}}
+                </div>
+                on
+                <span class="review-time small">
+                    <time datetime="{{timereviewed.iso8601date}}">
+                        {{timereviewed.absdate}}
+                        <span class="muted">({{timereviewed.reldate}})</span>
+                    </time>
+                </span>
+            </div>
+        </div>
+        {{# status0 }} <span class="badge badge-warning">{{# str }} reviewstatus0, local_plugins {{/ str }}</span> {{/ status0 }}
+        {{# status1 }} <span class="badge badge-success">{{# str }} reviewstatus1, local_plugins {{/ str }}</span> {{/ status1 }}
+
+    </header>
+
+    <div class="plugin-review-body">
+        <div class="plugin-review-content">
+            <dl class="plugin-review-criterions">
+                <dt>Reviewed version</dt>
+                <dd><a href="{{ version.link }}">{{ version.name }}</a></dd>
+                {{# outcomes }}
+                <dt>{{ criterion }}</dt>
+                <dd class="review-contents">
+                    {{{ truncated }}}
+                </dd>
+                {{/ outcomes }}
+            </dl>
+        </div>
+
+        <div class="plugin-review-footer">
+            <a class="viewfullreview btn btn-default" href="{{ viewreviewlink }}">
+                {{# str }} viewfullreview, local_plugins {{/ str }}
+            </a>
+
+            <div class="pull-right">
+                {{# grades }}
+                <span class="plugin-review-grade"><strong>{{ criterion }}: {{ grade }}</strong></span>
+                {{/ grades }}
+            </div>
+
+        </div>
+
+    </div>
+</article>

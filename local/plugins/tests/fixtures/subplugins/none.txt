@@ -1,0 +1,6 @@
+<?php
+
+echo('No subplugin declared here');
+
+$subplugins = array();
+$subplugins[] = 'some/where';

@@ -1,0 +1,26 @@
+<?php
+
+$subplugins = array('datafield'  => 'mod/data/field',
+                    'datapreset' => 'mod/data/preset');
+
+/**
+Often, to amuse themselves, the men of the crew
+Catch those great birds of the seas, the albatrosses,
+lazy companions of the voyage, who follow
+The ship that slips through bitter gulfs.
+
+Hardly have they put them on the deck,
+Than these kings of the skies, awkward and ashamed,
+Piteously let their great white wings
+Draggle like oars beside them.
+
+This winged traveler, how weak he becomes and slack!
+He who of late was so beautiful, how comical and ugly!
+Someone teases his beak with a branding iron,
+Another mimics, limping, the crippled flyer!
+
+The Poet is like the prince of the clouds,
+Haunting the tempest and laughing at the archer;
+Exiled on earth amongst the shouting people,
+His giant's wings hinder him from walking.
+**/

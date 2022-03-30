@@ -1,0 +1,10 @@
+{
+    "name": "moodle-local_plugins-vcswidget",
+    "builds": {
+        "moodle-local_plugins-vcswidget": {
+            "jsfiles": [
+                "vcswidget.js"
+            ]
+        }
+    }
+}
