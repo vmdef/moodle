@@ -1,0 +1,4 @@
+MDTSITE=moodle.org
+MDTCOMPONENT=local_chatlogs
+MDTRELPATH=local/chatlogs/
+MDTEXPORT=origin/master
