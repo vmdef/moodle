@@ -1,0 +1,10 @@
+{
+    "name": "moodle-local_plugins-favourites",
+    "builds": {
+        "moodle-local_plugins-favourites": {
+            "jsfiles": [
+                "favourites.js"
+            ]
+        }
+    }
+}

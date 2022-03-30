@@ -1,0 +1,12 @@
+{
+    "moodle-local_plugins-favourites": {
+        "requires": [
+            "base",
+            "node",
+            "event",
+            "io-base",
+            "json-parse",
+            "handlebars"
+        ]
+    }
+}

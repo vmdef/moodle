@@ -1,0 +1,64 @@
+{{!
+    @template local_plugins/browser_grid_preview
+
+    Render a preview modal of a single plugin item.
+}}
+<div id="modal{{id}}" class="plugin-preview-canvas modal fade">
+    <div class="plugin-preview-modal modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="frankenstyle mb-0">
+                    <small>{{ plugintype.name }} ::: {{ frankenstyle }}</small>
+                </p>
+                <button type="button" class="close" data-widget="close">&times;</button>
+            </div>
+            <div class="modal-body plugin-card">
+                <div class="media mb-2">
+                    <div class="media-body">
+                        <h3 class="name font-weight-bold"><a href="{{ url }}">{{ name }}</a></h3>
+                        <p class="maintainers">
+                        {{# maintainers }}
+                            <span><a href="{{ url }}" rel="author">{{ firstname }} {{ lastname }}</a></span>
+                        {{/ maintainers }}
+                        </p>
+                    </div>
+                    {{# has_logo }}
+                    <div class="logo">
+                        <img src="{{ logo.thumb }}">
+                    </div>
+                    {{/ has_logo }}
+                </div>
+                <div class="content">
+                    <div class="shortdescription-preview">
+                        <p>{{ shortdescription }}</p>
+                    </div>
+                    <div class="screenshot text-center">
+                        <div class="canvas bg-white box-shadow-2">
+                            <img data-region="preview-screenshot" src="{{ mainscreenshot.bigthumb }}" width="250" height="250" class="img-responsive">
+                        </div>
+                    </div>
+                    <div class="action d-flex justify-content-center my-4">
+                        <a href="{{ url }}" class="btn btn-default"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Go to plugin page</a>
+                    </div>
+                </div>
+                <footer>
+                    <p class="stats  text-right m-0">
+                    {{# aggsites }}<span><i class="fa fa-map-marker" aria-hidden="true"></i> {{ . }} <span class="nocoll">sites</span></span>{{/ aggsites }}
+                    {{# aggdownloads }}<span><i class="fa fa-download ml-2" aria-hidden="true"></i> {{ . }} <span class="nocoll">downloads</span></span>{{/ aggdownloads }}
+                    {{# aggfavs }}<span><i class="fa fa-heart ml-2" aria-hidden="true"></i> {{ . }} <span class="nocoll">fans</span></span>{{/ aggfavs }}
+                    </p>
+                    <p class="labels">
+                    {{# descriptors }}
+                    <span class="label">{{ value }}</span>
+                    {{/ descriptors }}
+                    </p>
+                    <p class="timelastreleased text-right">
+                    <time datetime="{{timelastreleased.iso8601date}}" title="{{timelastreleased.absdate}}">
+                        {{# str }} timelastreleaseddate, local_plugins, {{timelastreleased.reldate}} {{/ str }}
+                    </time>
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>

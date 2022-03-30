@@ -1,0 +1,35 @@
+{{!
+    @template local_plugins/browser_grid_items
+
+    Render a batch of plugins.
+}}
+{{# plugins }}
+<div class="grid-item mb-4">
+    <article data-widget="plugincard" class="plugin-card card h-100 bg-light border mx-2" data-rawinfo="{{ rawinfo }}" data-approved="{{ approved }}">
+        <div class="card-body">
+            <h3 class="card-title text-truncate"><a data-widget="directlink" href="{{ url }}">{{ name }}</a></h3>
+            <div class="shortdescription position-relative">
+                <p>{{ shortdescription }}</p>
+            </div>
+            <div class="screenshot text-center">
+                <div class="canvas bg-white box-shadow-2 p-2">
+                    <img src="{{ screenshotloading }}" width="250" height="250" data-lazyload="{{ mainscreenshot.bigthumb }}" class="img-responsive">
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <p class="stats text-moodle-gray text-right m-0">
+                {{# timelastreleased }}
+                    <span>
+                        <i class="fa fa-rocket" aria-hidden="true"></i>
+                        <time datetime="{{iso8601date}}" title="{{absdate}}">{{reldate}}</time>
+                    </span>
+                {{/ timelastreleased }}
+                {{# aggsites }}<span><i class="fa fa-map-marker ml-2" aria-hidden="true"></i> {{ . }}</span>{{/ aggsites }}
+                {{# aggdownloads }}<span><i class="fa fa-download ml-2" aria-hidden="true"></i> {{ . }}</span>{{/ aggdownloads }}
+                {{# aggfavs }}<span><i class="fa fa-heart ml-2" aria-hidden="true"></i> {{ . }}</span>{{/ aggfavs }}
+            </p>
+        </div>
+    </article>
+</div>
+{{/ plugins }}

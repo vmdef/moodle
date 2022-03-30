@@ -1,0 +1,6 @@
+<?php
+
+$foo = 'Do not include';
+die($foo);
+
+$subplugins = array('assignsubmission'=>  'mod/assign/submission', 'assignfeedback'=>'mod/assign/feedback');

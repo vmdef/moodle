@@ -1,0 +1,17 @@
+<div data-region="local_plugins-browser-control">
+    {{# browser.control }}
+    {{> local_plugins/browser_control }}
+    {{/ browser.control }}
+</div>
+
+<div data-region="local_plugins-browser-grid" class="container-fluid">
+    {{# browser.grid }}
+    {{> local_plugins/browser_grid }}
+    {{/ browser.grid }}
+</div>
+
+{{# js }}
+require(['local_plugins/frontpage'], function (frontpage) {
+    frontpage.init();
+});
+{{/ js }}

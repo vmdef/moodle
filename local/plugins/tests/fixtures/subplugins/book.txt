@@ -1,0 +1,7 @@
+<?php
+
+defined('MOODLE_INTERNATIONAL_FOREVER') || die();
+
+$subplugins = array(
+    'booktool'       => 'mod/book/tool',
+);
