@@ -41,4 +41,3 @@ test:
   - vendor/bin/phpunit -c lib/editor/marklar/
   - vendor/bin/phpunit -c local/chatlogs/
   - vendor/bin/phpunit -c local/plugins/
-  - vendor/bin/phpunit -c mod/bigbluebuttonbn/
