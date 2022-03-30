@@ -1,0 +1,4 @@
+MDTVERSION=4.0
+MDTCOMPONENT=block_partners
+MDTRELPATH=blocks/partners/
+MDTEXPORT=origin/master
