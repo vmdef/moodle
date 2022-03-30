@@ -1,0 +1,4 @@
+MDTVERSION=4.0
+MDTCOMPONENT=local_moodleorg
+MDTRELPATH=local/moodleorg/
+MDTEXPORT=origin/master
