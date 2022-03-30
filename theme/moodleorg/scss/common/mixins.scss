@@ -1,0 +1,12 @@
+@mixin well() {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: $wellBackground;
+    border: 1px solid darken($wellBackground, 7%);
+    border-radius: $baseBorderRadius;
+    @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .05));
+    blockquote {
+        border-color: rgba(0, 0, 0, .15);
+    }
+}

@@ -1,0 +1,49 @@
+// Preset specific variables
+$themeColor:        $moodle-orange;
+$headings-color:    $themeColor;
+
+// Import FontAwesome.
+@import "fontawesome";
+
+// Import All of Bootstrap
+@import "bootstrap";
+
+// Import Core moodle CSS
+@import "moodle";
+@import "sitebar.scss";
+
+#moodlesitestopnavbar {
+    ul {
+        li.home {
+            a {
+                background-color: $themeColor;
+            }
+        }
+    }
+    .navbar-toggler {
+        background-color: $themeColor;
+    }
+}
+
+#page-site-index {
+    #moodlesitestopnavbar {
+        .sitelogo {
+            display: none;
+        }
+        ul {
+            li.home {
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+#page-donations-index .table th {
+    font-size: 17.5px;
+    font-weight: 400;
+    background-color: #eee;
+    line-height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+}

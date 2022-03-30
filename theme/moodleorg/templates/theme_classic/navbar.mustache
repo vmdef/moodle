@@ -1,0 +1,140 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_classic/navbar
+
+    This template renders the top navbar.
+
+    Example context (json):
+    {
+        "output": {
+            "should_display_navbar_logo": true,
+            "get_compact_logo_url": "http://example.com/image.png",
+            "custom_menu": "<li>..</li>",
+            "page_heading_menu": "<li>..</li>",
+            "search_box": "<div><input type='text'></div>",
+            "navbar_plugin_output": "<div class='dropdown'>Messaging</div>",
+            "user_menu": "<div class='dropdown'>John Doe</div>"
+        },
+        "config": {
+            "wwwroot": "#"
+        },
+        "sitename": "Moodle Site"
+    }
+}}
+<nav id="moodlesitestopnavbar" class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="d-none d-lg-block">
+            <a class="sitelogo" href="https://moodle.org">
+                <img alt="Moodle.org" width="96" height="25" src="{{{ output.sitebarlogo }}}" />
+            </a>
+        </div>
+        <ul class="navbar-nav homenav">
+            <li class="nav-item home">
+                <a class="nav-link active" href="https://moodle.org"><span class="sr-only">Moodle.org Home</span>
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+        </ul>
+        <button class="navbar-toggler btn p-2 icon-nomargin text-white mr-1" type="button" data-toggle="collapse" data-target="#sitetopnavbar" aria-controls="sitetopnavbar" aria-expanded="false" aria-label="Toggle navigation">
+            {{#pix}} i/menubars, core {{/pix}}
+        </button>
+        <div class="collapse navbar-collapse" id="sitetopnavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item documentation">
+                    <a class="nav-link" href="https://docs.moodle.org"><span>Documentation</span></a>
+                </li>
+                <li class="nav-item download">
+                    <a class="nav-link" href="https://download.moodle.org"><span>Downloads</span></a>
+                </li>
+                <li class="nav-item demo">
+                    <a class="nav-link" href="https://moodle.org/demo"><span>Demo</span></a>
+                </li>
+                <li class="nav-item tracker">
+                    <a class="nav-link" href="https://tracker.moodle.org"><span>Tracker</span></a>
+                </li>
+                <li class="nav-item development">
+                    <a class="nav-link" href="https://docs.moodle.org/dev/Main_Page"><span>Development</span></a>
+                </li>
+                <li class="nav-item translation">
+                    <a class="nav-link" href="https://lang.moodle.org"><span>Translation</span></a>
+                </li>
+                <li class="nav-item moodlenet">
+                    <a class="nav-link" href="https://moodle.net"><span>MoodleNet</span></a>
+                </li>
+                <li class="nav-item search">
+                    <a class="nav-link" href="https://moodle.org/public/search/"><span class="sr-only">Search</span><i class="fa fa-search"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-second px-0 {{#output.sitehome}}withlogo py-0{{/output.sitehome}} navbar navbar-expand navbar-bootswatch moodle-has-zindex">
+    <div class="container-fluid">
+        <div class="row mx-0 w-100">
+            <div class="col-12 d-flex flex-wrap align-items-end">
+                <div class="d-flex">
+                    {{#output.sitehome}}
+                    <a href="{{{ config.wwwroot }}}" class="navbar-brand py-0 mb-3">
+                        {{#output.moodlelogo}}
+                            <img src="{{{ output.moodlelogo }}}" alt="Moodle" height="61px" width="204px"/>
+                        {{/output.moodlelogo}}
+                        {{^output.moodlelogo}}
+                            <h1>{{{ output.domainname}}}</h1>
+                        {{/output.moodlelogo}}
+                    </a>
+                    {{/output.sitehome}}
+                    {{^output.sitehome}}
+                    <div id="page-navbar" class="d-flex flex-fill align-items-center">
+                        {{{output.navbar}}}
+                    </div>
+                    {{/output.sitehome}}
+                </div>
+                <ul class="nav navbar-nav justify-content-center justify-content-md-end mb-2 ml-auto">
+                    <!-- custom_menu -->
+                    <span class="custom-menu hidden my-2 my-md-0">
+                        {{{ output.lang_menu }}}
+                    </span>
+                    <!-- page_heading_menu -->
+                    {{{ output.page_heading_menu }}}
+                    <div>
+                        {{{ output.search_box }}}
+                    </div>
+                    <!-- navbar_plugin_output -->
+                    <li class="nav-item d-flex flex-nowrap flex-row-reverse">
+                        {{{ output.navbar_plugin_output }}}
+                    </li>
+                    <!-- user_menu -->
+                    <li class="nav-item d-flex align-items-center">
+                        {{{ output.user_menu }}}
+                    </li>
+                </ul>
+                <!-- search_box -->
+            </div>
+        </div>
+    </div>
+</nav>
+{{#output.page_heading_button}}
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-12 d-flex justify-content-center justify-content-md-end mb-2">
+            {{{ output.page_heading_button }}}
+        </div>
+    </div>
+</div>
+{{/output.page_heading_button}}
+

@@ -1,0 +1,226 @@
+.pagelayout-frontpage, #page-plugins-index {
+    .navbar-brand h1 {
+        color: $grayDark;
+        font-size: 45px;
+    }
+}
+
+.pagelayout-frontpage {
+    .border-bottom-dotted {
+        border-bottom: 1px dotted $themeColor;
+    }
+
+    .hero-unit {
+        padding: 0;
+        .nav-tabs {
+            border-bottom: 0;
+        }
+    }
+
+    #region-main {
+        .feed hr {
+            margin: auto;
+        }
+    }
+
+    // Footer
+    #page-footer {
+        margin-top: 0;
+        .footer-info {
+            padding-bottom: 10px;
+            .standards {
+                ul {
+                    margin: 0;
+                    li {
+                        display: inline-block;
+                        padding: 20px 5px 0;
+                        a {
+                            display: block;
+                            width: 60px;
+                            height: 70px;
+                            background-repeat: no-repeat;
+                            background-position: center top;
+                            span {
+                                display: none;
+                            }
+                        }
+                        a.ll {
+                            background-image: url([[pix:theme|secfooter-opensource]]);
+                        }
+                        a.l {
+                            background-image: url([[pix:theme|secfooter-ims]]);
+                        }
+                        a.r {
+                            background-image: url([[pix:theme|secfooter-adl]]);
+                        }
+                        a.rr {
+                            background-image: url([[pix:theme|secfooter-openbadges]]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .navbar-nav .custom-menu {
+        display: block;
+    }
+}
+
+.pagelayout-frontpage {
+    #underslidesbar {
+        background-color: rgb(212, 212, 212);
+    }
+    // Community driven, globally supported.
+    #underslidesbarcommunity {
+        background-image: url([[pix:theme|frontpage/community2]]);
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: cover;
+        h2 {
+            background-color: rgba(212, 212, 212, 0.8);
+            color: black;
+        }
+        a {
+            color: black;
+        }
+        a.button {
+            background-color: #d4d4d4;
+            border-color: black;
+        }
+    }
+    // Help us make a difference with open and quality education for all.
+    #underslidesbardonate {
+        background-image: url([[pix:theme|frontpage/donate]]);
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: cover;
+        h2 {
+            background-color: rgba(77, 77, 77, 0.8);
+            color: white;
+        }
+        a {
+            color: black;
+        }
+        a.button {
+            background-color: white;
+            border-color: black;
+        }
+    }
+    .underslidesitem {
+        padding: 20px;
+        h2 {
+            font-size: 20px;
+            line-height: 24px;
+            margin-bottom: 20px;
+            padding: 5px;
+            @include media-breakpoint-up(sm) {
+                max-width: 55%;
+            }
+        }
+        a.button {
+            font-size: 18px;
+            line-height: 22px;
+            border: 1px solid;
+            padding: 5px 13px;
+            display: inline-block;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+    }
+
+    // Announcement
+    .news {
+        .card {
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+
+        @include media-breakpoint-up(sm) {
+            .card {
+                max-width: (100% / 2);
+                flex: 0 0 (100% / 2);
+            }
+        }
+
+        .card-body {
+            background-color: #f7f7f7;
+            h4 {
+                color: $textColor;
+                line-height: 30px;
+                word-wrap: break-word;
+            }
+            p {
+                margin-top: 20px;
+                word-wrap: break-word;
+            }
+            ul {
+                margin: 0;
+                padding: 0;
+                li {
+                    list-style: none;
+                    word-wrap: break-word;
+                }
+            }
+        }
+    }
+
+    // Using moodle
+    .using-moodle {
+        // stylelint-disable
+        .card {
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+
+        @include media-breakpoint-up(sm) {
+            .card {
+                max-width: (100% / 2);
+                flex: 0 0 (100% / 2);
+            }
+        }
+
+        @include media-breakpoint-up(md) {
+            .card {
+                max-width: (100% / 3);
+                flex: 0 0 (100% / 3);
+            }
+        }
+
+        @include media-breakpoint-up(xl) {
+            .card {
+                max-width: (100% / 6);
+                flex: 0 0 (100% / 6);
+            }
+        }
+        // stylelint-enable
+        .card-body {
+            background-color: #f7f7f7;
+            h4 {
+                color: $textColor;
+                line-height: 30px;
+                word-wrap: break-word;
+            }
+            p {
+                margin-top: 20px;
+                word-wrap: break-word;
+            }
+            ul {
+                margin: 0;
+                padding: 0;
+                li {
+                    list-style: none;
+                    word-wrap: break-word;
+                }
+            }
+        }
+    }
+}
+
+.pagelayout-frontpage.dir-rtl {
+    #underslidesbarcommunity {
+        background-image: url([[pix:theme|frontpage/community2-rtl]]);
+    }
+    #underslidesbardonate {
+        background-image: url([[pix:theme|frontpage/donate-rtl]]);
+    }
+}

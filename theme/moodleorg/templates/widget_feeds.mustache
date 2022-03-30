@@ -1,0 +1,184 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    Frontpage news feeds.
+}}
+<div class="feeds">
+    <div class="container-fluid">
+        <div class="row mb-5">
+            <!-- Useful posts -->
+            {{#hasuseful}}
+            <div class="col-md-4 feed useful">
+                <div class="d-flex border-bottom-dotted align-items-center">
+                    <h3>
+                    {{#str}}feed_useful, local_moodleorg{{/str}}
+                    </h3>
+                    <a href="{{{ useful.rssurl }}}" class="text-moodle-gray ml-auto">
+                       {{#pix}} i/rss, core, {{/pix}}
+                    </a>
+                </div>
+                {{#showdebug}}
+                <div style="background-color:#ffd3d9; padding:10px; margin-bottom: 10px;">
+                    <em>source:</em>&nbsp;{{{useful.source}}}
+                    <em>generated:</em>&nbsp;{{#userdate}} {{useful.timegenerated}} , {{#str}} strftimedatefullshort, core_langconfig  {{/str}} {{/userdate}}
+                </div>
+                {{/showdebug}}
+                <ul class="media-list list-unstyled">
+                    {{#useful.items}}
+                    <li class="media mt-3 mt-3">
+                        <div class="itemimage">
+                            {{{ userpicture }}}
+                        </div>
+                        <div class="media-body">
+                            <div class="media-heading mb-1">
+                                <a href="{{{ url }}}">
+                                    {{{ title }}}
+                                </a>
+                            </div>
+                            <div class="muted text-muted small">
+                                <span class="name">
+                                    <p>{{{ userfullname }}}
+                                </span>
+                                -
+                                <span class="date">
+                                    {{{ date }}}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    {{/useful.items}}
+                </ul>
+                <hr>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-link btn-sm icon-nomargin" href="{{{ useful.moreurl }}}">
+                        {{#str}}feed_useful_more, local_moodleorg{{/str}}
+                        {{#pix}}a/double-right, theme{{/pix}}
+                    </a>
+                </div>
+            </div>
+            {{/hasuseful}}
+
+            <!-- Events -->
+            {{#hasevents}}
+            <div class="col-md-4 feed events">
+                <div class="d-flex border-bottom-dotted align-items-center">
+                    <h3>
+                        {{#str}}feed_events, local_moodleorg{{/str}}
+                    </h3>
+                    <a href="{{{ events.rssurl }}}" class="text-moodle-gray ml-auto">
+                       {{#pix}} i/rss, core, {{/pix}}
+                    </a>
+                </div>
+                {{#showdebug}}
+                <div style="background-color:#ffd3d9; padding:10px; margin-bottom: 10px;">
+                    <em>source:</em>&nbsp;{{{events.source}}}
+                    <em>generated:</em>&nbsp;{{#userdate}} {{events.timegenerated}} , {{#str}} strftimedatefullshort, core_langconfig  {{/str}} {{/userdate}}
+                </div>
+                {{/showdebug}}
+                <ul class="media-list list-unstyled">
+                    {{#events.items}}
+                    <li class="media mt-3">
+                        <div class="itemimage text-moodle-gray">
+                            {{#pix}} i/siteevent, core, {{#str}} siteevent, core_calendar{{/str}} {{/pix}}
+                        </div>
+                        <div class="media-body">
+                            <div class="media-heading mb-1">
+                                <a href="{{{ url }}}">
+                                    {{{ title }}}
+                                </a>
+                            </div>
+                            <div class="muted text-muted small">
+                                <span class="date">
+                                    {{{ date }}}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    {{/events.items}}
+                </ul>
+                <hr />
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-link btn-sm icon-nomargin" href="{{{events.moreurl}}}">
+                        {{#str}}feed_events_more, local_moodleorg{{/str}}
+                        {{#pix}}a/double-right, theme{{/pix}}
+                    </a>
+                </div>
+            </div>
+            {{/hasevents}}
+
+            <!-- Resources -->
+            {{#hasresources}}
+            <div class="col-md-4 feed resources">
+                <div class="d-flex border-bottom-dotted align-items-center">
+                    <h3>
+                        {{#str}}feed_resources, local_moodleorg{{/str}}
+                    </h3>
+                    <a href="{{{ resources.rssurl }}}" class="text-moodle-gray ml-auto">
+                       {{#pix}} i/rss, core, {{/pix}}
+                    </a>
+                </div>
+                {{#showdebug}}
+                <div style="background-color:#ffd3d9; padding:10px; margin-bottom: 10px;">
+                    <em>source:</em>&nbsp;{{{resources.source}}}
+                    <em>generated:</em>&nbsp;{{#userdate}} {{resources.timegenerated}} , {{#str}} strftimedatefullshort, core_langconfig  {{/str}} {{/userdate}}
+                </div>
+                {{/showdebug}}
+                <ul class="media-list list-unstyled">
+                    {{#resources.items}}
+                    <li class="media mt-3">
+                        <div class="itemimage">
+                            {{#pix}} {{image.name}}, {{image.component}}, {{image.alt}} {{/pix}}
+                        </div>
+                        <div class="media-body">
+                            <div class="media-heading mb-1">
+                                <a href="{{{ url }}} ">
+                                    {{{ title }}}
+                                </a>
+                            </div>
+                            <div class="muted text-muted small">
+                                <span class="date">
+                                    {{{ date }}}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    {{/resources.items}}
+                </ul>
+                <hr>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-link btn-sm icon-nomargin" href="{{{ config.wwwroot }}}/plugins/">
+                        {{#str}}resources_plugins, local_moodleorg{{/str}}
+                        {{#pix}}a/double-right, theme{{/pix}}
+                    </a>
+                    <a class="btn btn-link btn-sm icon-nomargin" href="{{{ config.wwwroot }}}/jobs/">
+                        {{#str}}resources_jobs, local_moodleorg{{/str}}
+                        {{#pix}}a/double-right, theme{{/pix}}
+                    </a>
+                    <a class="btn btn-link btn-sm icon-nomargin" href="http://moodle.net">
+                        {{#str}}resources_courses, local_moodleorg{{/str}}
+                        {{#pix}}a/double-right, theme{{/pix}}
+                    </a>
+                    <a class="btn btn-link btn-sm icon-nomargin" href="{{{ config.wwwroot }}}/buzz/">
+                        {{#str}}resources_buzz, local_moodleorg{{/str}}
+                        {{#pix}}a/double-right, theme{{/pix}}
+                    </a>
+                </div>
+            </div>
+            {{/hasresources}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+MDTVERSION=4.0
+MDTCOMPONENT=theme_moodleorg
+MDTRELPATH=theme/moodleorg/
+MDTEXPORT=origin/master

@@ -1,0 +1,28 @@
+.category-browse {
+    .coursebox {
+        border: 1px solid $border-color;
+    }
+}
+form#coursesearch.form-inline {
+    justify-content: center;
+}
+.coursebox .enrolmenticons {
+    padding: 3px 0;
+    float: right;
+}
+
+.course-content ul li.section.main:last-child {
+    border-bottom: 1px solid $gray-300;
+}
+
+.course-content ul.topics li.section, .course-content ul.weeks li.section {
+    padding: 5px 15px 5px 5px;
+}
+
+.availabilityinfo.ishidden {
+    margin-left: 15px;
+}
+
+.course-content {
+    overflow-y: hidden;
+}

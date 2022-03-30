@@ -1,0 +1,176 @@
+// Sitebar related styling is kept in a separate LESS and CSS files so we are
+// able to generate the style to be used at another sites.
+
+#moodlesitestopnavbar {
+
+    // These are similar variables from bootstrap used for consistency but used is exclusive to sitebar only
+    $baseFontSize:                          14px;
+    $fontSizeSmall:                         $baseFontSize * 0.85;
+    $baseLineHeight:                        20px;
+    $navbarIconSize:                        16px;
+    $sansFontFamily:                        "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    $navbarHeight:                          40px;
+    $navbarBackground:                      #1b1b1b;
+    $navbarLinkColor:                       #fff;
+    $navbarLinkBackgroundActive:            $themeColor;
+
+    font-family: $sansFontFamily;
+    font-size: $fontSizeSmall;
+    min-height: $navbarHeight;
+    background-color: $navbarBackground;
+    background-image: linear-gradient(to bottom, #222, #111);
+    border-bottom: 5px solid $themeColor;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .75);
+    padding: 0;
+
+    .navbar-container {
+        position: relative;
+        max-width: 1680px;
+        margin: 0 auto;
+        padding-right: 20px;
+        padding-left: 20px;
+        display: block;
+    }
+    .sitelogo {
+        display: block;
+        padding-top: 7px;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: -20px;
+        position: absolute;
+        top: 0;
+        img {
+            height: 25px;
+        }
+    }
+
+    ul {
+        padding: 0;
+        margin: 0;
+
+        li {
+            list-style: none;
+            display: inline-block;
+            float: left;
+            line-height: $baseLineHeight;
+            a {
+                display: block;
+                padding: (($navbarHeight - $baseLineHeight) / 2) 15px;
+                color: $navbarLinkColor;
+                text-decoration: none;
+                text-transform: uppercase;
+                text-shadow: none;
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+
+            &.home {
+                a {
+                    i {
+                        font-size: $navbarIconSize;
+                    }
+                    &:hover {
+                        background-color: $moodle-orange;
+                    }
+                }
+            }
+
+            &.documentation {
+                a {
+                    &:hover {
+                        background-color: $moodle-purple;
+                    }
+                }
+            }
+
+            &.download {
+                a {
+                    &:hover {
+                        background-color: $moodle-green;
+                    }
+                }
+            }
+
+            &.demo {
+                a {
+                    &:hover {
+                        background-color: $moodle-gray;
+                    }
+                }
+            }
+
+            &.tracker {
+                a {
+                    &:hover {
+                        background-color: $moodle-blue;
+                    }
+                }
+            }
+
+            &.development {
+                a {
+                    &:hover {
+                        background-color: $moodle-blue;
+                    }
+                }
+            }
+
+            &.translation {
+                a {
+                    &:hover {
+                        background-color: $moodle-red;
+                    }
+                }
+            }
+
+            &.moodlenet {
+                a {
+                    &:hover {
+                        background-color: $moodle-red-orange;
+                    }
+                }
+            }
+
+            &.search {
+                a {
+                    i {
+                        font-size: $navbarIconSize;
+                    }
+                    &:hover {
+                        background-color: $moodle-orange;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.dir-rtl {
+    #moodlesitestopnavbar {
+        .sitelogo {
+            margin-left: 0;
+            margin-right: -20px;
+        }
+
+        ul {
+            float: left;
+            li {
+                float: right;
+                &.home {
+                    margin-left: 0;
+                    margin-right: 104px;
+                }
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .navbar.fixed-top {
+        // Undo bootstrap's behaviour to margin left/right -20px;
+        margin-left: 0;
+        margin-right: 0;
+        position: absolute;
+    }
+}

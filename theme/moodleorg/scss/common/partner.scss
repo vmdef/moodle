@@ -1,0 +1,29 @@
+.pagelayout-frontpage {
+    .partners {
+        background-color: #eee;
+        background-image: url([[pix:theme|tile-grey]]);
+        .moodlepartnerbar {
+            border-bottom: 1px dashed #bbb;
+            padding-bottom: 20px;
+            padding-top: 10px;
+        }
+        .thumbnails {
+            border-top: 1px dashed #fff;
+            background-color: transparent;
+            text-align: center;
+            margin-left: 0;
+            .row {
+                background-color: transparent;
+                padding-top: 10px;
+                padding-bottom: 20px;
+
+                img.grey {
+                    opacity: 0.8;
+                    filter: alpha(opacity=8);
+                    max-width: 100%;
+                    height: auto;
+                }
+            }
+        }
+    }
+}
