@@ -1,0 +1,107 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    Frontpage focus blocks.
+}}
+<div class="using-moodle container-fluid px-4 pt-2">
+    <div class="row">
+        <div class="card m-0 pb-4 px-2 border-0 focusblock">
+            <div class="card-body theproject">
+                <h4>{{#str}}focusbox_theproject, local_moodleorg{{/str}}</h4>
+                <p>{{#str}}focusbox_theproject_text, local_moodleorg{{/str}}</p>
+                <ul class="list-unstyled alternate" type="square">
+                    <li><a href="/about/">{{#str}}focusbox_theproject_about, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/stats/">{{#str}}focusbox_theproject_stats, local_moodleorg{{/str}}</a></li>
+                    <li><a href="https://moodle.com/about/">{{#str}}focusbox_theproject_hq, local_moodleorg{{/str}}</a></li>
+                    <li><a href="https://moodle.com/partners/">{{#str}}focusbox_theproject_partners, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/dev/">{{#str}}focusbox_theproject_devs, local_moodleorg{{/str}}</a></li>
+                    <li><a href="https://moodleassociation.org/" target="_blank">{{#str}}focusbox_theproject_mua, local_moodleorg{{/str}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card m-0 pb-4 px-2 border-0 focusblock">
+            <div class="card-body settingup">
+                <h4>{{#str}}focusbox_settingup, local_moodleorg{{/str}}</h4>
+                <p>{{#str}}focusbox_settingup_own, local_moodleorg{{/str}}</p>
+                <ul class="list-unstyled alternate" type="square">
+                    <li><a href="https://download.moodle.org/">{{#str}}focusbox_settingup_download, local_moodleorg{{/str}}</a></li>
+                    <li><a href="{{#str}}url-install, local_moodleorg{{/str}}">{{#str}}focusbox_settingup_install, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/plugins/">{{#str}}focusbox_settingup_plugins, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/forums/">{{#str}}focusbox_settingup_community, local_moodleorg{{/str}}</a></li>
+                </ul>
+                <p>{{#str}}focusbox_settingup_partner, local_moodleorg{{/str}}</p>
+                <ul class="list-unstyled alternate" type="square">
+                <li><a href="https://moodle.com/partners/?mode=search&services=hosting">{{#str}}focusbox_settingup_hosting, local_moodleorg{{/str}}</a></li>
+                <li><a href="https://moodle.com/partners/?mode=search&services=support">{{#str}}focusbox_settingup_support, local_moodleorg{{/str}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card m-0 pb-4 px-2 border-0 focusblock">
+            <div class="card-body teaching">
+                <h4>{{#str}}focusbox_teaching, local_moodleorg{{/str}}</h4>
+                <p>{{#str}}focusbox_teaching_text, local_moodleorg{{/str}}</p>
+                <ul class="list-unstyled alternate" type="square">
+                    <li><a href="{{#str}}url-userdocs, local_moodleorg{{/str}}">{{#str}}focusbox_teaching_docs, local_moodleorg{{/str}}</a></li>
+                    <li><a href="https://moodle.net/">{{#str}}focusbox_teaching_courses, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/books/">{{#str}}focusbox_teaching_books, local_moodleorg{{/str}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card m-0 pb-4 px-2 border-0 focusblock">
+            <div class="card-body community">
+                <h4>{{#str}}focusbox_community, local_moodleorg{{/str}}</h4>
+                <p>{{#str}}focusbox_community_text, local_moodleorg{{/str}}</p>
+                {{#communities.count}}
+                <ul class="list-unstyled alternate" type="square">
+                    {{#communities.list}}
+                    <li class="community lang-{{lang}}">
+                        <a href="{{{url}}}">
+                            {{name}}
+                        </a>
+                    </li>
+                    {{/communities.list}}
+                </ul>
+                <p class="viewmore"><a href="/community/">{{#str}}focusbox_community_viewall, local_moodleorg{{/str}}</a></p>
+                {{/communities.count}}
+            </div>
+        </div>
+        <div class="card m-0 pb-4 px-2 border-0 focusblock">
+            <div class="card-body future">
+                <h4>{{#str}}focusbox_future, local_moodleorg{{/str}}</h4>
+                <p>{{#str}}focusbox_future_text, local_moodleorg{{/str}}</p>
+                <ul class="list-unstyled alternate" type="square">
+                    <li><a href="https://docs.moodle.org/dev/Roadmap">{{#str}}focusbox_future_roadmap, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/mod/forum/view.php?f=33">{{#str}}focusbox_future_gdf, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/ux">{{#str}}focusbox_future_ux, local_moodleorg{{/str}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card m-0 pb-4 px-2 border-0 focusblock">
+            <div class="card-body uptodate">
+                <h4>{{#str}}focusbox_uptodate, local_moodleorg{{/str}}</h4>
+                <p>{{#str}}focusbox_uptodate_text, local_moodleorg{{/str}}</p>
+                <ul class="list-unstyled alternate" type="square">
+                    <li><a href="/news/">{{#str}}focusbox_uptodate_news, local_moodleorg{{/str}}</a></li>
+                    <li><a href="https://moodle.com/news">{{#str}}rssmoodlecomtitle, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/security/">{{#str}}focusbox_uptodate_security, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/buzz/">{{#str}}focusbox_uptodate_buzz, local_moodleorg{{/str}}</a></li>
+                    <li><a href="/social/">{{#str}}focusbox_uptodate_social, local_moodleorg{{/str}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

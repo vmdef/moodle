@@ -1,0 +1,95 @@
+.discussion-list {
+    .topic {
+        font-weight: inherit;
+    }
+}
+
+.forumpost {
+    background-color: $gray-100;
+    &.unread {
+        background-color: #ffd;
+    }
+    padding: 0;
+    .post-header {
+        margin: 0.5rem;
+    }
+    .post-userpicture img {
+        width: 70px;
+        height: 70px;
+    }
+    .post-content {
+        margin: 0 0.5rem;
+        padding: 0.5rem;
+        background: $white;
+    }
+    .post-footer {
+        margin: 0.5rem;
+    }
+    .post-actions a,
+    .post-footer .link {
+        border-left: $border-width solid $border-color;
+    }
+    .post-author {
+        line-height: 1.3;
+        font-size: 0rem;
+        a {
+            font-size: 0.875rem;
+        }
+        time {
+            font-size: 0.725rem;
+            &:before {
+                content: ' ';
+                display: block;
+            }
+        }
+    }
+    .author-groups {
+        img {
+            display: inline-block;
+            margin: 0 2px 5px;
+            padding: 5px 6px;
+            background-color: #fff;
+            border-radius: 50px;
+            box-shadow: 0 2px 1px rgba(0,0,0,.05);
+            width: 45px;
+        }
+    }
+
+    .rating-aggregate-label {
+        margin-right: .25rem;
+    }
+}
+
+// MDLSITE-5795 - For forum descriptions, replace ".normal-intro" texts with
+// ".posting-intro" or ".coursepage-intro" alternatives when posting to a forum
+// or at the course front page, respectively.
+
+.posting-intro,
+.coursepage-intro {
+    display: none;
+}
+
+.path-course-view {
+    .normal-intro {
+        display: none;
+    }
+    .coursepage-intro {
+        display: block;
+    }
+}
+
+#page-mod-forum-post {
+    .normal-intro {
+        display: none;
+    }
+
+    .posting-intro {
+        display: block;
+    }
+}
+
+[data-content='inpage-reply-content'] {
+    textarea {
+        padding: 0.5rem;
+    }
+}

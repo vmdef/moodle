@@ -1,0 +1,95 @@
+#page-footer {
+    font-size: $fontSizeSmall;
+    padding: 0;
+    margin: 50px 0 0;
+    background-color: #1b1b1b;
+    border-top: 5px solid $themeColor;
+    a {
+        text-decoration: none;
+    }
+    .footer-nav {
+        text-align: left;
+        background-color: #222;
+        box-shadow: 0 15px 15px rgba(0, 0, 0, 0.25);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        .footer-nav-list {
+            a {
+                display: block;
+                color: $white;
+                text-shadow: 1px 1px 5px rgba(0, 0, 0, .3);
+                background-color: transparent;
+            }
+            a:hover {
+                color: lighten($footerNavbarLinkColor, 10%);
+            }
+            .primary a {
+                color: $themeColor;
+                text-transform: uppercase;
+                margin-bottom: 8px;
+                padding-top: 20px;
+                text-shadow: 1px 1px 5px rgba(0, 0, 0, .6);
+            }
+        }
+        .footer-nav-list {
+            li a {
+                padding-top: 3px;
+                padding-bottom: 3px;
+                border-radius: 0;
+            }
+        }
+    }
+    .social {
+        text-align: center;
+        padding: 10px 10px 0 10px;
+        position: absolute;
+        bottom: 30%;
+        right: 0;
+        border: 1px dashed #666;
+        border-radius: 10px;
+        .nav {
+            margin-bottom: 0;
+        }
+        #sharethis {
+            padding-top: 10px;
+            ul {
+                margin: 0;
+                li {
+                    display: inline-block;
+                    padding: 5px;
+                    a {
+                        display: block;
+                        width: 19px;
+                        height: 19px;
+                        background-repeat: no-repeat;
+                        padding: 0;
+                        span {
+                            display: none;
+                        }
+                    }
+                }
+            }
+            #share-twitter {
+                background-image: url([[pix:theme|moodle-twitter-dgrey]]);
+            }
+            #share-facebook {
+                background-image: url([[pix:theme|moodle-fb-dgrey]]);
+            }
+            #share-linkedin {
+                background-image: url([[pix:theme|moodle-linkedin-dgrey]]);
+            }
+            #share-googleplus {
+                background-image: url([[pix:theme|moodle-googleplus-dgrey]]);
+            }
+            #share-youtube {
+                background-image: url([[pix:theme|moodle-youtube-dgrey]]);
+            }
+        }
+    }
+    .footer-info {
+        padding-top: 25px;
+        padding-bottom: 20px;
+        color: $grayLight;
+        text-align: center;
+    }
+}

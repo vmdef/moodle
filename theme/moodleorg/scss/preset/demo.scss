@@ -1,0 +1,29 @@
+// Preset specific variables
+$themeColor:        $moodle-gray;
+$headings-color:    $themeColor;
+
+// Import FontAwesome.
+@import "fontawesome";
+
+// Import All of Bootstrap
+@import "bootstrap";
+
+// Import Core moodle CSS
+@import "moodle";
+@import "sitebar.scss";
+
+#moodlesitestopnavbar {
+    ul {
+        li.demo {
+            a {
+                background-color: $themeColor;
+            }
+        }
+    }
+}
+body#page-demo-index {
+    .options img {
+        border-radius: 50%;
+        background-color: #999;
+    }
+}

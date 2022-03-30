@@ -1,0 +1,76 @@
+#page-logo-index {
+    hr {
+        margin-top: 2em;
+        margin-bottom: 2em;
+    }
+    .logo {
+        text-align: center;
+
+        img {
+            margin: 1em;
+            padding: 1em;
+        }
+
+        &.moodle-logo-white > img {
+            background-color: black;
+        }
+    }
+}
+
+#page-network-index {
+    ul.mnethosts {
+        margin: 1em 0;
+        list-style: none;
+
+        li {
+            margin-bottom: 0.5em;
+
+            img {
+                vertical-align: middle;
+            }
+
+            .hosturl {
+                @extend .text-muted;
+                font-size: smaller;
+            }
+        }
+    }
+}
+
+#page-public-search-index {
+    #searchboxwrapper {
+        max-width: 600px;
+    }
+}
+
+#social-media-list {
+    margin-top: 2em;
+    margin-bottom: 3em;
+    dt {
+        padding-right: 25px;
+        background-repeat: no-repeat;
+        background-position: right center;
+        &:hover {
+            background-color: #eee;
+        }
+        &.googleplus {
+            background-image: url([[pix:theme|moodle-googleplus]]);
+        }
+        &.twitter {
+            background-image: url([[pix:theme|moodle-twitter]]);
+        }
+        &.facebook {
+            background-image: url([[pix:theme|moodle-fb]]);
+        }
+        &.linkedin {
+            background-image: url([[pix:theme|moodle-linkedin]]);
+        }
+        &.youtube {
+            background-image: url([[pix:theme|moodle-youtube]]);
+        }
+    }
+    dd {
+        padding-left: 15px;
+        margin-bottom: 0.75 * $baseLineHeight;
+    }
+}

@@ -1,0 +1,160 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    Frontpage slider.
+}}
+<section id="region-main-slides" class="hero-unit">
+    <div id="spiffySlides" class="">
+        <div class="tab-content slides" id="nav-tabContent">
+            <div class="slide tab-pane fade active getstarted" id="slide1" role="tabpanel" aria-labelledby="slide1-tab">
+                <div class="container-fluid fg">
+                    <div class="row getstarted">
+                        <div class="offset-xl-1 col-md-5">
+                            <h2 class="heroslide_getstarted_headline">
+                                {{#str}}heroslide_getstarted_headline, local_moodleorg{{/str}}
+                            </h2>
+                            <div class="description">
+                                {{#str}}heroslide_getstarted_description, local_moodleorg{{/str}}
+                            </div>
+                            <a href="{{linkgetstarted}}" class="button">
+                                {{#str}}heroslide_link_getstarted, local_moodleorg {{/str}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide tab-pane fade power" id="slide2" role="tabpanel" aria-labelledby="slide2-tab">
+                <div class="container-fluid">
+                    <div class="row power">
+                        <div class="offset-md-1 col-md-4">
+                            <div class="videopower">
+                                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/3ORsUGVNxGs"
+                            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="offset-md-1 col-md-5">
+                            <h2 class="heroslide_power_headline">
+                                {{#str}}heroslide_power_headline, local_moodleorg{{/str}}
+                            </h2>
+                            <div class="description">
+                                {{#str}}heroslide_power_description, local_moodleorg{{/str}}
+                            </div>
+                            <a href="{{linkfeatures}}" class="button">
+                                {{#str}}heroslide_link_features, local_moodleorg {{/str}}
+                            </a>
+                            <a href="https://school.moodledemo.net" class="button">
+                                {{#str}}heroslide_link_demo, local_moodleorg {{/str}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide tab-pane fade global" id="slide3" role="tabpanel" aria-labelledby="slide3-tab">
+                <div class="container-fluid fg img{{rand15}}">
+                    <div class="row">
+                        <div class="offset-md-1 col-md-10">
+                            <h2 class="heroslide_global_headline">
+                                {{#str}}heroslide_global_headline, local_moodleorg{{/str}}
+                            </h2>
+                            <div class="description">
+                                {{#str}}heroslide_global_description, local_moodleorg{{/str}}
+                            </div>
+                            <a href="{{linksites}}" class="button">
+                                {{#str}}heroslide_link_sites, local_moodleorg {{/str}}
+                            </a>
+                            <a href="{{linkstats}}" class="button">
+                                {{#str}}heroslide_link_stats, local_moodleorg {{/str}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide tab-pane fade stories {{storyid}}" id="slide4" role="tabpanel" aria-labelledby="slide4-tab">
+                <div class="container-fluid">
+                    <div class="row stories">
+                        <div class="offset-md-1 col-md-6">
+                            <h2 class="heroslide_stories_headline">
+                                {{story}}
+                            </h2>
+                            <div class="description">
+                                {{storydescription}}
+                            </div>
+                            <a href="{{linkstories}}" class="button">
+                                {{#str}}heroslide_link_stories, local_moodleorg {{/str}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="spiffyNav">
+            <div class="container-fluid">
+                <div class="row-container" id="nav-tab" role="tablist">
+                    <ul class="nav nav-tabs controls">
+                        <li class="nav-item">
+                            <a href="#slide1" class="nav-link active" id="slide1" data-toggle="tab" role="tab" aria-controls="slide1" aria-selected="true">
+                                <div class="description">
+                                    {{#str}}heroslide_getstarted_slidecontrol, local_moodleorg{{/str}}
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#slide2" class="nav-link" id="slide2" data-toggle="tab" role="tab" aria-controls="slide2" aria-selected="true">
+                                <div class="description">
+                                    {{#str}}heroslide_power_slidecontrol, local_moodleorg{{/str}}
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#slide3" class="nav-link" id="slide3" data-toggle="tab" role="tab" aria-controls="slide3" aria-selected="true">
+                                <div class="description">
+                                    {{#str}}heroslide_global_slidecontrol, local_moodleorg{{/str}}
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#slide4" class="nav-link" id="slide4" data-toggle="tab" role="tab" aria-controls="slide4" aria-selected="true">
+                                <div class="description">
+                                    {{#str}}heroslide_story_slidecontrol, local_moodleorg{{/str}}
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</section>
+
+<div id="underslidesbar">
+    <div class="container-fluid">
+        <div class="row">
+            <div id="underslidesbarcommunity" class="underslidesitem col-lg-6">
+                 <h2>{{#str}}heroslide_community_headline, local_moodleorg{{/str}}</h2>
+                 <a href="{{linkcommunity}}" class="button">{{#str}}heroslide_link_forums, local_moodleorg {{/str}}</a>
+            </div>
+            <div id="underslidesbardonate" class="underslidesitem col-lg-6">
+                 <h2>{{#str}}heroslide_donate_headline, local_moodleorg{{/str}}</h2>
+                 <a href="{{linkdonate}}" class="button">{{#str}}heroslide_link_donate, local_moodleorg {{/str}}</a>
+            </div>
+        </div>
+    </div>
+</div>

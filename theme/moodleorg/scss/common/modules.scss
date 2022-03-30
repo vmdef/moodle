@@ -1,0 +1,251 @@
+#page-mod-glossary-view {
+    #region-main {
+        .glossarycontrol {
+            float: none;
+            margin: 0;
+        }
+        #intro {
+            margin-top: 0;
+        }
+        br:first-of-type {
+            display: none;
+        }
+        form {
+            display: inline-block;
+            .boxaligncenter {
+                width: 100%;
+                .glossarysearchbox {
+                    text-align: left;
+                    input,
+                    label {
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }
+        .glossaryaddentry {
+            display: block;
+            float: right;
+            &.singlebutton {
+                div {
+                    margin: 0;
+                }
+            }
+        }
+
+        .glossarydisplay {
+            margin-top: 50px;
+            .entrybox {
+                width: auto;
+                padding-left: 15px;
+                padding-right: 15px;
+                > table {
+                    td:first-of-type {
+                        text-align: left;
+                        .singlebutton {
+                            div {
+                                margin-bottom: 0;
+                                input {
+                                    margin: 0;
+                                }
+                            }
+                        }
+                    }
+                    td:last-of-type {
+                        text-align: right;
+                    }
+                }
+                hr {
+                    border-bottom: 1px solid #ddd;
+                    margin-top: 10px;
+                }
+                .glossarycategoryheader {
+                    width: 100%;
+                    display: block;
+                    img {
+                        height: 30px;
+                        width: 30px;
+                        display: inline-block;
+                        margin-right: 10px;
+                        vertical-align: text-bottom;
+                    }
+                    h3 {
+                        display: inline-block;
+                        background-color: $themeColorOrange;
+                        color: #fff;
+                        line-height: 30px;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    }
+                }
+                .glossarypost {
+                    position: relative;
+                    padding: 0 10px 20px;
+                    border-bottom: 1px solid #ddd;
+                    margin-bottom: 20px;
+                    width: 100%;
+                    .entry {
+                        text-align: left;
+                        table:first-of-type {
+                            margin-top: 30px;
+                            margin-bottom: 20px;
+                            td {
+                                text-align: left;
+                                white-space: normal;
+                                br {
+                                    display: block;
+                                }
+                            }
+                        }
+                        .concept {
+                            margin-top: 30px;
+                        }
+                    }
+                    .entrylowersection {
+                        padding-top: 10px;
+                        .aliases {
+                            label {
+                                display: inline;
+                            }
+                        }
+                        .commands {
+                            position: absolute;
+                            top: 0;
+                            right: 10px;
+                        }
+                        .comment-link {
+                            img {
+                                vertical-align: baseline;
+                            }
+                            span {
+                                padding-left: 10px;
+                                padding-right: 10px;
+                            }
+                        }
+                        .comment-ctrl {
+                            padding-top: 10px;
+                            padding-left: 20px;
+                            .comment-list {
+                                font-size: $baseFontSize;
+                            }
+                            .comment-message-meta {
+                                padding-right: 20px;
+                            }
+                            .picture {
+                                width: 35px;
+                                margin-right: 10px;
+                            }
+                            .userpicture {
+                                width: 35px;
+                                height: 35px;
+                                max-width: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#page-mod-glossary-view.dir-rtl {
+    #region-main {
+        .glossarycontrol {
+            /* stylelint-disable declaration-no-important */
+            text-align: left !important;
+            /* stylelint-enable declaration-no-important */
+            .printicon {
+                background-position: right center;
+                padding-left: inherit;
+                padding-right: 20px;
+            }
+        }
+        form {
+            .boxaligncenter {
+                .glossarysearchbox {
+                    text-align: right;
+                    input,
+                    label {
+                        margin-left: inherit;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+        .glossaryaddentry {
+            float: left;
+            &.singlebutton {
+                input {
+                    margin-right: 5px;
+                }
+            }
+        }
+        .glossarydisplay {
+            margin-top: 50px;
+            .entrybox {
+                > table {
+                    td:first-of-type {
+                        text-align: right;
+                    }
+                    td:last-of-type {
+                        text-align: left;
+                    }
+                }
+                .glossarycategoryheader {
+                    img {
+                        margin-right: inherit;
+                        margin-left: 10px;
+                        margin-top: 10px;
+                        float: right;
+                    }
+                    h3 {
+                        float: right;
+                    }
+                }
+                .glossarypost {
+                    .entry {
+                        text-align: right;
+                        table:first-of-type {
+                            td {
+                                text-align: right;
+                            }
+                        }
+                    }
+                    .entrylowersection {
+                        .aliases {
+                            text-align: left;
+                        }
+                        .commands {
+                            right: inherit;
+                            left: 10px;
+                            text-align: left;
+                        }
+                        .comment-ctrl {
+                            padding-left: inherit;
+                            padding-right: 20px;
+                            .comment-message-meta {
+                                padding-right: inherit;
+                                padding-left: 20px;
+                            }
+                            .picture {
+                                margin-right: inherit;
+                                margin-left: 10px;
+                            }
+                            .comment-area {
+                                .fd {
+                                    text-align: left;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.path-mod-data form {
+    &:not(.search-input-form) {
+        margin-top: 10px;
+    }
+}

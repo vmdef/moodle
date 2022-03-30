@@ -1,0 +1,858 @@
+#spiffySlides {
+    overflow: hidden;
+    display: block;
+    zoom: 1;
+}
+
+#spiffySlides {
+    font-weight: normal;
+    .slides {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 420px;
+        position: relative;
+        .slide {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 500px;
+            list-style: none;
+            opacity: 0;
+            filter: alpha(opacity=0);
+            transition: opacity 0.3s ease-out;
+            background-repeat: no-repeat;
+            h2 {
+                font-size: 28px;
+                line-height: 32px;
+                color: $white;
+                text-shadow: 1px 1px 2px #333;
+                font-family: $sansFontFamily;
+                font-weight: normal;
+
+            }
+            .description {
+                font-size: 20px;
+                line-height: 24px;
+                color: $white;
+                text-shadow: 1px 1px 2px #333;
+                margin-bottom: 20px;
+            }
+            a {
+                color: $white;
+            }
+            a.button {
+                font-size: 30px;
+                line-height: 34px;
+                border: 1px solid $white;
+                padding: 5px 13px;
+                margin-bottom: 10px;
+                display: inline-block;
+                margin-right: 20px;
+                text-shadow: 1px 1px 2px #333;
+                text-transform: uppercase;
+                text-decoration: none;
+            }
+            a.link {
+                text-decoration: underline;
+            }
+            ul {
+                border-top: 1px dashed rgba(255, 255, 255, 0.5);
+                margin-top: 20px;
+                padding-top: 10px;
+                li {
+                    text-shadow: 1px 1px 2px #333;
+                }
+            }
+            .container-fluid {
+                position: relative;
+                .row {
+                    background-color: transparent;
+                    padding-top: 50px;
+                }
+            }
+        }
+        .videopower {
+            position: relative;
+            height: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 56.37%;
+            iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .fg {
+            background-repeat: no-repeat;
+            background-size: contain;
+            height: 500px;
+        }
+        .slide.power {
+            .container-fluid {
+                .row {
+                    .span4 {
+                        padding-top: 18px;
+                    }
+                }
+            }
+            background-image: url([[pix:theme|frontpage/BG-banner1-1224px]]);
+        }
+        .slide.getstarted {
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner9-1224px]]);
+            }
+        }
+        .slide.community {
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner2-1224px]]);
+            }
+        }
+
+        .slide.global {
+            h2 {
+                color: #555;
+                text-shadow: 1px 2px #fff;
+            }
+            .description {
+                color: #555;
+                text-shadow: 1px 2px #fff;
+                &:after {
+                    content: " ";
+                }
+            }
+            a {
+                color: #555;
+                text-shadow: 1px 2px #fff;
+                border-color: #555;
+                box-shadow: 1px 1px #fff;
+            }
+            .container-fluid {
+                position: relative;
+                .row {
+                    text-align: center;
+                }
+            }
+            .fg {
+                background-position: center;
+            }
+            background-image: url([[pix:theme|frontpage/BG-banner3-1224px]]);
+        }
+        .slide.story1 {
+            background-image: url([[pix:theme|frontpage/stories/MU_1224]]);
+            background-repeat: no-repeat;
+        }
+        .slide.story2 {
+            background-image: url([[pix:theme|frontpage/stories/GAC_1224]]);
+            background-repeat: no-repeat;
+        }
+        .slide.story3 {
+            background-image: url([[pix:theme|frontpage/stories/FVC_1224]]);
+            background-repeat: no-repeat;
+        }
+        .slide.story4 {
+            background-image: url([[pix:theme|frontpage/stories/VSO_1224]]);
+            background-repeat: no-repeat;
+        }
+        .slide.downloads {
+            .span4 {
+                text-align: center;
+            }
+            background-image: url([[pix:theme|frontpage/BG-banner6-1824px]]);
+        }
+        .slide.donations {
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner8]]);
+                background-position: center;
+                height: 420px;
+            }
+            background-image: url([[pix:theme|frontpage/BG-banner8-1824px]]);
+            background-position: center;
+            height: 420px;
+        }
+    }
+}
+
+#spiffySlides .slides .active {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    transition: opacity 0.3s ease-out;
+    z-index: 1;
+}
+
+
+/* - C O N T R O L S - */
+
+#spiffySlides {
+    .controls {
+        margin: 0;
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        li {
+            list-style: none;
+            display: table;
+            float: left;
+            position: relative;
+            top: -20px;
+            width: 25%;
+            background-color: rgba(0, 0, 0, 0.5);
+            a.active {
+                background-color: rgba(0, 0, 0, 0.65);
+                color: #fff;
+                border: 0;
+            }
+            a.nav-link {
+                border-width: 0 1px 0 0;
+                border-radius: 0;
+                font-size: 14px;
+                line-height: 16px;
+                width: 100%;
+                display: table-cell;
+                zoom: 1;
+                text-decoration: none;
+                height: 80px;
+                color: rgba(255, 255, 255, 0.65);
+                background-color: transparent;
+                background-position: left 16px center;
+                background-repeat: no-repeat;
+                vertical-align: middle;
+                border-right: 1px solid $white;
+                .description {
+                    padding-left: 52px;
+                    padding-right: 5px;
+                }
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.40);
+                    color: rgba(255, 255, 255, 0.9);
+                }
+            }
+            &:last-of-type {
+                a {
+                    border-right: 0;
+                }
+            }
+        }
+        li:nth-of-type(1) a {
+            background-image: url([[pix:theme|frontpage/slideicon5]]);
+        }
+        li:nth-of-type(2) a {
+            background-image: url([[pix:theme|frontpage/slideicon1]]);
+        }
+        li:nth-of-type(3) a {
+            background-image: url([[pix:theme|frontpage/slideicon3]]);
+        }
+        li:nth-of-type(4) a {
+            background-image: url([[pix:theme|frontpage/slideicon4]]);
+        }
+    }
+}
+
+.hero {
+    #spiffySlides {
+        .controls {
+            visibility: hidden;
+        }
+    }
+}
+
+.dir-rtl {
+    #spiffySlides {
+        .slides {
+            .slide {
+                .container-fluid {
+                    a.button {
+                        margin-right: 0;
+                        margin-left: 20px;
+                    }
+                }
+            }
+            .slide.getstarted {
+                .fg {
+                    background-image: url([[pix:theme|frontpage/FG-banner9-1224px-rtl]]);
+                }
+            }
+        }
+        .controls {
+            li {
+                float: right;
+                a {
+                    background-position: right 8px center;
+                    border-right: 0;
+                    border-left: 1px solid $white;
+                    .description {
+                        padding-right: 52px;
+                        padding-left: 5px;
+                    }
+                }
+                &:last-of-type {
+                    a {
+                        border-left: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// image specific responsive rules (for bandwidth and quality)
+
+@media (min-width: 1861px) {
+    #spiffySlides .slides {
+        .slide.power {
+            background-image: url([[pix:theme|frontpage/BG-banner1-1824px]]);
+        }
+        .slide.getstarted {
+            background-image: url([[pix:theme|frontpage/BG-banner9-1824px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner9-1680px]]);
+            }
+        }
+        .slide.community {
+            background-image: url([[pix:theme|frontpage/BG-banner2-1824px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner2-1680px]]);
+            }
+        }
+        .slide.global {
+            background-image: url([[pix:theme|frontpage/BG-banner3-1824px]]);
+            .fg {
+                &.img1 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3a-1680px]]);
+                }
+                &.img2 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3b-1680px]]);
+                }
+                &.img3 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3c-1680px]]);
+                }
+                &.img4 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3d-1680px]]);
+                }
+                &.img5 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3e-1680px]]);
+                }
+            }
+        }
+        .slide.story1 {
+            background-image: url([[pix:theme|frontpage/stories/MU_1824]]);
+        }
+        .slide.story2 {
+            background-image: url([[pix:theme|frontpage/stories/GAC_1824]]);
+        }
+        .slide.story3 {
+            background-image: url([[pix:theme|frontpage/stories/FVC_1824]]);
+        }
+        .slide.story4 {
+            background-image: url([[pix:theme|frontpage/stories/VSO_1824]]);
+        }
+        .slide.donations {
+            background-image: url([[pix:theme|frontpage/BG-banner8-1824px]]);
+        }
+    }
+    .dir-rtl #spiffySlides .slides .slide.getstarted .fg {
+        background-image: url([[pix:theme|frontpage/FG-banner9-1680px-rtl]]);
+    }
+}
+
+@media (max-width: 1860px) {
+    #spiffySlides .slides {
+        .slide.power {
+            background-image: url([[pix:theme|frontpage/BG-banner1-1824px]]);
+        }
+        .slide.getstarted {
+            background-image: url([[pix:theme|frontpage/BG-banner9-1824px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner9-1680px]]);
+            }
+        }
+        .slide.community {
+            background-image: url([[pix:theme|frontpage/BG-banner2-1824px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner2-1680px]]);
+            }
+        }
+        .slide.global {
+            background-image: url([[pix:theme|frontpage/BG-banner3-1824px]]);
+            .fg {
+                &.img1 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3a-1680px]]);
+                }
+                &.img2 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3b-1680px]]);
+                }
+                &.img3 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3c-1680px]]);
+                }
+                &.img4 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3d-1680px]]);
+                }
+                &.img5 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3e-1680px]]);
+                }
+            }
+        }
+        .slide.story1 {
+            background-image: url([[pix:theme|frontpage/stories/MU_1824]]);
+        }
+        .slide.story2 {
+            background-image: url([[pix:theme|frontpage/stories/GAC_1824]]);
+        }
+        .slide.story3 {
+            background-image: url([[pix:theme|frontpage/stories/FVC_1824]]);
+        }
+        .slide.story4 {
+            background-image: url([[pix:theme|frontpage/stories/VSO_1824]]);
+        }
+        .slide.donations {
+            background-image: url([[pix:theme|frontpage/BG-banner8-1824px]]);
+        }
+    }
+    .dir-rtl #spiffySlides .slides .slide.getstarted .fg {
+        background-image: url([[pix:theme|frontpage/FG-banner9-1680px-rtl]]);
+    }
+}
+
+@media (max-width: 1224px) {
+    #spiffySlides .slides {
+        .slide.power {
+            background-image: url([[pix:theme|frontpage/BG-banner1-1224px]]);
+        }
+        .slide.getstarted {
+            background-image: url([[pix:theme|frontpage/BG-banner9-1224px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner9-1224px]]);
+            }
+        }
+        .slide.community {
+            background-image: url([[pix:theme|frontpage/BG-banner2-1224px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner2-1224px]]);
+            }
+        }
+        .slide.global {
+            background-image: url([[pix:theme|frontpage/BG-banner3-1224px]]);
+            .fg {
+                &.img1 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3a-1224px]]);
+                }
+                &.img2 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3b-1224px]]);
+                }
+                &.img3 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3c-1224px]]);
+                }
+                &.img4 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3d-1224px]]);
+                }
+                &.img5 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3e-1224px]]);
+                }
+            }
+        }
+        .slide.story1 {
+            background-image: url([[pix:theme|frontpage/stories/MU_1224]]);
+        }
+        .slide.story2 {
+            background-image: url([[pix:theme|frontpage/stories/GAC_1224]]);
+        }
+        .slide.story3 {
+            background-image: url([[pix:theme|frontpage/stories/FVC_1224]]);
+        }
+        .slide.story4 {
+            background-image: url([[pix:theme|frontpage/stories/VSO_1224]]);
+        }
+        .slide.donations {
+            background-image: url([[pix:theme|frontpage/BG-banner8-1224px]]);
+        }
+    }
+    .dir-rtl #spiffySlides .slides .slide.getstarted .fg {
+        background-image: url([[pix:theme|frontpage/FG-banner9-1224px-rtl]]);
+    }
+}
+
+@media (min-width: 1104px) {
+    #spiffySlides .slides .slide {
+        background-position: 50% 50%;
+        background-size: cover;
+        h2 {
+            font-size: 40px;
+            line-height: 44px;
+        }
+        .description {
+            font-size: 26px;
+            line-height: 30px;
+        }
+        a.button {
+            font-size: 30px;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    #spiffySlides .slides {
+        .slide.power {
+            background-image: url([[pix:theme|frontpage/BG-banner1-1024px]]);
+        }
+        .slide.getstarted {
+            background-image: url([[pix:theme|frontpage/BG-banner9-1024px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner9-1024px]]);
+            }
+        }
+        .slide.community {
+            background-image: url([[pix:theme|frontpage/BG-banner2-1024px]]);
+            .fg {
+                background-image: url([[pix:theme|frontpage/FG-banner2-1024px]]);
+            }
+        }
+        .slide.global {
+            background-image: url([[pix:theme|frontpage/BG-banner3-1024px]]);
+            .fg {
+                &.img1 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3a-1024px]]);
+                }
+                &.img2 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3b-1024px]]);
+                }
+                &.img3 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3c-1024px]]);
+                }
+                &.img4 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3d-1024px]]);
+                }
+                &.img5 {
+                    background-image: url([[pix:theme|frontpage/FG-banner3e-1024px]]);
+                }
+            }
+        }
+        .slide.story1 {
+            background-image: url([[pix:theme|frontpage/stories/MU_1024]]);
+        }
+        .slide.story2 {
+            background-image: url([[pix:theme|frontpage/stories/GAC_1024]]);
+        }
+        .slide.story3 {
+            background-image: url([[pix:theme|frontpage/stories/FVC_1024]]);
+        }
+        .slide.story4 {
+            background-image: url([[pix:theme|frontpage/stories/VSO_1024]]);
+        }
+        .slide.donations {
+            background-image: url([[pix:theme|frontpage/BG-banner8-1024px]]);
+        }
+    }
+    .dir-rtl #spiffySlides .slides .slide.getstarted .fg {
+        background-image: url([[pix:theme|frontpage/FG-banner9-1024px-rtl]]);
+    }
+}
+
+@media (min-width: 975px) and (max-width: 1103px) {
+    #spiffySlides .slides .slide {
+        background-position: 80% 50%;
+        background-size: cover;
+        h2 {
+            font-size: 36px;
+            line-height: 38px;
+        }
+        .description {
+            font-size: 20px;
+            line-height: 24px;
+        }
+        a.button {
+            font-size: 30px;
+        }
+    }
+}
+
+@media (max-width: 974px) {
+    #spiffySlides .slides .slide {
+        background-position: 90% 50%;
+        background-size: cover;
+    }
+}
+
+// iPad Portrait
+@media (max-width: 768px) {
+    #spiffySlides {
+        .slides {
+            .slide.power {
+                .container-fluid {
+                    .row {
+                        .span4 {
+                            width: 40%;
+                            display: inline-block;
+                        }
+                        .span5 {
+                            width: 60%;
+                            float: right;
+                            padding-left: 50px;
+                        }
+                    }
+                }
+                background-image: url([[pix:theme|frontpage/BG-banner1-768px]]);
+            }
+            .slide.getstarted {
+                background-image: url([[pix:theme|frontpage/BG-banner9-768px]]);
+                .fg {
+                    background-image: url([[pix:theme|frontpage/FG-banner9-768px]]);
+                }
+            }
+            .slide.community {
+                background-image: url([[pix:theme|frontpage/BG-banner2-768px]]);
+                .fg {
+                    background-image: url([[pix:theme|frontpage/FG-banner2-768px]]);
+                }
+            }
+            .slide.global {
+                background-image: url([[pix:theme|frontpage/BG-banner3-768px]]);
+                .fg {
+                    &.img1 {
+                        background-image: url([[pix:theme|frontpage/FG-banner3a-768px]]);
+                    }
+                    &.img2 {
+                        background-image: url([[pix:theme|frontpage/FG-banner3b-768px]]);
+                    }
+                    &.img3 {
+                        background-image: url([[pix:theme|frontpage/FG-banner3c-768px]]);
+                    }
+                    &.img4 {
+                        background-image: url([[pix:theme|frontpage/FG-banner3d-768px]]);
+                    }
+                    &.img5 {
+                        background-image: url([[pix:theme|frontpage/FG-banner3e-768px]]);
+                    }
+                }
+            }
+            .slide.story1 {
+                background-image: url([[pix:theme|frontpage/stories/MU_768]]);
+            }
+            .slide.story2 {
+                background-image: url([[pix:theme|frontpage/stories/GAC_768]]);
+            }
+            .slide.story3 {
+                background-image: url([[pix:theme|frontpage/stories/FVC_768]]);
+            }
+            .slide.story4 {
+                background-image: url([[pix:theme|frontpage/stories/VSO_768]]);
+            }
+            .slide.donations {
+                background-image: url([[pix:theme|frontpage/BG-banner8-768px]]);
+            }
+        }
+    }
+}
+
+// Smaller than iPad Portrait to Galaxy4 Landscape (640px)
+@media (max-width: 767px) {
+    #spiffySlides {
+        .slides {
+            height: 250px;
+            .slide {
+                h2 {
+                    font-size: 36px;
+                    line-height: 38px;
+                }
+                .description {
+                    font-size: 20px;
+                    line-height: 24px;
+                }
+                .container-fluid {
+                    .row {
+                        text-align: left;
+                        padding-top: 20px;
+                    }
+                }
+            }
+            .slide.power {
+                .container-fluid {
+                    .row {
+                        .span4 {
+                            display: none;
+                        }
+                        .span5 {
+                            width: inherit;
+                            padding-left: inherit;
+                            float: inherit;
+                        }
+                    }
+                }
+            }
+            .slide.getstarted {
+                .fg {
+                    background-image: none;
+                }
+            }
+            .slide.community {
+                .fg {
+                    background-image: none;
+                }
+            }
+            .slide.global {
+                .fg.img1,
+                .fg.img2,
+                .fg.img3,
+                .fg.img4,
+                .fg.img5 {
+                    background-image: none;
+                }
+            }
+            .slide.downloads {
+                .span4 {
+                    display: none;
+                }
+            }
+            .slide.donations {
+                .fg {
+                    height: 250px;
+                }
+            }
+        }
+        .controls {
+            li {
+                a, a.nav-link {
+                    height: 50px;
+                    background-position: 50% 50%;
+                    .description {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+    .dir-rtl {
+        #spiffySlides {
+            .slides {
+                .slide {
+                    .container-fluid {
+                        .row {
+                            text-align: right;
+                        }
+                    }
+                }
+                .slide.getstarted {
+                    .fg {
+                        background-image: none;
+                    }
+                }
+            }
+            .controls {
+                li {
+                    a {
+                        background-position: 50% 50%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Smaller than Galaxy4 Landscape
+@media (max-width: 639px) {
+    #spiffySlides {
+        .slides {
+            height: 280px;
+            .slide.donations {
+                .fg {
+                    height: 280px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    #spiffySlides {
+        .slides {
+            .slide.power {
+                background-image: url([[pix:theme|frontpage/BG-banner1-480px]]);
+            }
+            .slide.community {
+                background-image: url([[pix:theme|frontpage/BG-banner2-480px]]);
+            }
+            .slide.global {
+                background-image: url([[pix:theme|frontpage/BG-banner3-480px]]);
+                .fg.img1,
+                .fg.img2,
+                .fg.img3,
+                .fg.img4,
+                .fg.img5 {
+                    background-image: none;
+                }
+            }
+            .slide.story1 {
+                background-image: url([[pix:theme|frontpage/stories/MU_480]]);
+            }
+            .slide.story2 {
+                background-image: url([[pix:theme|frontpage/stories/GAC_480]]);
+            }
+            .slide.story3 {
+                background-image: url([[pix:theme|frontpage/stories/FVC_480]]);
+            }
+            .slide.story4 {
+                background-image: url([[pix:theme|frontpage/stories/VSO_480]]);
+            }
+            .slide.donations {
+                background-image: url([[pix:theme|frontpage/BG-banner8-480px]]);
+            }
+        }
+    }
+}
+
+// Smaller than iPhone Landscape (Galaxy4 Portrait 360px)
+@media (max-width: 479px) {
+    #spiffySlides .slides {
+        height: 380px;
+        .slide.donations {
+            .fg {
+                height: 380px;
+            }
+        }
+    }
+}
+
+@media (max-width: 320px) {
+    #spiffySlides .slides {
+        .slide {
+            h2 {
+                font-size: 28px;
+                line-height: 32px;
+            }
+            .description {
+                font-size: 16px;
+                line-height: 18px;
+            }
+            a.button {
+                font-size: 20px;
+            }
+        }
+        .slide.power {
+            background-image: url([[pix:theme|frontpage/BG-banner1-320px]]);
+        }
+        .slide.community {
+            background-image: url([[pix:theme|frontpage/BG-banner2-320px]]);
+        }
+        .slide.global {
+            background-image: url([[pix:theme|frontpage/BG-banner3-320px]]);
+        }
+        .slide.story1 {
+            background-image: url([[pix:theme|frontpage/stories/MU_320]]);
+        }
+        .slide.story2 {
+            background-image: url([[pix:theme|frontpage/stories/GAC_320]]);
+        }
+        .slide.story3 {
+            background-image: url([[pix:theme|frontpage/stories/FVC_320]]);
+        }
+        .slide.story4 {
+            background-image: url([[pix:theme|frontpage/stories/VSO_320]]);
+        }
+        .slide.donations {
+            background-image: url([[pix:theme|frontpage/BG-banner8-320px]]);
+        }
+    }
+}

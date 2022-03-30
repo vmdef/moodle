@@ -1,0 +1,224 @@
+/**
+ * Provides CSS styles for the plugins grid filter.
+ *
+ * @package     local_plugins
+ * @subpackage  scss
+ * @category    output
+ * @copyright   2019 Mathew May <mathew@moodle.com>
+ * @copyright   2016 David Mudrák <david@moodle.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+.path-local-plugins {
+    #page {
+        margin-top: 1rem;
+    }
+    .browserform {
+        .current {
+            border: 1px solid $link-color;
+        }
+        select > option:first-child {
+            font-weight: bold;
+        }
+        form[data-show-advanced=""] {
+            [data-is-advanced="1"],
+            [data-widget="advanced-filter-hide"] {
+                display: none;
+            }
+        }
+        form[data-show-advanced="1"] {
+            [data-widget="advanced-filter-show"] {
+                display: none;
+            }
+        }
+    }
+
+    #page-header {
+        display: none;
+    }
+
+    .comment-area {
+        max-width: 100%;
+        textarea {
+            @extend .form-control;
+        }
+    }
+
+    .browsersort {
+        a {
+            padding: 4px;
+            white-space: nowrap;
+        }
+        .current {
+            text-decoration: none;
+            background-color: $link-color;
+            color: white;
+            @include border-radius(3px);
+            padding: 4px;
+        }
+    }
+    .frontpage_info_stats {
+        .figure {
+            font-size: 26px;
+            line-height: 26px;
+            font-weight: 300;
+        }
+        .title {
+            font-size: 11.6px;
+        }
+    }
+
+    // CI precheck badges.
+    .precheck-badge {
+        font-size: $fontSizeSmall;
+        margin: 1px;
+        .precheck-badge-label {
+            color: #eee;
+            background-color: #666;
+            padding: 1px 3px;
+            @include border-radius(4px 0 0 4px);
+        }
+        .precheck-badge-info {
+            color: white;
+            background-color: #6eab2e;
+            padding: 1px 3px;
+            @include border-radius(0 4px 4px 0);
+        }
+    }
+    .precheck-badge-error .precheck-badge-info {
+        background-color: #b94a48;
+    }
+    .precheck-badge-warning .precheck-badge-info {
+        background-color: #f89406;
+    }
+
+}
+
+// On extra large devices (large desktops, 1200px and up), display plugins cards in three columns.
+@media (min-width: 1200px) {
+    .path-local-plugins {
+        .browserform {
+            input.keywords {
+                max-width: 165px;
+            }
+        }
+    }
+}
+
+/**
+ * Provides CSS styles for the plugins grid.
+ *
+ * @package     local_plugins
+ * @subpackage  scss
+ * @category    output
+ * @copyright   2019 Mathew May <mathew@moodle.com>
+ * @copyright   2016 David Mudrák <david@moodle.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+$articlePadding: 10px;
+$cardBackgroundTransparent: rgba(251, 251, 251, 0);
+$cardBackgroundColor: rgba(251, 251, 251, 1);
+$cardHeaderHeight: 25px + 2 * $articlePadding;
+$cardContentsHeight: 60px + 280px + $articlePadding;
+$cardFooterHeight: 20px + 2 * $articlePadding;
+$colorPendingApproval: #f89406;
+$colorUnapproved: #b94a48;
+
+
+.path-local-plugins {
+
+    .grid-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .container-fluid > .grid-wrapper {
+        margin-right: -27px;
+        margin-left: -27px;
+    }
+    .grid-item {
+        // display: block;
+        // float: left;
+        flex: 1 0 100%;
+        // @include border-box-sizing;
+        transition: all 0.3s ease;
+    }
+    .plugin-card {
+
+        .shortdescription {
+            height: 60px;
+            min-height: 60px;
+            margin: 0 0 10px;
+            overflow: hidden;
+        }
+        .shortdescription:before {
+            content: '';
+            width: 100%;
+            height: 20px;
+            position: absolute;
+            left: 0;
+            top: 40px;
+            background-color: mix($cardBackgroundTransparent, $cardBackgroundColor, 60%);
+            background-image: linear-gradient(to bottom, $cardBackgroundTransparent, $cardBackgroundColor); // Standard, IE10
+            background-repeat: repeat-x;
+        }
+        .screenshot {
+            text-align: center;
+            .canvas {
+                display: inline-block;
+                max-width: 250px;
+                img {
+                    width: 250px;
+                    height: 250px;
+                }
+            }
+        }
+    }
+
+    .plugin-preview-canvas .maintainers {
+        display: block;
+        span:first-child::before {
+            content: "by ";
+        }
+        span:last-child::after {
+            content: "";
+        }
+        span::after {
+            content: ", ";
+        }
+    }
+
+    .plugin-card[data-approved="-1"] {
+        .card-title, .card-title a {
+            color: $colorUnapproved;
+        }
+    }
+    .plugin-card[data-approved="0"] {
+        .card-title, .card-title a {
+            color: $colorPendingApproval;
+        }
+    }
+}
+
+// stylelint-disable
+// On small devices (landscape phones, 544px and up), display plugins cards in two columns.
+@media (min-width: 544px) {
+    .path-local-plugins {
+        .grid-item {
+            flex: 1 0 (100% / 2);
+            max-width: (100% / 2);
+        }
+    }
+}
+
+// On extra large devices (large desktops, 1200px and up), display plugins cards in three columns.
+@media (min-width: 1200px) {
+    .path-local-plugins {
+        .grid-item {
+            flex: 1 0 (100% / 3);
+            max-width: (100% / 3);
+        }
+    }
+}
+// stylelint-enable
+
