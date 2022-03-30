@@ -1,0 +1,4 @@
+MDTVERSION=4.0
+MDTCOMPONENT=block_spam_deletion
+MDTRELPATH=blocks/spam_deletion/
+MDTEXPORT=origin/master
