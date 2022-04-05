@@ -2939,8 +2939,8 @@ class global_navigation extends navigation_node {
             if ($navoptions->notes) {
                 $participants->add(get_string('notes', 'notes'), new moodle_url('/notes/index.php', array('filtertype' => 'course', 'filterselect' => $course->id)), self::TYPE_SETTING, null, 'currentcoursenotes');
             }
-        } else if (count($this->extendforuser) > 0 || $this->page->course->id == $course->id) {
-            $participants = $coursenode->add(get_string('participants'), null, self::TYPE_CONTAINER, get_string('participants'), 'participants');
+        } else if (count($this->extendforuser) > 0) {
+            $coursenode->add(get_string('participants'), null, self::TYPE_CONTAINER, get_string('participants'), 'participants');
         }
 
         // Badges.
@@ -4665,6 +4665,10 @@ class settings_navigation extends navigation_node {
             foreach ($reports as $reportfunction) {
                 $reportfunction($reportnav, $course, $coursecontext);
             }
+
+            if (!$reportnav->has_children()) {
+                $reportnav->remove();
+            }
         }
 
         // Check if we can view the gradebook's setup page.
@@ -5632,6 +5636,10 @@ class settings_navigation extends navigation_node {
             $reports = get_plugin_list_with_function('report', 'extend_navigation_course', 'lib.php');
             foreach ($reports as $reportfunction) {
                 $reportfunction($frontpagenav, $course, $coursecontext);
+            }
+
+            if (!$frontpagenav->has_children()) {
+                $frontpagenav->remove();
             }
         }
 

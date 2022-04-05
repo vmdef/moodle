@@ -11,7 +11,10 @@ $query = trim(optional_param('query', '', PARAM_NOTAGS));  // Search string
 
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_secondary_navigation(true, true);
+
+// If we are performing a search we need to display the secondary navigation with links as opposed to just anchors.
+// NOTE: hassecondarynavigation will be overridden in classic.
+$PAGE->set_secondary_navigation(true, !$query);
 
 $hassiteconfig = has_capability('moodle/site:config', $context);
 
@@ -24,18 +27,6 @@ if ($hassiteconfig && moodle_needs_upgrading()) {
 
 admin_externalpage_setup('search', '', array('query' => $query)); // now hidden page
 $PAGE->set_heading(get_string('administrationsite')); // Has to be after setup since it has its' own heading set_heading.
-
-if ($hassiteconfig) {
-    $data = [
-        'action' => new moodle_url('/admin/search.php'),
-        'btnclass' => 'btn-primary',
-        'inputname' => 'query',
-        'searchstring' => get_string('search'),
-        'query' => $query,
-        'extraclasses' => 'd-flex justify-content-end'
-    ];
-    $PAGE->add_header_action($OUTPUT->render_from_template('core/search_input', $data));
-}
 
 $adminroot = admin_get_root(); // need all settings here
 $adminroot->search = $query; // So we can reference it in search boxes later in this invocation
