@@ -25,7 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/my/lib.php');
+require_once("{$CFG->dirroot}/my/lib.php");
+require_once("{$CFG->libdir}/db/upgradelib.php");
 
 /**
  * Upgrade code for the MyOverview block.
@@ -84,7 +85,7 @@ function xmldb_block_myoverview_upgrade($oldversion) {
     // Put any upgrade step following this.
 
     if ($oldversion < 2021052504) {
-        upgrade_block_delete_instances('myoverview', 'my-index');
+        upgrade_block_delete_instances('myoverview', '__default', 'my-index');
 
         // Add new instance to the /my/courses.php page.
         $subpagepattern = $DB->get_record('my_pages', [
@@ -92,6 +93,9 @@ function xmldb_block_myoverview_upgrade($oldversion) {
             'name' => MY_PAGE_COURSES,
             'private' => MY_PAGE_PUBLIC,
         ], 'id', IGNORE_MULTIPLE)->id;
+
+        $blockname = 'myoverview';
+        $pagetypepattern = 'my-index';
 
         $blockparams = [
             'blockname' => $blockname,
@@ -102,11 +106,10 @@ function xmldb_block_myoverview_upgrade($oldversion) {
         // See if this block already somehow exists, it should not but who knows.
         if (!$DB->record_exists('block_instances', $blockparams)) {
             $page = new moodle_page();
-            $systemcontext = context_system::instance();
             $page->set_context(context_system::instance());
             // Add the block to the default /my/courses.
             $page->blocks->add_region('content');
-            $page->blocks->add_block($blockname, $newdefaultregion, 0, false, $pagetypepattern, $subpagepattern);
+            $page->blocks->add_block($blockname, 'content', 0, false, $pagetypepattern, $subpagepattern);
         }
 
         upgrade_block_savepoint(true, 2021052504, 'myoverview', false);
