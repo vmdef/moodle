@@ -598,7 +598,6 @@ class frontpage_column_useful extends frontpage_column {
 
     protected function processprintpost($post, $course, $rm, $ratingoptions) {
         global $DB, $CFG;
-        require_once($CFG->dirroot.'/mod/forum/lib.php');
 
         $discussions = array();
         $forums = array();
@@ -654,40 +653,8 @@ class frontpage_column_useful extends frontpage_column {
         $frontcontentbit->title = s($post->subject);
         $frontcontentbit->date = userdate($post->modified, get_string('strftimedaydate', 'core_langconfig'));
 
-        // Output normal posts
-        $fullsubject = html_writer::link($forumlink, format_string($forum->name,true));
-        if ($forum->type != 'single') {
-            $fullsubject .= ' -> '.html_writer::link($discussionlink->out(false), format_string($post->subject,true));
-            if ($post->parent != 0) {
-                $fullsubject .= ' -> '.html_writer::link($postlink->out(false), format_string($post->subject,true));
-            }
-        }
-        $post->subject = $fullsubject;
-        $fulllink = html_writer::link($postlink, get_string("postincontext", "forum"));
+        $fullcontentbit = '';
 
-        ob_start();
-        echo "<br /><br />";
-        //add the ratings information to the post
-        //Unfortunately seem to have do this individually as posts may be from different forums
-        if ($forum->assessed != RATING_AGGREGATE_NONE) {
-            $modcontext = context_module::instance($cm->id, MUST_EXIST);
-            $ratingoptions->context = $modcontext;
-            $ratingoptions->items = array($post);
-            $ratingoptions->aggregate = $forum->assessed;//the aggregation method
-            $ratingoptions->scaleid = $forum->scale;
-            $ratingoptions->assesstimestart = $forum->assesstimestart;
-            $ratingoptions->assesstimefinish = $forum->assesstimefinish;
-            $postswithratings = $rm->get_ratings($ratingoptions);
-
-            if ($postswithratings && count($postswithratings)==1) {
-                $post = $postswithratings[0];
-            }
-        }
-        // the actual reason for buffer follows
-        forum_print_post($post, $discussion, $forum, $cm, $course, false, false, false, $fulllink);
-
-        $fullcontentbit = ob_get_contents();
-        ob_end_clean();
         return array($frontcontentbit, $rsscontent, $fullcontentbit);
     }
 
@@ -706,19 +673,16 @@ class frontpage_column_useful extends frontpage_column {
         return $content;
     }
 
+    /**
+     * @deprecated since 4.0
+     */
     public function get_full_content() {
-        $cache = $this->get_cache();
-        $key = 'useful_full_'.$this->mapping->lang;
-        if ($content = $cache->get($key)) {
-            return $content;
-        }
 
-        $this->generate();
-        if (!$content = $cache->get($key)) {
-            throw new moodle_exception('cant get content');
-        }
+        // We haven't used this for years since the top/useful/index.php was removed. No need to bother
+        // with posts rendering.
+        debugging('frontpage_column_resources::get_full_content() has been deprecated');
 
-        return $content;
+        return '';
     }
 
     protected function more_url() {
