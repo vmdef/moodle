@@ -6,6 +6,8 @@ $headings-font-family:      "Open Sans", "Helvetica Neue", Helvetica, Arial, san
 $font-family-sans-serif:    "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $headings-line-height:      1.3;
 
+$navbar-height: 44px;
+
 $breadcrumb-divider:                "▶" !default;
 
 $font-size-base: 0.875rem !default; // 14 px;
@@ -42,4 +44,3 @@ $theme-colors: map-merge((
     "moodle-red-orange": $moodle-red-orange
 ), $theme-colors);
 // stylelint-enable
-

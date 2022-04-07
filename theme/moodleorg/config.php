@@ -32,6 +32,11 @@ $THEME->enable_dock = false;
 $THEME->yuicssmodules = array();
 $THEME->rendererfactory = 'theme_overridden_renderer_factory';
 $THEME->iconsystem = '\\theme_moodleorg\\output\\icon_system_fontawesome';
+$THEME->haseditswitch = false;
+$THEME->usescourseindex = false;
+$THEME->activityheaderconfig = [
+    'notitle' => true,
+];
 $THEME->usefallback = true;
 $THEME->settings->validdomains = ['demo', 'dev', 'downloads', 'net', 'org', 'stats', 'plugins', 'translation'];
 
