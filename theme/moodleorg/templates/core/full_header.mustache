@@ -24,11 +24,24 @@
         "contextheader": "context_header_html",
         "hasnavbar": false,
         "navbar": "navbar_if_available",
-        "courseheader": "course_header_html"
+        "courseheader": "course_header_html",
+        "welcomemessage": "welcomemessage"
     }
 }}
-{{#contextheader}}
 <header id="page-header" class="w-100 py-2">
     {{{contextheader}}}
+    <div class="header-actions-container flex-shrink-0" data-region="header-actions-container">
+        {{#headeractions}}
+            <div class="header-action ml-2">{{{.}}}</div>
+        {{/headeractions}}
+    </div>
+    <div class="d-flex flex-wrap">
+        <div class="ml-auto d-flex">
+            {{{pageheadingbutton}}}
+        </div>
+        <div id="course-header">
+            {{{courseheader}}}
+        </div>
+    </div>
+    {{> core/welcome }}
 </header>
-{{/contextheader}}

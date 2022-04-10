@@ -16,7 +16,7 @@
 
 namespace theme_moodleorg\output;
 
-use \theme_boost\output\core_renderer as boost_core_renderer;
+use core_renderer as vanilla_core_renderer;
 use html_writer;
 
 defined('MOODLE_INTERNAL') || die;
@@ -29,8 +29,7 @@ defined('MOODLE_INTERNAL') || die;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class core_renderer extends boost_core_renderer {
-
+class core_renderer extends vanilla_core_renderer {
 
     /**
      * Return the favicon links.
@@ -94,12 +93,12 @@ class core_renderer extends boost_core_renderer {
      * @return String rendered template html.
      */
     public function footer_navigation() {
-        global $PAGE, $CFG;
+        global $CFG;
 
-        if (empty($PAGE->theme->settings->footersitesmap)) {
+        if (empty($this->page->theme->settings->footersitesmap)) {
             $sitesmenu = get_string('footersitesmap_default', 'theme_moodleorg');
         } else {
-            $sitesmenu = $PAGE->theme->settings->footersitesmap;
+            $sitesmenu = $this->page->theme->settings->footersitesmap;
         }
         $menus = explode('~span~', $sitesmenu);
 
@@ -252,7 +251,6 @@ class core_renderer extends boost_core_renderer {
      * @return {String} footnote;
      */
     public function footnote() {
-        global $PAGE;
-        return $PAGE->theme->settings->footnote;
+        return $this->page->theme->settings->footnote;
     }
 }
