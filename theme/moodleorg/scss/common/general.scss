@@ -8,12 +8,12 @@ $grayDark:                              #212121;
 
 // Accent colors
 // -------------------------
-$themeColorOrange:                      #f98012;    // .org
+$themeColorOrange:                      #c45400;    // .org
 $themeColorYellow:                      #fcfc41;
 // $themeColorBlue:                        #4d7fee; // dev and  tracker
 $themeColorBlue:                        #4653b4;    // dev and  tracker
 $themeColorPurple:                      #6c336d;    // docs
-$themeColorGreen:                       #6eab2e;    // downloads
+$themeColorGreen:                       #538122;    // downloads
 $themeColorGrayLighter:                 #999;    // demo
 $themeColorRed:                         #a62a3e;    // translation
 $themeColorRedOrange:                   #fb4b28;    // .net
@@ -154,6 +154,10 @@ body {
     .headerbar {
         display: none;
     }
+}
+
+#page-header h1.h2 {
+    font-weight: inherit;
 }
 
 #region-main {
