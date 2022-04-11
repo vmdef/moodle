@@ -211,7 +211,14 @@ body {
     margin-left: 200px;
 }
 
+.usermenu {
+    .userpicture {
+        border-radius: 18px;
+    }
+}
+
 .page-context-header {
+    align-items: center;
     .page-header-image {
         margin-bottom: 0;
         img.userpicture {
@@ -219,21 +226,16 @@ body {
         }
     }
     .page-header-headings {
+        margin-left: 1rem;
         float: none;
     }
     #message-user-button,
     #toggle-contact-button {
-        @include button-variant($primary, $primary);
-        margin-top: 1rem;
+        @include button-variant($gray-400, $gray-400);
+        margin-left: 1rem;
     }
-    #toggle-contact-button {
-        margin-left: 2px;
-    }
+
     .header-button-group {
-        display: block;
-        float: none;
-        a {
-            top: 0;
-        }
+        margin-left: auto;
     }
 }
