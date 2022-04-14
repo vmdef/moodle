@@ -239,3 +239,15 @@ body {
         margin-left: auto;
     }
 }
+
+.course_category_tree {
+    .coursebox {
+        &.even {
+            background-color: rgba(0,0,0,.05);
+        }
+        padding: 1rem;
+        .info .moreinfo {
+            margin-left: auto;
+        }
+    }
+}
