@@ -762,7 +762,7 @@ class block_manager {
                     bi.configdata
                     $ccselect
 
-                FROM {block_instances} bi
+                FROM {block_instances} bi FORCE INDEX (blocinst_parshopagsub_ix)
                 JOIN {block} b ON bi.blockname = b.name
                 LEFT JOIN {block_positions} bp ON bp.blockinstanceid = bi.id
                                                   AND bp.contextid = :contextid1
