@@ -91,6 +91,13 @@ $THEME->layouts = [
         'regions' => array('side-post'),
         'defaultregion' => 'side-post',
     ),
+    // My courses page.
+    'mycourses' => array(
+        'theme' => 'classic',
+        'file' => 'columns.php',
+        'regions' => ['side-post'],
+        'defaultregion' => 'side-post',
+    ),
     // My dashboard page.
     'mydashboard' => array(
         'theme' => 'classic',
