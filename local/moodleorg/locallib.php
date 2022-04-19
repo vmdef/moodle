@@ -90,6 +90,9 @@ abstract class frontpage_column {
     /** The number of items to show on the front page */
     const MAXITEMS = 4;
 
+    /** The number of seconds after which the caches are ignored and re-freshed. */
+    const TTL = HOURSECS;
+
     /** @var string the associated mapping record */
     protected $mapping = null;
 
@@ -114,28 +117,30 @@ abstract class frontpage_column {
     public function get($usecache = true) {
 
         if ($usecache) {
-            if (debugging('', DEBUG_DEVELOPER)) {
-                // Do not rely on cached structures in developer mode.
-                $skipcache = true;
-            }
-
             $cache = $this->get_cache();
             $key = $this->cache_key();
 
             // If we have a valid cache, use it.
-            if (empty($skipcache) and ($content = $cache->get($key))) {
-                $content->source = 'cache/' . $key;
-                return $content;
+            if ($usecache) {
+                if ($content = $cache->get($key)) {
+                    if (($content->_cache_valid_until ?? 0) > time()) {
+                        $content->source = 'cache/' . $key . '/' . $content->_cache_valid_until;
+                        return $content;
+                    }
+                }
             }
         }
 
         // Otherwise re-generate the contents.
         $content = $this->generate();
+
         if ($usecache) {
+            $content->_cache_valid_until = time() + self::TTL;
             $cache->set($key, $content);
             $content->source = 'fresh/'.$key;
         }
 
+        $content->source = 'nocache';
         return $content;
     }
 
@@ -272,8 +277,9 @@ class frontpage_column_news extends frontpage_column {
         if (empty($this->rssurl)) {
             return 'news_' . current_language();
         } else {
-            $host = str_replace(parse_url($this->rssurl, PHP_URL_HOST), '.', '');
-            return 'news_' . $host . '_'. current_language();
+            $source = preg_replace('/[^a-zA-Z0-9_]/', '_',
+                parse_url($this->rssurl, PHP_URL_HOST) . parse_url($this->rssurl, PHP_URL_PATH));
+            return 'news_' . $source . '_'. current_language();
         }
     }
 
@@ -304,11 +310,20 @@ class frontpage_column_news extends frontpage_column {
             }
             $cm = $modinfo->instances['forum'][$forum->id];
 
-            $posts = forum_get_discussions($cm, 'p.modified DESC', false, -1, self::MAXITEMS);
+            $posts = forum_get_discussions($cm, 'p.modified DESC', false, -1, 2 * self::MAXITEMS);
 
             $isfirstpost = true;
             foreach ($posts as $post) {
-                //$url = new moodle_url('/mod/forum/discuss.php', array('d' => $post->discussion));
+                if (!empty($CFG->forum_enabletimedposts)) {
+                    // Do not display timed (scheduled) posts unless they are actually visible.
+                    if (!empty($post->timestart) && $post->timestart > time()) {
+                        continue;
+                    }
+                    if (!empty($post->timeend) && $post->timeend < time()) {
+                        continue;
+                    }
+                }
+
                 $url = new moodle_url('/news/');
                 if ($isfirstpost) {
                     $isfirstpost = false;
@@ -320,6 +335,10 @@ class frontpage_column_news extends frontpage_column {
                     'date' => userdate($post->modified, get_string('strftimedaydate', 'core_langconfig')),
                     'url' => $url->out(),
                 );
+
+                if (count($data->items) >= self::MAXITEMS) {
+                    break;
+                }
             }
         } else {
             // Get the RSS feed items.
