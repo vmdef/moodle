@@ -39,7 +39,7 @@ class news implements renderable, templatable {
     /**
      * @var array of news items.
      */
-	private $news;
+    private $news;
 
 
     /**
@@ -48,9 +48,10 @@ class news implements renderable, templatable {
      */
     public function __construct() {
         $news = new \frontpage_column_news();
-        $comnews = new \frontpage_column_news('rssmoodlecomtitle', "https://moodle.com/feed/", "https://moodle.com/news", 'rssmoodlecommore');
+        $comnews = new \frontpage_column_news('rssmoodlecomtitle',
+            "https://moodle.com/feed/", "https://moodle.com/news", 'rssmoodlecommore');
         $this->rssfeed['news'] = $news->get();
-        $this->rssfeed['comnews'] = $comnews->get(false);
+        $this->rssfeed['comnews'] = $comnews->get();
     }
 
     /**
@@ -58,23 +59,23 @@ class news implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-    	$data = new stdClass();
-    	$key = 0;
-    	foreach ($this->rssfeed as $feed) {
+        $data = new stdClass();
+        $key = 0;
+        foreach ($this->rssfeed as $feed) {
             $data->hasnews = true;
-    	    $data->feed[$key] = new stdClass();
+            $data->feed[$key] = new stdClass();
             $data->feed[$key]->rsstitle = $feed->rsstitle;
-    		$data->feed[$key]->rssurl = $feed->rssurl;
-    		$data->feed[$key]->moreurl = $feed->moreurl;
+            $data->feed[$key]->rssurl = $feed->rssurl;
+            $data->feed[$key]->moreurl = $feed->moreurl;
             $data->feed[$key]->moreanchortext = $feed->moreanchortext;
-    		if (isset($_GET['debugcaches']) and $_GET['debugcaches'] == 1) {
-    			$data->feed[$key]->showdebug = true;
-    			$data->feed[$key]->source = $feed->source;
-    			$data->feed[$key]->timegenerated = $feed->timegenerated;
-    		}
-    		$data->feed[$key]->newsitems = array_slice($feed->items, 0, 3);
-    		$key++;
-    	}
-    	return $data;
+            if (isset($_GET['debugcaches']) and $_GET['debugcaches'] == 1) {
+                $data->feed[$key]->showdebug = true;
+                $data->feed[$key]->source = $feed->source ?? 'undefined';
+                $data->feed[$key]->timegenerated = $feed->timegenerated;
+            }
+            $data->feed[$key]->newsitems = array_slice($feed->items, 0, 3);
+            $key++;
+        }
+        return $data;
     }
 }
