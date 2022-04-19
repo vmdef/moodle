@@ -73,8 +73,6 @@ class feeds implements renderable, templatable {
         $useful = new \frontpage_column_useful($mapping);
         $result = $useful->get();
 
-        $result->timegenerated = userdate($result->timegenerated,
-            '%Y-%m-%d&nbsp;%H:%M', 99, false);
         foreach ($result->items as &$item) {
             $item->userpicture = $OUTPUT->user_picture($item->user,
                 array('size' => 35, 'courseid' => $item->courseid));
