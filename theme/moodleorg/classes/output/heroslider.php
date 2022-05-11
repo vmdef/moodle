@@ -51,8 +51,8 @@ class heroslider implements renderable, templatable {
 
         // Links
         $data->linkcommunity = new moodle_url('/community');
-        $data->linkfeatures = new moodle_url('/features');
-        $data->linkgetstarted = new moodle_url('https://moodle.com/getstarted/');
+        $data->linkfeatures = new moodle_url('https://docs.moodle.org/400/en/New_features');
+        $data->linkgetstarted = new moodle_url('https://moodle.com/moodle-4/');
         $data->linksites = new moodle_url('/sites');
         $data->linkstats = new moodle_url('/stats');
         $data->linkstories = new moodle_url('/stories');

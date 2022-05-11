@@ -391,17 +391,17 @@ class frontpage_column_news extends frontpage_column {
     }
 
     protected function rss_title() {
-        if (empty($this->rssurl)) {
-            $this->rsstitle = 'feed_news';
+        if (empty($this->rsstitle)) {
+            return  get_string('feed_news', 'local_moodleorg');
         }
-        return get_string($this->rsstitle, 'local_moodleorg');
+        return $this->rsstitle;
     }
 
     protected function rss_anchortext() {
-        if (empty($this->rssurl)) {
-            $this->moreanchortext = 'feed_news_more';
+        if (empty($this->moreanchortext)) {
+            return  get_string('feed_news_more', 'local_moodleorg');
         }
-        return get_string($this->moreanchortext, 'local_moodleorg');
+        return $this->moreanchortext;
     }
 }
 

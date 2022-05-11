@@ -47,9 +47,9 @@ class news implements renderable, templatable {
      *
      */
     public function __construct() {
-        $news = new \frontpage_column_news();
-        $comnews = new \frontpage_column_news('rssmoodlecomtitle',
-            "https://moodle.com/feed/", "https://moodle.com/news", 'rssmoodlecommore');
+        $news = new \frontpage_column_news('Moodle Community news', null, null, "See all Moodle Community news");
+        $comnews = new \frontpage_column_news('Moodle HQ news',
+            "https://moodle.com/feed/", "https://moodle.com/news", "See all Moodle HQ news");
         $this->rssfeed['news'] = $news->get();
         $this->rssfeed['comnews'] = $comnews->get();
     }
