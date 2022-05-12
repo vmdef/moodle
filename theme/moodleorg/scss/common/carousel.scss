@@ -26,7 +26,8 @@
             h2 {
                 font-size: 28px;
                 line-height: 32px;
-                color: $black;
+                color: $white;
+                text-shadow: 1px 1px 2px #333;
                 font-family: $sansFontFamily;
                 font-weight: normal;
 
@@ -34,20 +35,22 @@
             .description {
                 font-size: 20px;
                 line-height: 24px;
-                color: $black;
+                color: $white;
+                text-shadow: 1px 1px 2px #333;
                 margin-bottom: 20px;
             }
             a {
-                color: $black;
+                color: $white;
             }
             a.button {
                 font-size: 30px;
                 line-height: 34px;
-                border: 1px solid $black;
+                border: 1px solid $white;
                 padding: 5px 13px;
                 margin-bottom: 10px;
                 display: inline-block;
                 margin-right: 20px;
+                text-shadow: 1px 1px 2px #333;
                 text-transform: uppercase;
                 text-decoration: none;
             }
@@ -90,6 +93,21 @@
             height: 500px;
         }
         .slide.power {
+            h2 {
+                color: $black;
+                text-shadow: none;
+            }
+            .description {
+                color: $black;
+                text-shadow: none;
+            }
+            a {
+                color: $black;
+            }
+            a.button {
+                border: 1px solid $black;
+                text-shadow: none;
+            }
             .container-fluid {
                 .row {
                     .span4 {
@@ -100,6 +118,21 @@
             background-image: url([[pix:theme|frontpage/BG-banner1-1224px]]);
         }
         .slide.getstarted {
+            h2 {
+                color: $black;
+                text-shadow: none;
+            }
+            .description {
+                color: $black;
+                text-shadow: none;
+            }
+            a {
+                color: $black;
+            }
+            a.button {
+                border: 1px solid $black;
+                text-shadow: none;
+            }
             .fg {
                 background-image: url([[pix:theme|frontpage/FG-banner9-1224px]]);
             }
@@ -137,7 +170,7 @@
             .fg {
                 background-position: center;
             }
-            background-image: url([[pix:theme|frontpage/BG-banner3-1224px]]);
+            background-color: #e6e6e6;
         }
         .slide.story1 {
             background-image: url([[pix:theme|frontpage/stories/MU_1224]]);
@@ -316,7 +349,6 @@
             }
         }
         .slide.global {
-            background-image: url([[pix:theme|frontpage/BG-banner3-1824px]]);
             .fg {
                 &.img1 {
                     background-image: url([[pix:theme|frontpage/FG-banner3a-1680px]]);
@@ -374,7 +406,6 @@
             }
         }
         .slide.global {
-            background-image: url([[pix:theme|frontpage/BG-banner3-1824px]]);
             .fg {
                 &.img1 {
                     background-image: url([[pix:theme|frontpage/FG-banner3a-1680px]]);
@@ -432,7 +463,6 @@
             }
         }
         .slide.global {
-            background-image: url([[pix:theme|frontpage/BG-banner3-1224px]]);
             .fg {
                 &.img1 {
                     background-image: url([[pix:theme|frontpage/FG-banner3a-1224px]]);
@@ -508,7 +538,6 @@
             }
         }
         .slide.global {
-            background-image: url([[pix:theme|frontpage/BG-banner3-1024px]]);
             .fg {
                 &.img1 {
                     background-image: url([[pix:theme|frontpage/FG-banner3a-1024px]]);
@@ -606,7 +635,6 @@
                 }
             }
             .slide.global {
-                background-image: url([[pix:theme|frontpage/BG-banner3-768px]]);
                 .fg {
                     &.img1 {
                         background-image: url([[pix:theme|frontpage/FG-banner3a-768px]]);
@@ -772,7 +800,6 @@
                 background-image: url([[pix:theme|frontpage/BG-banner2-480px]]);
             }
             .slide.global {
-                background-image: url([[pix:theme|frontpage/BG-banner3-480px]]);
                 .fg.img1,
                 .fg.img2,
                 .fg.img3,
@@ -832,9 +859,6 @@
         }
         .slide.community {
             background-image: url([[pix:theme|frontpage/BG-banner2-320px]]);
-        }
-        .slide.global {
-            background-image: url([[pix:theme|frontpage/BG-banner3-320px]]);
         }
         .slide.story1 {
             background-image: url([[pix:theme|frontpage/stories/MU_320]]);
