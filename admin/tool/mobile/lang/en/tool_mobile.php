@@ -121,7 +121,7 @@ $string['qrcodetype'] = 'QR code access';
 $string['qrcodetype_desc'] = 'A QR code can be provided for mobile app users to scan. This can be used to fill in the site URL, or where the site is secured using HTTPS, to automatically log the user in without having to enter their username and password.';
 $string['qrcodetypeurl'] = 'QR code with site URL';
 $string['qrcodetypelogin'] = 'QR code with automatic login';
-$string['readingthisemailgettheapp'] = 'Reading this in an email? <a href="{$a}">Download the mobile app and receive notifications on your mobile device</a>.';
+$string['readingthisemailgettheapp'] = 'Are you reading this in an email? <a href="{$a}">Download the mobile app and receive notifications on your mobile device</a>.';
 $string['remoteaddons'] = 'Remote add-ons';
 $string['scanqrcode'] = 'Scan QR code';
 $string['selfsignedoruntrustedcertificatewarning'] = 'It seems that the HTTPS certificate is self-signed or not trusted. The mobile app will only work with trusted sites. Please use any online SSL checker to diagnose the problem. If it indicates that your certificate is OK, you can ignore this warning.';
